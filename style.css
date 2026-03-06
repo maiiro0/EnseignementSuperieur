@@ -1,0 +1,115 @@
+*{
+    box-sizing: 0;
+    margin: 0;
+    padding: 0;
+}
+::root{
+    --menu-color: #F1F2F7;
+
+}
+.txt-blue{
+    color: #2C416E;
+}
+.title{
+    font-family: Poppins;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 24px;
+    line-height: 11px;
+    letter-spacing: 0.5px;
+    margin-top: 30px;
+}
+
+.connexion-container{
+    display: flex;
+}
+.right-menu{
+    display: flex;
+    background-color: #F1F2F7;
+    height: 100vh;
+    width: 240px;
+    text-align: center;
+    justify-content: center;
+}
+.right-menu img{
+    width: 24px;
+    height: 24px;
+}
+.menu-content{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    text-align: center;
+    width: 160px;
+    height: 25px;
+    margin-top: 20px;
+}
+
+.menu-typo1 {
+    font-family: Montserrat;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 11px;
+    line-height: 11px;
+    letter-spacing: 0.5px;
+
+}
+.menu-typo2{
+    font-family: Montserrat;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 8px;
+    line-height: 11px;
+    letter-spacing: 0.5px;
+
+}
+.menu-text-align{
+    display: flex;
+    flex-direction: column;
+}
+.connexion-form{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 100px;
+    text-align: center;
+    flex-direction: column;
+    margin-left: 70px;
+}
+.connexion-form form{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    width: 100%;
+}
+.connexion-form input{
+    width: 500px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid rgb(199, 199, 199);
+}
+.connexion-form h1,h2{
+    text-align: start;
+    margin-bottom: 10px;
+}
+.z{
+    padding-bottom: 30px;
+}
+.connexion-form label{
+    text-align: start;
+    padding-bottom: 4px;
+}
+.connexion-form button{
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 25px;
+    background-color: #2C416E;
+    color: white;
+    padding: 15px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+form{
+    margin-top: 20px;
+}
