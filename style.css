@@ -99,16 +99,15 @@
     text-align: start;
     padding-bottom: 4px;
 }
-.connexion-form button{
-    display: flex;
-    justify-content: flex-start;
+.connexion-button{  
     margin-top: 25px;
     background-color: #2C416E;
     color: white;
-    padding: 15px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    max-width: 150px;
+    height: 50px;
 }
 form{
     margin-top: 20px;
