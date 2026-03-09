@@ -1,0 +1,74 @@
+p, h3 {
+    margin: 0;
+}
+
+nav {
+    width: 240px;
+    background-color: #F1F2F7;
+    height: 100vh;
+}
+
+.breadcrumb {
+    display: inline-flex;
+    height: 57px;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #C8CBD9;
+    width: 86vw;
+}
+
+.breadcrumb img {
+    width: 14px;
+    height: 14px;
+}
+
+body {
+    display: flex;
+    margin: 0;
+}
+
+.calendar {
+    padding: 0px 45px 45px 45px;
+    font-family: Poppins;
+}
+
+.titles-page h3 {
+    color :#1F384C;
+    font-size: 26px;
+    font-weight: 500;
+}
+
+.titles-page h4 {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.button {
+    padding: 10px 20px;
+    background-color: #2C416E;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.align {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+}
+
+td {
+    padding: 17px 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.columns {
+    background-color: #F1F2F7;
+}
