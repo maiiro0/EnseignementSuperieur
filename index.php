@@ -1,3 +1,7 @@
+
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -29,13 +33,24 @@
                 <h2 class="txt-blue">Connexion au portail</h2>
                 <form action="calendrier.php" method="POST">
                     <label>Email - champs obligatoire</label>
-                    <input type="email" name="email"><br>
+                    <input type="email" name="email" id="email"><br>
                     <label>Mot de passe - champs obligatoire</label>
-                    <input type="password" name="password">
-                    <input class="connexion-button" type="submit" value="Accéder au portail">
+                    <input type="password" name="password" id="password">
+                    <button type="submit" name="login"">Accéder au portail</button>
                 </form>
             </div>
         </div>
     </div>
 </body>
 </html>
+
+<?php
+    $msg = '';
+    $users = ['user'=>"test", "manager"=>"secret", "guest"=>"abc123"];
+
+    if(isset($_POST['login'])){
+        if(empty($_POST['email']) && (empty($_POST['password']))){
+
+        }
+    }
+?>
