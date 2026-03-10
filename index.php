@@ -1,7 +1,4 @@
 
-<?php
-    session_start();
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -45,12 +42,40 @@
 </html>
 
 <?php
-    $msg = '';
-    $users = ['user'=>"test", "manager"=>"secret", "guest"=>"abc123"];
+    // Démarre la session (stockée sur le serveur)
+    session_start();
+    
+    require_once('connexionBDD.php');
 
-    if(isset($_POST['login'])){
-        if(empty($_POST['email']) && (empty($_POST['password']))){
+    // Vérifie que les champs du formulaire sont remplis
+    if(!empty($_POST['email']) && !empty($_POST['password'])) {
+       
+        // On récupère les données dans des variables
+        $email = $_POST['email'];
+        $password = $_POST['password']; // AJOUT DU ; ICI
+       
+        //Je cherche si l'utilisateur possède bien cet email dans la base de données
 
+        $query = $pdo->prepare("SELECT * FROM utilisateurs WHERE email = ?"); 
+        $query->execute([$email]);
+        $user = $query->fetch();
+        
+         //Je vérifie si le mot de passe est bien attribuer a cet utilisateur
+
+        if($user && password_verify($password, $user['mot_de_passe'])){ //remplacer mot_de_passe par le nom de la colonne sql
+            
+            // On stocke dans $_SESSION la connnexion de l'utilisateur
+
+            $_SESSION['user'] = $user['nom_utilisateur']; 
+
+            // Redirige vers la page calendrier
+            header("Location: Calendrier.php");
+            exit();
+        } 
+        else {
+            // Si l'identifiant est faux
+            header("Location: index.php");
+            exit();
         }
-    }
+    } 
 ?>
