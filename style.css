@@ -44,13 +44,14 @@ body {
     font-weight: 500;
 }
 
-.button {
+.blue-button {
     padding: 10px 20px;
     background-color: #2C416E;
     color: white;
     text-align: center;
     border-radius: 5px;
     display: inline-block;
+    border: unset;
 }
 
 .align {
@@ -71,4 +72,80 @@ table {
 
 .columns {
     background-color: #F1F2F7;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.invisible-button {
+    background-color: white;
+    border: 0px;
+}
+
+.add-intervention {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.add-intervention img {
+    width: 56px;
+    height: 56px;
+    padding-right: 16px;
+}
+
+.add-intervention div h3{
+    color: #54595E;
+    font-weight: 600;
+    font-size: 24px;
+}
+
+.add-intervention div p {
+    color: #54595E;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+label {
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.form-align {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.form-align div {
+    width: 330px;
+}
+
+.form-align div input,
+.form-align div select {
+    width: 330px;
+    padding-left: 0;
+}
+
+form {
+    width: 680px;
+}
+
+input,
+select {
+    padding: 10px 0px;
+    border: 1px solid #DFE4EA;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+dialog {
+    border: 1px solid #CCCCCC;
+    border-radius: 7px;
+}
+
+select option:first {
+    color: #FFFFFF;
 }
