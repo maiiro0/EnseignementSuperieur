@@ -25,8 +25,65 @@
             <div class="align">
                 <h3>Calendrier</h3>
                 <div class="button">
-                    <p>Ajouter une nouvelle intervention</p>
+                    <button command="show-modal" commandfor="dialog">Ajouter une nouvelle intervention</button>
                 </div>
+
+                <dialog id="dialog">
+                    <div class="add-intervention">
+                        <img src="image/Frame.png" alt="">
+                        <div>
+                            <h3>Ajouter une intervention</h3>
+                            <p>Remplissez les informationd ci-dessous</p>
+                        </div>
+                    </div>
+
+                    <form action="" method="post">
+                        <label for="title">Titre</label> </br>
+                        <input type="text" name="Saisissez un titre sur l'intervention"></br>
+                        
+                        <div class="form-align">
+                            <div>
+                                <label for="date-start" require>Date de début - champ obligatoire</label></br>
+                                <input type="date"></br>
+                            </div>
+
+                            <div>
+                                <label for="date-end" require>Date de fin - champ obligatoire</label></br>
+                                <input type="date"></br>
+                            </div>
+                        </div>
+
+                        <div class="form-align">
+                            <div>
+                                <label for="module">Module - champ obligatoire</label></br>
+                                <select name="Sélectionner le module" id="">
+                                    <option value="1">1</option>
+                                    <option value="1">1</option>
+                                </select></br>
+                            </div>
+
+                            <div>
+                                <label for="module">Type d'intervention - champ obligatoire</label></br>
+                                <select name="Sélectionner le module" id="">
+                                    <option value="1">1</option>
+                                    <option value="1">1</option>
+                                </select></br>
+                            </div>
+                        </div>
+
+                        <label for="inter">Intervenant - champ obligatoire</label></br>
+                        <select name="Sélectionner des intervenants" id="">
+                                <option value="1">Sonia ARACIL</option>
+                                <option value="1">Olivier SALESSE</option>
+                        </select></br>
+                    </form>
+
+                    <div>
+                        <button commandfor="dialog" command="close">Fermer</button>
+                        <button commandfor="dialog" command="close">Fermer</button>
+                    </div>
+                </dialog>
+
             </div>
             <h4>Interventions de la semaine</h4>
 
