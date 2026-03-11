@@ -25,10 +25,11 @@
             <div class="align">
                 <h3>Calendrier</h3>
                 <div class="button">
-                    <button command="show-modal" commandfor="dialog">Ajouter une nouvelle intervention</button>
+                    <button command="show-modal" commandfor="dialog" class="blue-button">Ajouter une nouvelle intervention</button>
                 </div>
 
                 <dialog id="dialog">
+                    <button commandfor="dialog" command="close" class="invisible-button"><img src="image/Frame 1041.png" alt="" id="quit"></button>
                     <div class="add-intervention">
                         <img src="image/Frame.png" alt="">
                         <div>
@@ -38,25 +39,28 @@
                     </div>
 
                     <form action="" method="post">
-                        <label for="title">Titre</label> </br>
-                        <input type="text" name="Saisissez un titre sur l'intervention"></br>
+                        <div>
+                            <label for="title">Titre</label> </br>
+                            <input type="text" placeholder="Saisissez un titre sur l'intervention" name="title"></br>
+                        </div>
                         
                         <div class="form-align">
                             <div>
                                 <label for="date-start" require>Date de début - champ obligatoire</label></br>
-                                <input type="date"></br>
+                                <input type="date" name="date-start"></br>
                             </div>
 
                             <div>
                                 <label for="date-end" require>Date de fin - champ obligatoire</label></br>
-                                <input type="date"></br>
+                                <input type="date" name="date-end"></br>
                             </div>
                         </div>
 
                         <div class="form-align">
                             <div>
                                 <label for="module">Module - champ obligatoire</label></br>
-                                <select name="Sélectionner le module" id="">
+                                <select name="Sélectionner le module" name="module">
+                                    <option value="">Sélectionner le module</option>
                                     <option value="1">1</option>
                                     <option value="1">1</option>
                                 </select></br>
@@ -64,7 +68,8 @@
 
                             <div>
                                 <label for="module">Type d'intervention - champ obligatoire</label></br>
-                                <select name="Sélectionner le module" id="">
+                                <select name="Sélectionner le module" name="module">
+                                    <option value="">Sélectionner le module</option>
                                     <option value="1">1</option>
                                     <option value="1">1</option>
                                 </select></br>
@@ -72,15 +77,15 @@
                         </div>
 
                         <label for="inter">Intervenant - champ obligatoire</label></br>
-                        <select name="Sélectionner des intervenants" id="">
+                        <select name="Sélectionner des intervenants" name="inter">
                                 <option value="1">Sonia ARACIL</option>
                                 <option value="1">Olivier SALESSE</option>
                         </select></br>
                     </form>
 
                     <div>
-                        <button commandfor="dialog" command="close">Fermer</button>
-                        <button commandfor="dialog" command="close">Fermer</button>
+                        <button commandfor="dialog" command="close" class="blue-button">Fermer</button>
+                        <button commandfor="dialog" command="close" class="blue-button">Fermer</button>
                     </div>
                 </dialog>
 
