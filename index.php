@@ -45,7 +45,7 @@
     // Démarre la session (stockée sur le serveur)
     session_start();
     
-    require_once('connexionBDD.php');
+    require_once('connexion.php');
 
     // Vérifie que les champs du formulaire sont remplis
     if(!empty($_POST['email']) && !empty($_POST['password'])) {
