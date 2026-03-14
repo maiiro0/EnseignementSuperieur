@@ -16,7 +16,7 @@
 
     <section class="calendar">
         <div class="breadcrumb">
-            <img src="image/home.png" alt="">
+            <img src="assets/home.png" alt="">
             <p>></p>
             <p>Calendrier</p>
         </div>
@@ -29,9 +29,9 @@
                 </div>
 
                 <dialog id="dialog">
-                    <button commandfor="dialog" command="close" class="invisible-button"><img src="image/Frame 1041.png" alt="" id="quit"></button>
+                    <button commandfor="dialog" command="close" class="invisible-button"><img src="assets/Frame 1041.png" alt="" id="quit"></button>
                     <div class="add-intervention">
-                        <img src="image/Frame.png" alt="">
+                        <img src="assets/Frame.png" alt="">
                         <div>
                             <h3>Ajouter une intervention</h3>
                             <p>Remplissez les informationd ci-dessous</p>
