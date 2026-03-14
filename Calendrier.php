@@ -99,12 +99,48 @@
                     <td>Type</td>
                     <td>Intervenants</td>
                     <td>En visio</td>
+                    <td></td>
                 </tr>
-
                 <?php
-                require_once 'Connexion.php';
-                ?>
+                    include "Connexion.php";
 
+                    $requete = $con->prepare("SELECT id, start_date, end_date, intervention_type_id, module_id, remotely FROM course");
+                    $requete->execute();
+                    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+
+                    foreach ($contenu as $valeurs=>$element) {
+                        echo "<tr>";
+                        echo "<td>". $element["start_date"]. "</td>"; //Colonne Date de début. Il manque à mettre l'heure de fin
+
+                        $id = $element["id"];
+                        $requete = $con->prepare("SELECT name FROM module WHERE id = :id");
+                        $requete -> bindParam(':id', $id); 
+                        $requete->execute();
+                        $nom_module = $requete->fetch(\PDO::FETCH_ASSOC); // On va chercher le nom du module dans une autre table
+                        echo "<td>". $nom_module["name"] . "</td>";
+
+                        $type_intervention = $element["intervention_type_id"];
+                        $requete = $con->prepare("SELECT name FROM intervention_type WHERE id = :type_intervention");
+                        $requete -> bindParam(':type_intervention', $type_intervention);
+                        $requete->execute();
+                        $nom_intervention = $requete->fetch(\PDO::FETCH_ASSOC); //On va chercher le nom de l'intervention dans la table intervention_type
+                        echo "<td>". $nom_intervention["name"] ."</td>";
+
+                        echo "<td> </td>"; //Relier au nom des intervenants
+
+
+                        if ($element["remotely"] == 0){
+                            ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
+                        }   
+                        else {
+                            ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
+                        }
+
+                        ?><td><a href=""><img src="assets/Oeil.png" alt="">Accéder à la fiche</a></td><?php
+
+                        echo "</tr>";
+                    }
+                ?>
 
             </table>
         </section>

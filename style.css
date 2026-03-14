@@ -37,11 +37,13 @@ body {
     color :#1F384C;
     font-size: 26px;
     font-weight: 500;
+    margin: 20px 0px;
 }
 
 .titles-page h4 {
     font-size: 20px;
     font-weight: 500;
+    margin: 10px 0px;
 }
 
 .blue-button {
@@ -75,8 +77,6 @@ table {
 }
 *{
     box-sizing: 0;
-    margin: 0;
-    padding: 0;
 }
 ::root{
     --menu-color: #F1F2F7;
