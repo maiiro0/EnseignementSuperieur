@@ -2,6 +2,26 @@ p, h3 {
     margin: 0;
 }
 
+tr {
+    border-bottom: 1px solid #F1F2F7;
+    height: 72px;
+}
+
+.table_align {
+    display: flex;
+    align-items: center;
+    padding-top: 23px;
+}
+
+.table_align img {
+    padding-right: 7px;
+}
+
+.table_align a {
+    text-decoration: none;
+    color: black;
+}
+
 nav {
     width: 240px;
     background-color: #F1F2F7;

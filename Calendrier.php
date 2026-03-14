@@ -112,9 +112,9 @@
                         echo "<tr>";
                         echo "<td>". $element["start_date"]. "</td>"; //Colonne Date de début. Il manque à mettre l'heure de fin
 
-                        $id = $element["id"];
-                        $requete = $con->prepare("SELECT name FROM module WHERE id = :id");
-                        $requete -> bindParam(':id', $id); 
+                        $module_id = $element["module_id"];
+                        $requete = $con->prepare("SELECT name FROM module WHERE id = :module_id");
+                        $requete -> bindParam(':module_id', $module_id); 
                         $requete->execute();
                         $nom_module = $requete->fetch(\PDO::FETCH_ASSOC); // On va chercher le nom du module dans une autre table
                         echo "<td>". $nom_module["name"] . "</td>";
@@ -126,7 +126,18 @@
                         $nom_intervention = $requete->fetch(\PDO::FETCH_ASSOC); //On va chercher le nom de l'intervention dans la table intervention_type
                         echo "<td>". $nom_intervention["name"] ."</td>";
 
-                        echo "<td> </td>"; //Relier au nom des intervenants
+                        $id = $element["id"];
+                        $requete = $con->prepare("SELECT upper(u.last_name), upper(u.first_name) FROM user u WHERE u.id IN (SELECT i.user_id FROM instructor i WHERE i.id in (SELECT c.instructor_id FROM course_instructor c WHERE c.course_id = :id))");
+                        $requete -> bindParam(':id', $id); 
+                        $requete->execute();
+                        $noms_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC); //On récupère les noms et les prénoms en majuscule
+                        echo "<td>";
+                        $temporaire = "";
+                        foreach ($noms_intervenants as $colonne=>$noms){
+                            $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
+                        }
+                        echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
+                        echo "</td>";
 
 
                         if ($element["remotely"] == 0){
@@ -136,7 +147,9 @@
                             ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
                         }
 
-                        ?><td><a href=""><img src="assets/Oeil.png" alt="">Accéder à la fiche</a></td><?php
+                        ?><td class="table_align"><img src="assets/Oeil.png" alt="">
+                        <a href="">Accéder à la fiche</a></td>
+                        <?php
 
                         echo "</tr>";
                     }
