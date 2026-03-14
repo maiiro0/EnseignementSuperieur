@@ -34,7 +34,7 @@
                         <img src="assets/Frame.png" alt="">
                         <div>
                             <h3>Ajouter une intervention</h3>
-                            <p>Remplissez les informationd ci-dessous</p>
+                            <p>Remplissez les informations ci-dessous</p>
                         </div>
                     </div>
 
@@ -47,12 +47,12 @@
                         <div class="form-align">
                             <div>
                                 <label for="date-start" require>Date de début - champ obligatoire</label></br>
-                                <input type="date" name="date-start"></br>
+                                <input type="datetime-local" name="date-start"></br>
                             </div>
 
                             <div>
                                 <label for="date-end" require>Date de fin - champ obligatoire</label></br>
-                                <input type="date" name="date-end"></br>
+                                <input type="datetime-local" name="date-end"></br>
                             </div>
                         </div>
 
@@ -61,8 +61,15 @@
                                 <label for="module">Module - champ obligatoire</label></br>
                                 <select name="Sélectionner le module" name="module">
                                     <option value="">Sélectionner le module</option>
-                                    <option value="1">1</option>
-                                    <option value="1">1</option>
+                                    <?php
+                                    require_once "Connexion.php";
+                                    $requete = $con->prepare("SELECT id FROM module ORDER BY id");
+                                    $requete->execute();
+                                    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                    foreach ($contenu as $valeurs=>$element) { 
+                                        echo "<option>". $element["id"] ."</option>";
+                                    }
+                                    ?>
                                 </select></br>
                             </div>
 
@@ -70,16 +77,29 @@
                                 <label for="module">Type d'intervention - champ obligatoire</label></br>
                                 <select name="Sélectionner le module" name="module">
                                     <option value="">Sélectionner le module</option>
-                                    <option value="1">1</option>
-                                    <option value="1">1</option>
+                                    <?php 
+                                    $requete = $con->prepare("SELECT name FROM intervention_type ORDER BY name");
+                                    $requete->execute();
+                                    $nom_intervention = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                    foreach ($nom_intervention as $valeurs=>$element) { 
+                                        echo "<option>". $element["name"]."</option>";
+                                    }
+                                    ?>
                                 </select></br>
                             </div>
                         </div>
 
                         <label for="inter">Intervenant - champ obligatoire</label></br>
                         <select name="Sélectionner des intervenants" name="inter">
-                                <option value="1">Sonia ARACIL</option>
-                                <option value="1">Olivier SALESSE</option>
+                                <option value="">Sélectionner des intervenants</option>
+                                <?php
+                                    $requete = $con->prepare("SELECT upper(last_name), first_name FROM user ORDER BY last_name");
+                                    $requete->execute();
+                                    $nom_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                    foreach ($nom_intervenants as $valeurs=>$element) { 
+                                        echo "<option>". $element["upper(last_name)"]. " ". $element["first_name"] ."</option>";
+                                    }
+                                ?>
                         </select></br>
                     </form>
 
@@ -102,8 +122,6 @@
                     <td></td>
                 </tr>
                 <?php
-                    include "Connexion.php";
-
                     $requete = $con->prepare("SELECT id, start_date, end_date, intervention_type_id, module_id, remotely FROM course");
                     $requete->execute();
                     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
