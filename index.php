@@ -45,7 +45,7 @@
     // Démarre la session (stockée sur le serveur)
     session_start();
     
-    require_once('connexionBDD.php');
+    require_once('connexion.php');
 
     // Vérifie que les champs du formulaire sont remplis
     if(!empty($_POST['email']) && !empty($_POST['password'])) {
@@ -62,11 +62,11 @@
         
          //Je vérifie si le mot de passe est bien attribué a cet utilisateur
 
-        if($user && password_verify($password, $user['mot_de_passe'])){ //remplacer mot_de_passe par le nom de la colonne sql
+        if($user && password_verify($password, $user['password'])){ //remplacer mot_de_passe par le nom de la colonne sql
             
             // On stocke dans $_SESSION la connexion de l'utilisateur
 
-            $_SESSION['user'] = $user['nom_utilisateur']; 
+            $_SESSION['user'] = $user['first_name']; 
 
             // Redirige vers la page calendrier
             header("Location: Calendrier.php");
