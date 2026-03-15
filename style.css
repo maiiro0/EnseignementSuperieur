@@ -76,6 +76,25 @@ body {
     border: unset;
 }
 
+.grey-button {
+    padding: 10px 20px;
+    background-color: #F0F0F0;
+    text-align: center;
+    border-radius: 5px;
+    display: inline-block;
+    border: unset;
+}
+
+.selection {
+    width: 48%;
+}
+
+.select-button {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
 .align {
     display: flex;
     justify-content: space-between;

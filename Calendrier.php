@@ -41,41 +41,41 @@
                     <form action="" method="post">
                         <div>
                             <label for="title">Titre</label> </br>
-                            <input type="text" placeholder="Saisissez un titre sur l'intervention" name="title"></br>
+                            <input type="text" placeholder="Saisissez un titre sur l'intervention" name="title" id="title"></br>
                         </div>
                         
                         <div class="form-align">
                             <div>
                                 <label for="date-start" require>Date de début - champ obligatoire</label></br>
-                                <input type="datetime-local" name="date-start"></br>
+                                <input type="datetime-local" name="date-start" id="date-start"></br>
                             </div>
 
                             <div>
                                 <label for="date-end" require>Date de fin - champ obligatoire</label></br>
-                                <input type="datetime-local" name="date-end"></br>
+                                <input type="datetime-local" name="date-end" id="date-end"></br>
                             </div>
                         </div>
 
                         <div class="form-align">
                             <div>
                                 <label for="module">Module - champ obligatoire</label></br>
-                                <select name="Sélectionner le module" name="module">
+                                <select name="module" id="module">
                                     <option value="">Sélectionner le module</option>
                                     <?php
                                     require_once "Connexion.php";
-                                    $requete = $con->prepare("SELECT id FROM module ORDER BY id");
+                                    $requete = $con->prepare("SELECT id, name FROM module ORDER BY id");
                                     $requete->execute();
                                     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
                                     foreach ($contenu as $valeurs=>$element) { 
-                                        echo "<option>". $element["id"] ."</option>";
+                                        echo "<option>". $element["name"] ."</option>";
                                     }
                                     ?>
                                 </select></br>
                             </div>
 
                             <div>
-                                <label for="module">Type d'intervention - champ obligatoire</label></br>
-                                <select name="Sélectionner le module" name="module">
+                                <label for="intervrntion">Type d'intervention - champ obligatoire</label></br>
+                                <select name="intervention" id="intervention">
                                     <option value="">Sélectionner le module</option>
                                     <?php 
                                     $requete = $con->prepare("SELECT name FROM intervention_type ORDER BY name");
@@ -90,7 +90,7 @@
                         </div>
 
                         <label for="inter">Intervenant - champ obligatoire</label></br>
-                        <select name="Sélectionner des intervenants" name="inter">
+                        <select name="inter" id="inter">
                                 <option value="">Sélectionner des intervenants</option>
                                 <?php
                                     $requete = $con->prepare("SELECT upper(last_name), first_name FROM user ORDER BY last_name");
@@ -101,12 +101,11 @@
                                     }
                                 ?>
                         </select></br>
+                        <div class="select-button">
+                            <button commandfor="dialog" command="close" class="grey-button selection">Annuler</button>
+                            <button type="submit" class="blue-button selection">Confirmer</button>
+                        </div>
                     </form>
-
-                    <div>
-                        <button commandfor="dialog" command="close" class="blue-button">Fermer</button>
-                        <button commandfor="dialog" command="close" class="blue-button">Fermer</button>
-                    </div>
                 </dialog>
 
             </div>
@@ -178,3 +177,35 @@
     </section>
 </body>
 </html>
+
+
+<?php
+var_dump("You can do it ! xd");
+var_dump(!empty($_POST['title']));
+var_dump(!empty($_POST['date-start']));
+var_dump(!empty($_POST['date-end']));
+var_dump(!empty($_POST['module']));
+var_dump(!empty($_POST['intervention']));
+var_dump(!empty($_POST['inter']));
+if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['intervention']) && !empty($_POST['inter'])){
+    var_dump("Déjà ça c'est fait");
+    $title = htmlspecialchars($_POST['title']);
+    $date_start = htmlspecialchars($_POST['date_start']);
+    $date_end = htmlspecialchars($_POST['date_end']);
+    $module = htmlspecialchars($_POST['module']);
+    $intervention = htmlspecialchars($_POST['intervention']);
+    $intervenants = htmlspecialchars($_POST['inter']); //Ne pas oublier : intervenants peut contenir plusieurs intervenants
+
+    $requete = $con->prepare('SELECT id INTO intervention_type WHERE name = :intervention');
+    $requete->bindParam(':intervention', $intervention);
+    $requete->execute();
+    $id_intervention = fetch(\PDO::FETCH_ASSOC);
+    var_dump($id_intervention);
+
+    $query = $con->prepare('INSERT INTO article (Titre, Description, Categorie) VALUES (:titre, :contenu, :categorie)');
+    $query->bindParam(':titre', $titre);
+    $query->bindParam(':contenu', $contenu);
+    $query->bindParam(':categorie', $categorie);
+    $query->execute();
+
+}
