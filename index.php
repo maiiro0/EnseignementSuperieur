@@ -60,13 +60,13 @@
         $query->execute([$email]);
         $user = $query->fetch();
         
-         //Je vérifie si le mot de passe est bien attribuer a cet utilisateur
+        //Je vérifie si le mot de passe est bien attribuer a cet utilisateur
 
         if($user && password_verify($password, $user['mot_de_passe'])){ //remplacer mot_de_passe par le nom de la colonne sql
             
             // On stocke dans $_SESSION la connnexion de l'utilisateur
 
-            $_SESSION['user'] = $user['nom_utilisateur']; 
+            $_SESSION['user'] = $user['nom_utilisateur'];
 
             // Redirige vers la page calendrier
             header("Location: Calendrier.php");
