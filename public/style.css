@@ -8,12 +8,12 @@
     letter-spacing: 0px;
 }
 
-.intervention-column{
+.filter-column{
     display: flex;
     flex-direction: column ;
     width: 278px;
 }
-.intervention-row{
+.filter-row{
     display: flex;
     justify-content: flex-start;
     flex-direction: row;
@@ -28,6 +28,7 @@
     border: 1px solid #DFE4EA;
     margin-bottom: 0;
 }
+
 .yellow-button{
     background-color: #FFBD01;
     border: none;
@@ -40,7 +41,6 @@
     border-bottom: 2px solid #FFBD01;
     width: 100%;
 }
-
 p, h3 {
     margin: 0;
 }
@@ -329,7 +329,7 @@ label {
 }
 
 form {
-    width: 680px;
+    width: 100%;
 }
 
 input,
@@ -338,7 +338,6 @@ select {
     border: 1px solid #DFE4EA;
     border-radius: 6px;
     margin-bottom: 10px;
-    width: 100%;
 }
 
 dialog {
