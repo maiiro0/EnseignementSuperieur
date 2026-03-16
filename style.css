@@ -1,3 +1,43 @@
+.yellow{
+    color: #FFBD01;
+    font-family: Poppins;
+    font-weight: bold;
+    font-style: Medium;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: 0px;
+}
+
+.intervention-column{
+    display: flex;
+    flex-direction: column ;
+    width: 100%;
+}
+.intervention-row{
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-end;
+    border-bottom: #FFBD01 2px solid;
+    padding-bottom: 20px;
+}
+.intervention-column input, select{
+    padding: 12px 16px 12px 20px;
+    border-radius: 10px;
+    border: 1px solid gray;
+}
+.yellow-button{
+    background-color: #FFBD01;
+    border: none;
+    border-radius: 10px;
+    width: 270px;
+    padding: 14px 20px;
+    cursor: pointer;
+}
+.yellow-border{
+    border-bottom: 2px solid #FFBD01;
+    width: 100%;
 p, h3 {
     margin: 0;
 }
