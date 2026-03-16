@@ -1,0 +1,406 @@
+p, h3 {
+    margin: 0;
+}
+
+tr {
+    border-bottom: 1px solid #F1F2F7;
+    height: 72px;
+}
+
+.table_align {
+    display: flex;
+    align-items: center;
+    padding-top: 23px;
+}
+
+.table_align img {
+    padding-right: 7px;
+}
+
+.table_align a {
+    text-decoration: none;
+    color: black;
+}
+
+nav {
+    width: 240px;
+    background-color: #F1F2F7;
+    height: 100vh;
+}
+
+.breadcrumb {
+    display: inline-flex;
+    height: 57px;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #C8CBD9;
+    width: 86vw;
+}
+
+.breadcrumb img {
+    width: 14px;
+    height: 14px;
+}
+
+body {
+    display: flex;
+    margin: 0;
+}
+
+.calendar {
+    padding: 0px 45px 45px 45px;
+    font-family: Poppins;
+}
+
+.titles-page h3 {
+    color :#1F384C;
+    font-size: 26px;
+    font-weight: 500;
+    margin: 20px 0px;
+}
+
+.titles-page h4 {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 10px 0px;
+}
+
+.blue-button {
+    padding: 10px 20px;
+    background-color: #2C416E;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    display: inline-block;
+    border: unset;
+}
+
+.grey-button {
+    padding: 10px 20px;
+    background-color: #F0F0F0;
+    text-align: center;
+    border-radius: 5px;
+    display: inline-block;
+    border: unset;
+}
+
+.selection {
+    width: 48%;
+}
+
+.select-button {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.align {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+}
+
+td {
+    padding: 17px 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.columns {
+    background-color: #F1F2F7;
+}
+*{
+    box-sizing: 0;
+}
+::root{
+    --menu-color: #F1F2F7;
+
+}
+.txt-blue{
+    color: #2C416E;
+}
+.title{
+    font-family: Poppins;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 24px;
+    line-height: 11px;
+    letter-spacing: 0.5px;
+    margin-top: 30px;
+}
+
+.connexion-container{
+    display: flex;
+}
+.right-menu{
+    display: flex;
+    background-color: #F1F2F7;
+    height: 100vh;
+    width: 240px;
+    text-align: center;
+    justify-content: center;
+}
+.right-menu img{
+    width: 24px;
+    height: 24px;
+}
+.menu-content{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    text-align: center;
+    width: 160px;
+    height: 25px;
+    margin-top: 20px;
+}
+
+.menu-typo1 {
+    font-family: Montserrat;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 11px;
+    line-height: 11px;
+    letter-spacing: 0.5px;
+
+}
+.menu-typo2{
+    font-family: Montserrat;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 8px;
+    line-height: 11px;
+    letter-spacing: 0.5px;
+
+}
+.menu-text-align{
+    display: flex;
+    flex-direction: column;
+}
+.connexion-form{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 100px;
+    text-align: center;
+    flex-direction: column;
+    margin-left: 70px;
+}
+.connexion-form form{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    width: 100%;
+}
+.connexion-form input{
+    width: 500px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid rgb(199, 199, 199);
+}
+.connexion-form h1,h2{
+    text-align: start;
+    margin-bottom: 10px;
+}
+.connexion-form h1{
+    padding-bottom: 30px;
+}
+.connexion-form label{
+    text-align: start;
+    padding-bottom: 4px;
+}
+.connexion-form button{  
+    margin-top: 25px;
+    background-color: #2C416E;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    max-width: 150px;
+    height: 50px;
+}
+form{
+    margin-top: 20px;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.invisible-button {
+    background-color: white;
+    border: 0px;
+}
+
+.add-intervention {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.add-intervention img {
+    width: 56px;
+    height: 56px;
+    padding-right: 16px;
+}
+
+.add-intervention div h3{
+    color: #54595E;
+    font-weight: 600;
+    font-size: 24px;
+}
+
+.add-intervention div p {
+    color: #54595E;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+label {
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.form-align {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.form-align div {
+    width: 330px;
+}
+
+.form-align div input,
+.form-align div select {
+    width: 330px;
+    padding-left: 0;
+}
+
+form {
+    width: 680px;
+}
+
+input,
+select {
+    padding: 10px 0px;
+    border: 1px solid #DFE4EA;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+dialog {
+    border: 1px solid #CCCCCC;
+    border-radius: 7px;
+}
+
+select option:first {
+    color: #FFFFFF;
+}
+
+.lateral-menu{
+    width:260px;
+    height:100vh;
+    background:#F1F2F7;
+    padding:28px 22px;
+    box-sizing:border-box;
+    display:flex;
+    flex-direction:column;
+}
+
+.logo-menu{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:40px;
+}
+
+.logo-menu img{
+    width:24px;
+}
+
+.title-menu{
+    line-height:1.2;
+}
+
+.title-menu strong{
+    font-size:15px;
+    font-weight:600;
+    color:#082431;
+}
+
+.title-menu span{
+    font-size:12px;
+    color:#082431;
+}
+
+.menu-section{
+    margin-bottom:28px;
+}
+
+.menu-section-title{
+    font-family:'Poppins', sans-serif;
+    font-size:11px;
+    letter-spacing:1px;
+    color:#7C8798;
+    margin-bottom:12px;
+}
+
+.menu-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 14px;
+    border-radius:8px;
+    text-decoration:none;
+    font-size:14px;
+    color:#2C416E;
+    margin-bottom:6px;
+    font-weight:500;
+}
+
+.menu-icon{
+    width:18px;
+    height:18px;
+}
+
+
+.active-item-menu{
+    background:#2C416E;
+    color:white;
+}
+
+
+.user-menu{
+    margin-top:auto;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar-menu{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+}
+
+.name-menu{
+    font-size:14px;
+    font-weight:600;
+    color:#082431;
+}
+
+.menu-role{
+    font-size:12px;
+    color:#8A94A6;
+}
+
+.page-content{
+    flex:1;
+    padding:40px;
+}
