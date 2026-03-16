@@ -28,7 +28,7 @@
             <div>
                 <h1>Gestion Supérieur</h1>
                 <h2 class="txt-blue">Connexion au portail</h2>
-                <form action="calendrier.php" method="POST">
+                <form action="" method="POST">
                     <label>Email - champs obligatoire</label>
                     <input type="email" name="email" id="email"><br>
                     <label>Mot de passe - champs obligatoire</label>
@@ -48,7 +48,7 @@
     require_once('connexion.php');
 
     // Vérifie que les champs du formulaire sont remplis
-    if(!empty($_POST['email']) && !empty($_POST['password'])) {
+    if($_SERVER['REQUEST_METHOD'] ==+ 'POST ') {
        
         // On récupère les données dans des variables
         $email = $_POST['email'];
@@ -62,20 +62,18 @@
         
          //Je vérifie si le mot de passe est bien attribué a cet utilisateur
 
-        if($user && password_verify($password, $user['password'])){ //remplacer mot_de_passe par le nom de la colonne sql
+        if($user && password_verify($password, $user['email'])){ //remplacer mot_de_passe par le nom de la colonne sql
             
             // On stocke dans $_SESSION la connexion de l'utilisateur
 
-            $_SESSION['user'] = $user['first_name']; 
+            $_SESSION['user'] = $user['email']; 
 
             // Redirige vers la page calendrier
             header("Location: Calendrier.php");
             exit();
         } 
         else {
-            // Si l'identifiant est faux
-            header("Location: index.php");
-            exit();
+            echo ("nom d'utilisateur ou mot de passe incorrect");
         }
     } 
 ?>
