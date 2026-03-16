@@ -8,12 +8,12 @@
     letter-spacing: 0px;
 }
 
-.intervention-column{
+.filter-column{
     display: flex;
     flex-direction: column ;
     width: 100%;
 }
-.intervention-row{
+.filter-row{
     display: flex;
     justify-content: space-evenly;
     flex-direction: row;
@@ -27,6 +27,7 @@
     border-radius: 10px;
     border: 1px solid gray;
 }
+
 .yellow-button{
     background-color: #FFBD01;
     border: none;
@@ -323,7 +324,7 @@ label {
 }
 
 form {
-    width: 680px;
+    width: 100%;
 }
 
 input,
@@ -332,7 +333,6 @@ select {
     border: 1px solid #DFE4EA;
     border-radius: 6px;
     margin-bottom: 10px;
-    width: 100%;
 }
 
 dialog {
