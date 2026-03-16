@@ -35,20 +35,12 @@
 
         <section class="titles-page">
             <div class="align">
-                <h3>Corps enseignant</h3>
-                <div class="button">
-                    <button command="show-modal" commandfor="dialog" class="blue-button">Ajouter un type</button>
-                </div>
+                <h3>Corps enseignant  (var)</h3>
             </div>
-
-            <form method="post" action="">
-                <h3 class="yellow">Filtres</h3>
-                <div class="intervention-row">
-                    <div class="intervention-column">
-                        <label name="name-filter">Nom</label>
-                        <input type="text" name="name-filter" placeholder="Saisissez le nom">
-                    </div>
-                    <button class="yellow-button">Filtrer</button>
+                <h3 class="yellow">Modules enseignés</h3>
+                <div class="">
+                    
+                    
                 </div>
             </form>
         </section>
