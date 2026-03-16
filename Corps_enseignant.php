@@ -18,14 +18,14 @@
         <div class="breadcrumb">
             <img src="assets/home.png" alt="">
             <p>></p>
-            <p>Calendrier</p>
+            <p>Corps Enseignant</p>
         </div>
 
         <section class="titles-page">
             <div class="align">
-                <h3>Calendrier</h3>
+                <h3>Corps Enseignant</h3>
                 <div class="button">
-                    <button command="show-modal" commandfor="dialog" class="blue-button">Ajouter une nouvelle intervention</button>
+                    <button command="show-modal" commandfor="dialog" class="blue-button">Ajouter un nouvel Enseignant</button>
                 </div>
 
                 <dialog id="dialog">
@@ -33,7 +33,7 @@
                     <div class="add-intervention">
                         <img src="assets/Frame.png" alt="">
                         <div>
-                            <h3>Ajouter une intervention</h3>
+                            <h3>Ajouter une Enseignant</h3>
                             <p>Remplissez les informations ci-dessous</p>
                         </div>
                     </div>
@@ -129,7 +129,7 @@
                 </div>
             </form>
 
-            <h4>Interventions de la semaine</h4>
+            <h4>Enseignements trouvés : </h4>
 
             <table class="table">
                 <tr class="columns">
@@ -140,40 +140,16 @@
                     <td></td>
                 </tr>
                 <?php
-                    $requete = $con->prepare("SELECT id, start_date, end_date, intervention_type_id, module_id, remotely FROM course");
+                    $requete = $con->prepare("SELECT * FROM user JOIN module");
                     $requete->execute();
                     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
 
                     foreach ($contenu as $valeurs=>$element) {
                         echo "<tr>";
-                        echo "<td>". $element["start_date"]. "</td>"; //Colonne Date de début. Il manque à mettre l'heure de fin
-
-                        $module_id = $element["module_id"];
-                        $requete = $con->prepare("SELECT name FROM module WHERE id = :module_id");
-                        $requete -> bindParam(':module_id', $module_id); 
-                        $requete->execute();
-                        $nom_module = $requete->fetch(\PDO::FETCH_ASSOC); // On va chercher le nom du module dans une autre table
-                        echo "<td>". $nom_module["name"] . "</td>";
-
-                        $type_intervention = $element["intervention_type_id"];
-                        $requete = $con->prepare("SELECT name FROM intervention_type WHERE id = :type_intervention");
-                        $requete -> bindParam(':type_intervention', $type_intervention);
-                        $requete->execute();
-                        $nom_intervention = $requete->fetch(\PDO::FETCH_ASSOC); //On va chercher le nom de l'intervention dans la table intervention_type
-                        echo "<td>". $nom_intervention["name"] ."</td>";
-
-                        $id = $element["id"];
-                        $requete = $con->prepare("SELECT upper(u.last_name), upper(u.first_name) FROM user u WHERE u.id IN (SELECT i.user_id FROM instructor i WHERE i.id in (SELECT c.instructor_id FROM course_instructor c WHERE c.course_id = :id))");
-                        $requete -> bindParam(':id', $id); 
-                        $requete->execute();
-                        $noms_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC); //On récupère les noms et les prénoms en majuscule
-                        echo "<td>";
-                        $temporaire = "";
-                        foreach ($noms_intervenants as $colonne=>$noms){
-                            $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
-                        }
-                        echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
-                        echo "</td>";
+                        echo "<td>". $element["last_name"]. "</td>"; 
+                        echo"<td>". $element["first_name"]. "</td>";
+                        echo"<td>". $element['name']. "</td>";
+                        echo"<td>". $element['hours_count']. "</td>";
 
                         ?><td class="table_align"><img src="assets/Oeil.png" alt="">
                         <a href="">Accéder à la fiche</a></td>
@@ -190,33 +166,3 @@
 </html>
 
 
-<?php
-var_dump("You can do it ! xd");
-var_dump(!empty($_POST['title']));
-var_dump(!empty($_POST['date-start']));
-var_dump(!empty($_POST['date-end']));
-var_dump(!empty($_POST['module']));
-var_dump(!empty($_POST['intervention']));
-var_dump(!empty($_POST['inter']));
-if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['intervention']) && !empty($_POST['inter'])){
-    var_dump("Déjà ça c'est fait");
-    $title = htmlspecialchars($_POST['title']);
-    $date_start = htmlspecialchars($_POST['date_start']);
-    $date_end = htmlspecialchars($_POST['date_end']);
-    $module = htmlspecialchars($_POST['module']);
-    $intervention = htmlspecialchars($_POST['intervention']);
-    $intervenants = htmlspecialchars($_POST['inter']); //Ne pas oublier : intervenants peut contenir plusieurs intervenants
-
-    $requete = $con->prepare('SELECT id INTO intervention_type WHERE name = :intervention');
-    $requete->bindParam(':intervention', $intervention);
-    $requete->execute();
-    $id_intervention = fetch(\PDO::FETCH_ASSOC);
-    var_dump($id_intervention);
-
-    $query = $con->prepare('INSERT INTO article (Titre, Description, Categorie) VALUES (:titre, :contenu, :categorie)');
-    $query->bindParam(':titre', $titre);
-    $query->bindParam(':contenu', $contenu);
-    $query->bindParam(':categorie', $categorie);
-    $query->execute();
-
-}
