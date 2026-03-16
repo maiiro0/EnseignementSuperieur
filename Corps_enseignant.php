@@ -140,7 +140,7 @@
                     <td></td>
                 </tr>
                 <?php
-                    $requete = $con->prepare("SELECT * FROM user JOIN module");
+                    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id");
                     $requete->execute();
                     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -148,7 +148,7 @@
                         echo "<tr>";
                         echo "<td>". $element["last_name"]. "</td>"; 
                         echo"<td>". $element["first_name"]. "</td>";
-                        echo"<td>". $element['name']. "</td>";
+                        echo"<td>". $element['module']. "</td>";
                         echo"<td>". $element['hours_count']. "</td>";
 
                         ?><td class="table_align"><img src="assets/Oeil.png" alt="">
