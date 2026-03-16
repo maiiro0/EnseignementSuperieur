@@ -42,38 +42,26 @@
 </html>
 
 <?php
-    // Démarre la session (stockée sur le serveur)
     session_start();
-    
-    require_once('connexion.php');
 
-    // Vérifie que les champs du formulaire sont remplis
-    if($_SERVER['REQUEST_METHOD'] ==+ 'POST ') {
-       
-        // On récupère les données dans des variables
-        $email = $_POST['email'];
-        $password = $_POST['password']; 
-       
-        //Je cherche si l'utilisateur possède bien cet email dans la base de donnée
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = htmlspecialchars($_POST['username']);
+    $typedPassword = ($_POST['password']);
 
-        $query = $pdo->prepare("SELECT * FROM utilisateurs WHERE email = ?"); 
-        $query->execute([$email]);
-        $user = $query->fetch();
-        
-         //Je vérifie si le mot de passe est bien attribué a cet utilisateur
+    $query = $con->prepare("SELECT username, password FROM utilisateurs WHERE username=:username");
+    $query->bindParam(':username', $username);
+    $query->execute();
 
-        if($user && password_verify($password, $user['email'])){ //remplacer mot_de_passe par le nom de la colonne sql
-            
-            // On stocke dans $_SESSION la connexion de l'utilisateur
+    $user = $query->fetch(PDO::FETCH_ASSOC);
+    // comparaison du username et password saisis avec ceux en BD
+    if ($user['username'] && password_verify($typedPassword, $user['password'])) {
+        $_SESSION['username'] = $username;
+        // redirection vers la page calendrier
+        header('Location: Calendrier.php');
+        exit();
+    } else {
+        echo "Problème de connexion";
+    }
+}
 
-            $_SESSION['user'] = $user['email']; 
-
-            // Redirige vers la page calendrier
-            header("Location: Calendrier.php");
-            exit();
-        } 
-        else {
-            echo ("nom d'utilisateur ou mot de passe incorrect");
-        }
-    } 
 ?>
