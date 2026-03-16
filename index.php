@@ -42,6 +42,8 @@
 </html>
 
 <?php
+    session_start();
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = htmlspecialchars($_POST['username']);
     $typedPassword = ($_POST['password']);
@@ -54,7 +56,7 @@
     // comparaison du username et password saisis avec ceux en BD
     if ($user['username'] && password_verify($typedPassword, $user['password'])) {
         $_SESSION['username'] = $username;
-        // redirection vers la page de suppression
+        // redirection vers la page calendrier
         header('Location: Calendrier.php');
         exit();
     } else {
