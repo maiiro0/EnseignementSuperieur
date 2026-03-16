@@ -11,11 +11,11 @@
 .intervention-column{
     display: flex;
     flex-direction: column ;
-    width: 100%;
+    width: 278px;
 }
 .intervention-row{
     display: flex;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     flex-direction: row;
     gap: 20px;
     align-items: flex-end;
@@ -23,21 +23,24 @@
     padding-bottom: 20px;
 }
 .intervention-column input, select{
-    padding: 12px 16px 12px 20px;
+    padding: 12px 0px 12px 12px;
     border-radius: 10px;
-    border: 1px solid gray;
+    border: 1px solid #DFE4EA;
+    margin-bottom: 0;
 }
 .yellow-button{
     background-color: #FFBD01;
     border: none;
     border-radius: 10px;
-    width: 270px;
+    width: 153px;
     padding: 14px 20px;
     cursor: pointer;
 }
 .yellow-border{
     border-bottom: 2px solid #FFBD01;
     width: 100%;
+}
+
 p, h3 {
     margin: 0;
 }
@@ -93,8 +96,12 @@ body {
     font-family: Poppins;
 }
 
+.intervention-type {
+    padding: 0px 45px 45px 45px;
+    font-family: Poppins;
+}
+
 .titles-page h3 {
-    color :#1F384C;
     font-size: 26px;
     font-weight: 500;
     margin: 20px 0px;

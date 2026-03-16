@@ -15,7 +15,6 @@ $active = "calendrier";
 </head>
 
 <body>
-
     <div class="lateral-menu">
         <div class="logo-menu">
             <img src="assets/logo1.png">
