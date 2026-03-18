@@ -11,7 +11,6 @@
 </head>
 <body>
     <nav>
-        // en cours par Chloé
     </nav>
 
     <section class="calendar">
