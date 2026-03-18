@@ -161,6 +161,7 @@ table {
 .columns {
     background-color: #F1F2F7;
 }
+
 *{
     box-sizing: 0;
 }
@@ -450,4 +451,14 @@ select option:first {
 .page-content{
     flex:1;
     padding:40px;
+}
+
+.red-button {
+    padding: 10px 20px;
+    background-color: red;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    display: inline-block;
+    border: unset;
 }
