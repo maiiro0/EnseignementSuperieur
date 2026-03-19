@@ -55,8 +55,11 @@ $active = "calendrier";
                 <div class="user-menu">
                     <img src="assets/image1.png" class="avatar-menu">
                     <div>
-                        <div class="name-menu">Stella Ribas</div>
-                        <div class="menu-role">Administrateur</div>
+                        <div class="flex">
+                            <p class="name-menu">Stella Ribas</p>
+                            <img src="assets/chevron-down.png" alt="">
+                        </div>
+                        <p class="menu-role">Administrateur</p>
                     </div>
                 </div>
             </div>

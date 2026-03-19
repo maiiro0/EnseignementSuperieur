@@ -358,6 +358,7 @@ select option:first {
     box-sizing:border-box;
     display:flex;
     flex-direction:column;
+    font-family: 'Poppins';
 }
 
 .logo-menu{
@@ -460,4 +461,9 @@ select option:first {
     border-radius: 5px;
     display: inline-block;
     border: unset;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
 }
