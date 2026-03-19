@@ -64,7 +64,7 @@
 
                     if (!empty($_POST["name-filter"])){
                         $filtre = $_POST["name-filter"];
-                        $requete = $con->prepare("SELECT name, description, color FROM intervention_type WHERE name=:filtre");
+                        $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type WHERE name=:filtre");
                         $requete->bindParam(':filtre', $filtre);
                         $requete->execute();
                         $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
@@ -76,14 +76,13 @@
                         <td style="color:<?php echo $element["color"]?>"><?php echo $element["color"] ?></td>
 
                         <td class="table_align"><img src="assets/Oeil.png" alt="">
-                        <a href="">Accéder à la fiche</a></td>
-                        <?php
-                        echo "</tr>";
+                        <a href="Fiche_intervention.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td>
+                        </tr><?php
                         }
                     }
 
                     else {
-                        $requete = $con->prepare("SELECT name, description, color FROM intervention_type");
+                        $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type");
                         $requete->execute();
                         $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -94,7 +93,7 @@
                             <td style="color:<?php echo $element["color"]?>"><?php echo $element["color"] ?></td>
 
                             <td class="table_align"><img src="assets/Oeil.png" alt="">
-                            <a href="">Accéder à la fiche</a></td>
+                            <a href="Fiche_intervention.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td>
                             <?php
                             echo "</tr>";
                         }
