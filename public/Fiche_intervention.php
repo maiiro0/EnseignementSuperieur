@@ -63,6 +63,18 @@
                 <label for="" name="description" require>Description - champ obligatoire</label>
                 <input type="text" name="description" value="<?php echo $contenu['description']?>">
             </div>
+        </div>
+        <div>
+            <label for="" name="description" require>Description - champ obligatoire</label>
+            <input type="text" name="description" value="<?php echo $contenu['description']?>">
+        </div>
+
+        <button action="Type_intervention.php" class="grey-button selection">Retour à la liste</button>
+        <button type="submit" class="red-button selection" value="remove">Supprimer</button>
+        <button type="submit" class="blue-button selection" value="add">Enregistrer les informations</button>
+    </form>
+
+
 
             <div class="button-intervention">
                 <a href="Type_intervention.php" class="grey-button selection">Retour à la liste</a>
@@ -76,15 +88,24 @@
 
 
 <?php
-if ((!empty($_POST['name'])) && !empty($_POST['color']) && !empty($_POST['description'])) {
-    $name = htmlspecialchars($_POST['name']);
-    $color = htmlspecialchars($_POST['color']);
-    $description = htmlspecialchars($_POST['description']);
+if ($_SERVER['REQUEST_METHOD'] === "POST"){
+    if ($_POST['action'] === 'remove') {
+        $requete = $con->prepare("DELETE FROM intervention_type WHERE id = :id");
+        $requete -> bindParam('id', $id);
+    }
 
-    $requete = $con->prepare("UPDATE intervention_type SET name = :name, color = :color, description = :description WHERE id=:id");
-    $requete->bindParam(':id', $id);
-    $requete->bindParam(':name', $name);
-    $requete->bindParam(':color', $color);
-    $requete->bindParam(':description', $description);
-    $requete->execute();
+    elseif ($_POST['action'] === 'add'){
+        if ((!empty($_POST['name'])) && !empty($_POST['color']) && !empty($_POST['description'])) {
+            $name = htmlspecialchars($_POST['name']);
+            $color = htmlspecialchars($_POST['color']);
+            $description = htmlspecialchars($_POST['description']);
+
+            $requete = $con->prepare("UPDATE intervention_type SET name = :name, color = :color, description = :description WHERE id=:id");
+            $requete->bindParam(':id', $id);
+            $requete->bindParam(':name', $name);
+            $requete->bindParam(':color', $color);
+            $requete->bindParam(':description', $description);
+            $requete->execute();
+        }
+    }
 }
