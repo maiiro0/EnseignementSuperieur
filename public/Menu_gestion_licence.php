@@ -63,10 +63,6 @@ $active = "calendrier";
                     </div>
                 </div>
             </div>
-            <div class="page-content">
-                <h1>Page exemple</h1>
-                <p>Contenu de la page ici.</p>
-            </div>
         </div>
     </div>
 </body>
