@@ -23,7 +23,7 @@
 </head>
 <body>
     <nav>
-        // en cours par Chloé
+        <?php require_once('Menu_gestion_licence.php'); ?>
     </nav>
 
     <section class="intervention-type">

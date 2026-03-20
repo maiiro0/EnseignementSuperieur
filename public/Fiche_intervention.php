@@ -45,31 +45,31 @@
         $contenu = $contenu[0];
     }
     ?>
-
-    <h3>Cours</h3>
-    <form action="" method="post">
-        <div class="form-align">
-            <div>
-                <label for="" name="name" require>Nom - champ obligatoire</label>
-                <input type="text" name="name" value="<?php echo $contenu['name']?>">
+    
+    <section class="intervention_sheet">
+        <h3>Cours</h3>
+        <form action="" method="post">
+            <div class="form-align">
+                <div>
+                    <label for="" name="name" require>Nom - champ obligatoire</label>
+                    <input type="text" name="name" value="<?php echo $contenu['name']?>">
+                </div>
+                <div>
+                    <label for="" name="color" require>Code couleur (hexadécimal) - champ obligatoire</label>
+                    <input type="text" name="color" value="<?php echo $contenu['color']?>">
+                </div>
             </div>
             <div>
-                <label for="" name="color" require>Code couleur (hexadécimal) - champ obligatoire</label>
-                <input type="text" name="color" value="<?php echo $contenu['color']?>">
+                <label for="" name="description" require>Description - champ obligatoire</label>
+                <input type="text" name="description" value="<?php echo $contenu['description']?>">
             </div>
-        </div>
-        <div>
-            <label for="" name="description" require>Description - champ obligatoire</label>
-            <input type="text" name="description" value="<?php echo $contenu['description']?>">
-        </div>
 
-        <button action="Type_intervention.php" class="grey-button selection">Retour à la liste</button>
-        <button class="red-button selection">Supprimer</button>
-        <button type="submit" class="blue-button selection">Enregistrer les informations</button>
-    </form>
-
-
-
+            <div class="button-intervention">
+                <a href="Type_intervention.php" class="grey-button selection">Retour à la liste</a>
+                <button class="red-button selection">Supprimer</button>
+                <button type="submit" class="blue-button selection">Enregistrer les informations</button>
+            </div>
+        </form>
     </section>
 </body>
 </html>
