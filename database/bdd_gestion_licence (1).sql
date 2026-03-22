@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mar. 10 mars 2026 à 21:56
+-- Généré le : mer. 11 mars 2026 à 12:24
 -- Version du serveur : 9.1.0
 -- Version de PHP : 8.3.14
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `bdd_gestion_licence`
 --
+CREATE DATABASE IF NOT EXISTS `bdd_gestion_licence` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `bdd_gestion_licence`;
 
 -- --------------------------------------------------------
 
@@ -39,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `course` (
   PRIMARY KEY (`id`),
   KEY `id_course_module` (`module_id`),
   KEY `id_intervention` (`intervention_type_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `course`
@@ -71,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `course_instructor` (
   `instructor_id` int NOT NULL,
   PRIMARY KEY (`course_id`,`instructor_id`),
   KEY `id_course_instructor` (`instructor_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `course_instructor`
@@ -103,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `instructor` (
   `user_id` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `instructor`
@@ -135,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `instructor_module` (
   `module_id` int NOT NULL,
   PRIMARY KEY (`instructor_id`,`module_id`),
   KEY `id_module` (`module_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `instructor_module`
@@ -168,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `intervention_type` (
   `description` text NOT NULL,
   `color` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `intervention_type`
@@ -205,7 +207,7 @@ CREATE TABLE IF NOT EXISTS `module` (
   `capstone_project` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `parent_id` (`parent_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `module`
@@ -240,7 +242,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `first_name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `user`

@@ -29,6 +29,11 @@
     margin-bottom: 0;
 }
 
+.intervention-column {
+    display: flex;
+    flex-direction: column;
+}
+
 .yellow-button{
     background-color: #FFBD01;
     border: none;
@@ -36,6 +41,7 @@
     width: 153px;
     padding: 14px 20px;
     cursor: pointer;
+    height: 44px;
 }
 .yellow-border{
     border-bottom: 2px solid #FFBD01;
@@ -78,7 +84,6 @@ nav {
     align-items: center;
     gap: 10px;
     border-bottom: 1px solid #C8CBD9;
-    width: 86vw;
 }
 
 .breadcrumb img {
@@ -99,6 +104,7 @@ body {
 .intervention-type {
     padding: 0px 45px 45px 45px;
     font-family: Poppins;
+    width: 100%;
 }
 
 .titles-page h3 {
@@ -319,10 +325,6 @@ label {
 
 }
 
-.form-align div {
-    width: 330px;
-}
-
 .form-align div input,
 .form-align div select {
     width: 330px;
@@ -358,6 +360,7 @@ select option:first {
     box-sizing:border-box;
     display:flex;
     flex-direction:column;
+    font-family: 'Poppins';
 }
 
 .logo-menu{
@@ -460,6 +463,65 @@ select option:first {
     border-radius: 5px;
     display: inline-block;
     border: unset;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+}
+
+.intervention-row {
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px solid #FFBD01;
+    padding-bottom: 10px;
+    align-items: flex-end;
+}
+
+.intervention_sheet {
+    width: 850px;
+}
+
+.button-intervention {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+button {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+}
+
+.intervention_sheet h3 {
+    color: #1F384C;
+    font-size: 26px;
+    font-weight: 500;
+    margin-top: 7px;
+}
+
+.button-form {
+    margin-top: 35px;
+}
+
+.input_desc {
+    height: 40px;
+}
+
+.desc_form_update {
+    display: flex;
+    flex-direction: column;
+}
+
+.teaching_staff {
+    padding: 0px 45px 45px 45px;
+    font-family: Poppins;
 }
 
 
