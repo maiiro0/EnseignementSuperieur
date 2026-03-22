@@ -52,6 +52,16 @@
                 </div>
             </form>
 
+            <?php
+            require_once 'connexion.php';
+
+            $requete = $con->prepare("SELECT count(id) FROM intervention_type");
+            $requete -> execute();
+            $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+            $contenu=(int)$contenu[0]["count(id)"];
+            echo "<h4>".$contenu." types</h4>";
+            ?>
+
             <table class="table">
                 <tr class="columns">
                     <td>Nom</td>
@@ -60,8 +70,6 @@
                     <td></td>
                 </tr>
                 <?php
-                    require_once 'connexion.php';
-
                     if (!empty($_POST["name-filter"])){
                         $filtre = $_POST["name-filter"];
                         $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type WHERE name=:filtre");

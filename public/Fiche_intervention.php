@@ -23,7 +23,7 @@
 </head>
 <body>
     <nav>
-        // en cours par Chloé
+        <?php require_once('Menu_gestion_licence.php'); ?>
     </nav>
 
     <section class="intervention-type">
@@ -59,53 +59,84 @@
                     <input type="text" name="color" value="<?php echo $contenu['color']?>">
                 </div>
             </div>
-            <div>
+            <div class="desc_form_update">
                 <label for="" name="description" require>Description - champ obligatoire</label>
-                <input type="text" name="description" value="<?php echo $contenu['description']?>">
+                <input class="input_desc" type="text" name="description" value="<?php echo $contenu['description']?>">
             </div>
-        </div>
-        <div>
-            <label for="" name="description" require>Description - champ obligatoire</label>
-            <input type="text" name="description" value="<?php echo $contenu['description']?>">
-        </div>
-
-        <button action="Type_intervention.php" class="grey-button selection">Retour à la liste</button>
-        <button type="submit" class="red-button selection" value="remove">Supprimer</button>
-        <button type="submit" class="blue-button selection" value="add">Enregistrer les informations</button>
-    </form>
-
-
 
             <div class="button-intervention">
                 <a href="Type_intervention.php" class="grey-button selection">Retour à la liste</a>
-                <button class="red-button selection">Supprimer</button>
-                <button type="submit" class="blue-button selection">Enregistrer les informations</button>
             </div>
         </form>
+
+        <button command="show-modal" commandfor="dialog" class="red-button selection">Supprimer</button>
+        <dialog id="dialog">
+            <button commandfor="dialog" command="close" class="invisible-button"><img src="assets/Frame 1041.png" alt="" id="quit"></button>
+            <div class="add-intervention">
+                <img src="assets/Croix.png" alt="">
+                <div>
+                    <h3>Supprimer le type d'intervention</h3>
+                    <p>Confirmation de l'action</p>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <p>Vous vous apprêtez à supprimer le type d'intervention,</p>
+                    <p>cette action est irrévoquable.</p>
+                    <p>A noter qu'aucune intervention de doit être liée à ce module pour pouvoir le supprimer.</p>
+                    <br>
+                    <p>Confirmez-vous l'action ?</p>
+                </div>
+                <form method="POST" action="">
+                    <input type="hidden" name="pass">
+                    <div class="button-form">
+                        <button class="grey-button selection" commandfor="dialog" command="close">Annuler</button>
+                        <button class="red-button selection" type="submit" name="action" value="confirm-delete">Confirmer</button>  
+                    </div>
+                </form>
+            </div>
+        </dialog>
+        <button type="submit" class="blue-button selection">Enregistrer les informations</button>
     </section>
 </body>
 </html>
 
 
 <?php
-if ($_SERVER['REQUEST_METHOD'] === "POST"){
-    if ($_POST['action'] === 'remove') {
-        $requete = $con->prepare("DELETE FROM intervention_type WHERE id = :id");
-        $requete -> bindParam('id', $id);
+if (isset($_POST['action']) && $_POST['action'] === 'confirm-delete') {
+    $requete = $con->prepare("SELECT id FROM course WHERE intervention_type_id = :id");
+    $requete->bindParam(':id', $id);
+    $requete->execute();
+    $multi_id = $requete->fetchAll(\PDO::FETCH_ASSOC);
+
+    foreach ($multi_id as $valeurs){
+        $requete = $con->prepare("DELETE FROM course_instructor WHERE course_id = :multi_id");
+        $requete->bindParam(':multi_id', $valeurs["id"]);
+        $requete->execute();
     }
 
-    elseif ($_POST['action'] === 'add'){
-        if ((!empty($_POST['name'])) && !empty($_POST['color']) && !empty($_POST['description'])) {
-            $name = htmlspecialchars($_POST['name']);
-            $color = htmlspecialchars($_POST['color']);
-            $description = htmlspecialchars($_POST['description']);
+    $requete = $con->prepare("DELETE FROM course WHERE intervention_type_id = :id");
+    $requete->bindParam(':id', $id);
+    $requete->execute();
 
-            $requete = $con->prepare("UPDATE intervention_type SET name = :name, color = :color, description = :description WHERE id=:id");
-            $requete->bindParam(':id', $id);
-            $requete->bindParam(':name', $name);
-            $requete->bindParam(':color', $color);
-            $requete->bindParam(':description', $description);
-            $requete->execute();
-        }
-    }
+    $requete = $con->prepare("DELETE FROM intervention_type WHERE id = :id");
+    var_dump('Oui');
+    $requete->bindParam(':id', $id);
+    $requete->execute();
 }
+
+
+
+if ((!empty($_POST['name'])) && !empty($_POST['color']) && !empty($_POST['description'])) {
+    $name = htmlspecialchars($_POST['name']);
+    $color = htmlspecialchars($_POST['color']);
+    $description = htmlspecialchars($_POST['description']);
+
+    $requete = $con->prepare("UPDATE intervention_type SET name = :name, color = :color, description = :description WHERE id=:id");
+    $requete->bindParam(':id', $id);
+    $requete->bindParam(':name', $name);
+    $requete->bindParam(':color', $color);
+    $requete->bindParam(':description', $description);
+    $requete->execute();
+}
+
