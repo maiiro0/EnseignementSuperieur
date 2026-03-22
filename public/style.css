@@ -518,3 +518,8 @@ a {
     display: flex;
     flex-direction: column;
 }
+
+.teaching_staff {
+    padding: 0px 45px 45px 45px;
+    font-family: Poppins;
+}
