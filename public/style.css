@@ -461,8 +461,6 @@ select option:first {
     display: inline-block;
     border: unset;
 }
-<<<<<<< Updated upstream
-=======
 
 .flex {
     display: flex;
@@ -522,4 +520,3 @@ a {
     padding: 0px 45px 45px 45px;
     font-family: Poppins;
 }
->>>>>>> Stashed changes
