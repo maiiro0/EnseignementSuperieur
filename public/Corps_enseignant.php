@@ -4,16 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendrier</title>
+<<<<<<< Updated upstream
     <link rel="stylesheet" href="enseignants.CSS">
+=======
+    <link rel="stylesheet" href="style.css">
+>>>>>>> Stashed changes
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav>
+        <?php require_once('Menu_gestion_licence.php'); ?>
     </nav>
 
-    <section class="calendar">
+    <section class="teaching_staff">
         <div class="breadcrumb">
             <img src="assets/home.png" alt="">
             <p>></p>
@@ -109,20 +114,20 @@
 
             </div>
 
-            <form>
+            <form method="post" action="">
                 <h3 class="yellow">Filtre</h3>
                 <div class="filter-row">
                     <div class="filter-column">
-                        <label>Nom de famille</label>
-                        <input type="text" name="firs_name" placeholder="Saisissez le nom de famille">
+                        <label name="last_name">Nom de famille</label>
+                        <input type="text" name="last_name" placeholder="Saisissez le nom de famille">
                     </div>
                     <div class="filter-column">
-                        <label>Prénom</label>
-                        <input type="text" name="last_name" placeholder="Saisissez le prénom">
+                        <label name="first_name">Prénom</label>
+                        <input type="text" name="first_name" placeholder="Saisissez le prénom">
                     </div>
                     <div class="filter-column">
-                        <label>Email</label>
-                        <input type="email" name="Email">
+                        <label name="email">Email</label>
+                        <input type="email" name="email">
                     </div>
                     <button class="yellow-button">Filtrer</button>
                 </div>
@@ -139,6 +144,32 @@
                     <td></td>
                 </tr>
                 <?php
+                if (!empty($_POST["first_name"] && !empty($_POST["last_name"]) && !empty($_POST["email"]))){
+                    $filtre_prenom = $_POST["first_name"];
+                    $filtre_nom = $_POST["last_name"];
+                    $filtre_email = $_POST["email"];
+
+                    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name = :first_name AND u.last_name = :last_name AND u.email = :email");
+                    $requete->bindParam(':first_name', $filtre_prenom);
+                    $requete->bindParam(':last_name', $filtre_nom);
+                    $requete->bindParam(':email', $filtre_email);
+                    $requete->execute();
+                    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+
+                    echo "<tr>";
+                    echo "<td>". $contenu[0]["last_name"]. "</td>"; 
+                    echo"<td>". $contenu[0]["first_name"]. "</td>";
+                    echo"<td>". $contenu[0]['module']. "</td>";
+                    echo"<td>". $contenu[0]['hours_count']. "</td>";
+
+                    ?><td class="table_align"><img src="assets/Oeil.png" alt="">
+                    <a href="">Accéder à la fiche</a></td>
+                    <?php
+
+                    echo "</tr>";
+                } 
+
+                else {
                     $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id");
                     $requete->execute();
                     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
@@ -156,6 +187,7 @@
 
                         echo "</tr>";
                     }
+                }
                 ?>
 
             </table>
