@@ -461,3 +461,111 @@ select option:first {
     display: inline-block;
     border: unset;
 }
+
+
+
+/*teacher information part */
+
+.teacher-information{
+    padding: 0px 45px 45px 45px;
+    font-family: Poppins;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+
+.teacher-information h3{
+    font-size: 26px;
+    font-weight: 500;
+}
+
+.margin-null{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.yellow-title{
+    color: #FFBD01;
+    font-family: Poppins;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 23px;
+    line-height: 24px;
+    letter-spacing: 0px;
+    margin-top: 5px;
+}
+
+.information-part{
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    gap: 10px;
+    font-weight: 500;
+    border-bottom: #FFBD01 2px solid;
+}
+
+.padding-5{
+    padding-right: 6px;
+}
+
+.form-part{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.link-part{
+    height: 45px;
+    display: flex;
+    gap: 3px;
+}
+
+.link-part a{
+    text-decoration: none;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 17px;
+    padding-right: 17px;
+    border-radius: 10px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+.link-unselected{
+    color: #000000;
+    border: #DDDDDD solid 1px;
+}
+
+
+.link-select{
+    color: white;
+    background-color: #2C416E;
+}
+
+.teacher-information-form{
+    margin-top: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-gap{
+    display: flex;
+    gap: 30px;
+}
+
+.form-input{
+    width: 330px;
+}
+
+.select-multiple{
+    width: 1052px;
+}
+
+.modification-button{
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    text-align: center;
+}

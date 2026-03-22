@@ -34,7 +34,7 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
     <nav>
         <?php include_once 'Menu_gestion_licence.php' ?>
     </nav>
-    <section class="intervention-type">
+    <section class="teacher-information">
         <div class="breadcrumb">  
             <img src="assets/home.png" alt="">
             <p>></p>
@@ -46,13 +46,13 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
             <p>Informations générales</p>
         </div>
 
-        <section class="titles-page">
-            <div class="align">
-                <h3><span><?php echo $infos["first_name"] ?></span>
+        <section>
+            <div class="align margin-null">
+                <h3 class="margin-null"><span><?php echo $infos["first_name"] ?></span>
                 <span><?php echo $infos["last_name"] ?></span></h3>
             </div>
-            <h3 class="yellow">Modules enseignés</h3>
-            <div class="">
+            <p class="yellow-title">Modules enseignés</p>
+            <div class="information-part">
             <?php
                 $requete = $con->prepare("SELECT m.name, m.hours_count FROM instructor_module im JOIN module m ON im.module_id = m.id  WHERE im.instructor_id= $id ");
                 $requete->execute();
@@ -60,8 +60,9 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
 
                 foreach ($contenu as $colonne => $element) {
                     echo"<p>";
-                    echo "<span>". $element["name"]. "</span>"; 
-                    echo"<span>". " : ". "</span>";
+                    echo "<span>". $element["name"]. "</span>"; ?>
+                    <span class="padding-5">:</span>
+                    <?php
                     echo"<span>". $element['hours_count']. "</span>";
                     echo"<span>"."h00". "</span>" ;
                     echo"</p>";
@@ -69,43 +70,44 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
             ?>  
             </div>
         </section>
-        <section>
-            <div>
-                <a href="">Informations générales</a>
-                <a href="">Interventions</a>
+        <section class="form-part">
+            <div class="link-part">
+                <a href="" class="link-select">Informations générales</a>
+                <a href=""  class="link-unselected">Interventions</a>
             </div>
             <div>
-                <h3 class="yellow">Informations générales</h3>
+                <p class="yellow-title">Informations générales</p>
             </div>
-            <form action="" method="post">
-                <div class="form-align">
+            <form action="" method="post" class= "teacher-information-form">
+                <div class="form-gap">
                     <div>
                         <label for="last_name">Nom de famille - champ obligatoire</label> </br>
-                        <input type="text" placeholder=" <?php echo $infos["last_name"] ?>" name="last_name" id="last_name"></br>
+                        <input class="form-input" type="text" placeholder=" <?php echo $infos["last_name"] ?>" name="last_name" id="last_name"></br>
                     </div>
                     <div>
                         <label for="first_name">Prénom - champ obligatoire</label> </br>
-                        <input type="text" placeholder=" <?php echo $infos["first_name"] ?>" name="first_name" id="first_name"></br>
+                        <input class="form-input" type="text" placeholder=" <?php echo $infos["first_name"] ?>" name="first_name" id="first_name"></br>
                     </div>
                     <div>
                         <label for="email">Email - champ obligatoire</label> </br>
-                        <input type="text" placeholder=" <?php echo $infos["email"] ?>" name="email" id="email"></br>
+                        <input class="form-input" type="text" placeholder=" <?php echo $infos["email"] ?>" name="email" id="email"></br>
                     </div>   
                 </div>
-
-                <label for="name">Modules enseignés - champ obligatoire</label></br>
-                <select name="name[]" id="name" multiple>
-                        <?php
-                            $requete = $con->prepare("SELECT m.name FROM  module m;");
-                            $requete->execute();
-                            $nom_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC);
-                            foreach ($nom_intervenants as $valeurs=>$element) { 
-                                echo "<option>". $element["name"]."</option>";
-                            }
-                        ?>
-                </select></br>
-                <div class="select-button">
-                    <button type="submit" class="blue-button selection">Enregistrer les informations</button>
+                <div>
+                    <label for="name">Modules enseignés - champ obligatoire</label>
+                    <select name="name[]" id="name" multiple class="select-multiple">
+                            <?php
+                                $requete = $con->prepare("SELECT m.name FROM  module m;");
+                                $requete->execute();
+                                $nom_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                foreach ($nom_intervenants as $valeurs=>$element) { 
+                                    echo "<option>". $element["name"]."</option>";
+                                }
+                            ?>
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" class="blue-button modification-button">Enregistrer les informations</button>
                 </div>
             </form>
         </section>
