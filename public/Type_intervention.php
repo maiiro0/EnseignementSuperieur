@@ -36,9 +36,7 @@
         <section class="titles-page">
             <div class="align">
                 <h3>Types intervention</h3>
-                <div class="button">
-                    <button command="show-modal" commandfor="dialog" class="blue-button">Ajouter un type</button>
-                </div>
+                <a href="Ajout_intervention.php" class="blue-button">Ajouter un type</a>
             </div>
 
             <form method="post" action="">

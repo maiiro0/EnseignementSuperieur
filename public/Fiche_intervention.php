@@ -126,7 +126,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'confirm-delete') {
 }
 
 
-
 if ((!empty($_POST['name'])) && !empty($_POST['color']) && !empty($_POST['description'])) {
     $name = htmlspecialchars($_POST['name']);
     $color = htmlspecialchars($_POST['color']);
@@ -139,4 +138,3 @@ if ((!empty($_POST['name'])) && !empty($_POST['color']) && !empty($_POST['descri
     $requete->bindParam(':description', $description);
     $requete->execute();
 }
-
