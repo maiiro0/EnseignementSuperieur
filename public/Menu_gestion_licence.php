@@ -1,4 +1,5 @@
 <?php 
+session_start();
 $active = "calendrier";
 ?>
 
@@ -52,14 +53,30 @@ $active = "calendrier";
                     Types d’intervention
                     </a>
                 </div>
+                    
                 <div class="user-menu">
                     <img src="assets/image1.png" class="avatar-menu">
                     <div>
-                        <div class="flex">
+                        <div class="flex">       
                             <p class="name-menu">Stella Ribas</p>
-                            <img src="assets/chevron-down.png" alt="">
+                            <a href="#dialog"><img src="assets/chevron-down.png" alt="" style="cursor: pointer;"></a>
                         </div>
                         <p class="menu-role">Administrateur</p>
+                    </div>
+                </div>
+                <div class="modal-deco" id="dialog">
+                    <div class="modal-content">
+                        <a style="cursor-pointer" href="Menu_gestion_licence.php">Annuler</a>
+                        <form action="#" method="get">
+                            <input  class="red-button" type="submit" name="deconnexion" value="Déconnexion">
+                        </form> 
+                        <?php
+                            if(isset($_GET['deconnexion'])) {
+                                session_destroy();
+                                header("Location: index.php");
+                                exit();
+                            }
+                        ?>
                     </div>
                 </div>
             </div>
