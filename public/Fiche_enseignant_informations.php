@@ -94,7 +94,7 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
                     </div>   
                 </div>
                 <div>
-                    <label for="name">Modules enseignés - champ obligatoire</label>
+                    <label for="name">Modules enseignés - champ obligatoire</label><br>
                     <select name="name[]" id="name" multiple class="select-multiple">
                             <?php
                                 $requete = $con->prepare("SELECT m.name FROM  module m;");
@@ -129,16 +129,17 @@ if ((!empty($_POST['last_name'])) && !empty($_POST['first_name']) && !empty($_PO
 
     if(!empty($_POST['name'])){
         $name = $_POST['name'];
-
         $requete = $con->prepare("DELETE FROM instructor_module im  WHERE im.instructor_id=$id");
         $requete->execute();
     
         foreach ($name as $colonne => $element) {
+            var_dump( $element);
             $requete = $con->prepare("SELECT m.id FROM module m  WHERE m.name= $element");
             $requete->execute();
-            $module_id = $requete->fetchColumn();
+            $module_id = $requete->fetch(PDO::FETCH_ASSOC);
+            var_dump($module_id);
 
-            $requete = $con->prepare("INSERT INTO instructor_module VALUES ($id ,$module_id)" );
+            $requete = $con->prepare("INSERT INTO instructor_module VALUES ($id ,$module_id)");
             $requete->execute();
         }
 
