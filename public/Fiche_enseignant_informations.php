@@ -34,7 +34,7 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
     <nav>
         <?php include_once 'Menu_gestion_licence.php' ?>
     </nav>
-    <section class="teacher-information">
+    <section class="teacher-information page">
         <div class="breadcrumb">  
             <img src="assets/home.png" alt="">
             <p>></p>
@@ -102,7 +102,7 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
                                 $requete->execute();
                                 $nom_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC);
                                 foreach ($nom_intervenants as $valeurs=>$element) { 
-                                    echo "<option>". $element["name"]."</option>";
+                                    echo "<option selected>". $element["name"]."</option>";
                                 }
                             ?>
                     </select>
