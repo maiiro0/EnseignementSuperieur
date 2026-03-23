@@ -129,17 +129,20 @@ if ((!empty($_POST['last_name'])) && !empty($_POST['first_name']) && !empty($_PO
 
     if(!empty($_POST['name'])){
         $name = $_POST['name'];
-        $requete = $con->prepare("DELETE FROM instructor_module im  WHERE im.instructor_id=$id");
+        $requete = $con->prepare("DELETE FROM instructor_module WHERE instructor_id = :id");
+        $requete->bindParam(':id', $id);
         $requete->execute();
     
         foreach ($name as $colonne => $element) {
             var_dump( $element);
-            $requete = $con->prepare("SELECT m.id FROM module m  WHERE m.name= $element");
+            $requete = $con->prepare("SELECT id FROM module WHERE name = :element");
+            $requete->bindParam(':element', $element);
             $requete->execute();
             $module_id = $requete->fetch(PDO::FETCH_ASSOC);
-            var_dump($module_id);
 
-            $requete = $con->prepare("INSERT INTO instructor_module VALUES ($id ,$module_id)");
+            $requete = $con->prepare("INSERT INTO instructor_module VALUES (:id ,:module_id)");
+            $requete->bindParam(':id', $id);
+            $requete->bindParam(':module_id', $module_id['id']);
             $requete->execute();
         }
 
