@@ -66,7 +66,7 @@ $active = "calendrier";
                 </div>
                 <div class="modal-deco" id="dialog">
                     <div class="modal-content">
-                        <a style="cursor-pointer" href="Menu_gestion_licence.php">Annuler</a>
+                        <a style="cursor-pointer" href="#">Annuler</a>
                         <form action="#" method="get">
                             <input  class="red-button" type="submit" name="deconnexion" value="Déconnexion">
                         </form> 
