@@ -134,7 +134,6 @@ if ((!empty($_POST['last_name'])) && !empty($_POST['first_name']) && !empty($_PO
         $requete->execute();
     
         foreach ($name as $colonne => $element) {
-            var_dump( $element);
             $requete = $con->prepare("SELECT id FROM module WHERE name = :element");
             $requete->bindParam(':element', $element);
             $requete->execute();
