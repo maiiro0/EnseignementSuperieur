@@ -11,7 +11,7 @@ if (isset($_GET['id'])) {
     $infos = $requete ->fetchAll(\PDO::FETCH_ASSOC);
 }
 */
-$id =1;
+$id =11;
 $requete = $con->prepare("SELECT email, last_name, first_name FROM user WHERE id=:id");
 $requete->bindParam(':id', $id);
 $requete->execute();
@@ -54,7 +54,8 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
             <p class="yellow-title">Modules enseignés</p>
             <div class="information-part">
             <?php
-                $requete = $con->prepare("SELECT m.name, m.hours_count FROM instructor_module im JOIN module m ON im.module_id = m.id  WHERE im.instructor_id= $id ");
+                $requete = $con->prepare("SELECT m.name, m.hours_count FROM instructor_module im JOIN module m ON im.module_id = m.id  WHERE im.instructor_id= :id ");
+                $requete->bindParam(':id', $id);
                 $requete->execute();
                 $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -121,10 +122,11 @@ if ((!empty($_POST['last_name'])) && !empty($_POST['first_name']) && !empty($_PO
     $first_name = htmlspecialchars($_POST['first_name']);
     $email = htmlspecialchars($_POST['email']);
 
-    $requete = $con->prepare("UPDATE user SET last_name = :last_name, first_name = :first_name, email = :email WHERE id=$id");
+    $requete = $con->prepare("UPDATE user SET last_name = :last_name, first_name = :first_name, email = :email WHERE id=:id");
     $requete->bindParam(':last_name', $last_name);
     $requete->bindParam(':first_name', $first_name);
     $requete->bindParam(':email', $email);
+    $requete->bindParam(':id', $id);
     $requete->execute();
 
     if(!empty($_POST['name'])){
