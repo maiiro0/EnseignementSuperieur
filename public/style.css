@@ -84,6 +84,7 @@ nav {
     align-items: center;
     gap: 10px;
     border-bottom: 1px solid #C8CBD9;
+    background-color: white;
 }
 
 .breadcrumb img {
@@ -328,7 +329,7 @@ label {
 .form-align div input,
 .form-align div select {
     width: 330px;
-    padding-left: 0;
+    padding-left: 10px;
 }
 
 form {
@@ -493,6 +494,10 @@ button {
     font-size: 16px;
 }
 
+a:hover {
+    cursor: pointer;
+}
+
 a {
     text-decoration: none;
     color: black;
@@ -503,7 +508,7 @@ a {
     color: #1F384C;
     font-size: 26px;
     font-weight: 500;
-    margin-top: 7px;
+    margin-top: 30px;
 }
 
 .button-form {
@@ -512,6 +517,7 @@ a {
 
 .input_desc {
     height: 40px;
+    padding-left: 10px;
 }
 
 .desc_form_update {
