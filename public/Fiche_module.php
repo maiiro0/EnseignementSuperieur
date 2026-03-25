@@ -51,21 +51,17 @@
         <form action="" method="post">
             <div class="form-align">
                 <div>
-                    <label for="" name="name" require>Code - Champs obligatoire</label>
-                    <input type="text" name="name" value="<?php echo $contenu['code']?>">
+                    <label for="" name="name" require>Nom - champ obligatoire</label>
+                    <input type="text" name="name" value="<?php echo $contenu['name']?>">
                 </div>
                 <div>
-                    <label for="" name="color" require>Nom - champ obligatoire</label>
-                    <input type="text" name="color" value="<?php echo $contenu['name']?>">
+                    <label for="" name="color" require>Code couleur (hexadécimal) - champ obligatoire</label>
+                    <input type="text" name="color" value="<?php echo $contenu['color']?>">
                 </div>
             </div>
             <div class="desc_form_update">
-                <label for="" name="description" require>Nombre d'heures - champ obligatoire</label>
-                <input class="input_desc" type="text" name="description" value="<?php echo $contenu['hours']?>">
-            </div>
-             <div class="desc_form_update">
-                <label for="" name="description" require>Parent - champ obligatoire</label>
-                <input class="input_desc" type="text" name="description" value="<?php echo $contenu['parent']?>">
+                <label for="" name="description" require>Description - champ obligatoire</label>
+                <input class="input_desc" type="text" name="description" value="<?php echo $contenu['description']?>">
             </div>
 
             <div class="button-intervention">
@@ -105,45 +101,40 @@
 </body>
 </html>
 
+
 <?php
 if (isset($_POST['action']) && $_POST['action'] === 'confirm-delete') {
-    $requete = $con->prepare("SELECT id FROM module WHERE id = :id");
+    $requete = $con->prepare("SELECT id FROM course WHERE intervention_type_id = :id");
     $requete->bindParam(':id', $id);
     $requete->execute();
     $multi_id = $requete->fetchAll(\PDO::FETCH_ASSOC);
 
     foreach ($multi_id as $valeurs){
-        $requete = $con->prepare("DELETE FROM instructor_module WHERE instructor_id = :multi_id");
+        $requete = $con->prepare("DELETE FROM course_instructor WHERE course_id = :multi_id");
         $requete->bindParam(':multi_id', $valeurs["id"]);
         $requete->execute();
     }
 
-    $requete = $con->prepare("DELETE FROM module WHERE id = :id");
+    $requete = $con->prepare("DELETE FROM course WHERE intervention_type_id = :id");
     $requete->bindParam(':id', $id);
     $requete->execute();
 
-    $requete = $con->prepare("DELETE FROM module WHERE id = :id");
+    $requete = $con->prepare("DELETE FROM intervention_type WHERE id = :id");
     var_dump('Oui');
     $requete->bindParam(':id', $id);
     $requete->execute();
 }
 
 
-if ((!empty($_POST['code'])) && !empty($_POST['name']) && !empty($_POST['hours']) && !empty($_POST['parent']) && !isset($_POST['description'])) {
-    $code = htmlspecialchars($_POST['code']);
+if ((!empty($_POST['name'])) && !empty($_POST['color']) && !empty($_POST['description'])) {
     $name = htmlspecialchars($_POST['name']);
-    $hours = htmlspecialchars($_POST['hours']);
-    $parent = htmlspecialchars($_POST['parent']);
+    $color = htmlspecialchars($_POST['color']);
     $description = htmlspecialchars($_POST['description']);
 
-    $requete = $con->prepare("UPDATE module SET code = :code, name = :name, hours = :hours, parent = :parent, description = :description WHERE id=:id");   
-
+    $requete = $con->prepare("UPDATE intervention_type SET name = :name, color = :color, description = :description WHERE id=:id");
     $requete->bindParam(':id', $id);
-    $requete->bindParam(':code', $code);
     $requete->bindParam(':name', $name);
-    $requete->bindParam(':hours', $hours);
-    $requete->bindParam(':parent', $parent);
+    $requete->bindParam(':color', $color);
     $requete->bindParam(':description', $description);
     $requete->execute();
 }
-?>
