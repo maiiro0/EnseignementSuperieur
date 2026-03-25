@@ -140,27 +140,39 @@
                     <td></td>
                 </tr>
                 <?php
-                if (!empty($_POST["first_name"] && !empty($_POST["last_name"]) && !empty($_POST["email"]))){
-                    $filtre_prenom = $_POST["first_name"];
-                    $filtre_nom = $_POST["last_name"];
-                    $filtre_email = $_POST["email"];
+                if (!empty($_POST["first_name"]) || !empty($_POST["last_name"]) || !empty($_POST["email"])){
+                    $filtre_prenom = '%'.$_POST["first_name"].'%';
+                    $filtre_nom = '%'.$_POST["last_name"].'%';
+                    $filtre_email = '%'.$_POST["email"].'%';
 
-                    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name = :first_name AND u.last_name = :last_name AND u.email = :email");
+                    if (empty($_POST['first_name'])) {
+                        $filtre_prenom = '';
+                    }
+                    if (empty($_POST["last_name"])){
+                        $filtre_nom = '';
+                    }
+                    if (empty($_POST["email"])){
+                        $filtre_email = '';
+                    }
+
+                    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name LIKE :first_name OR u.last_name LIKE :last_name OR u.email LIKE :email");
                     $requete->bindParam(':first_name', $filtre_prenom);
                     $requete->bindParam(':last_name', $filtre_nom);
                     $requete->bindParam(':email', $filtre_email);
                     $requete->execute();
                     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
 
-                    echo "<tr>";
-                    echo "<td>". $contenu[0]["last_name"]. "</td>"; 
-                    echo"<td>". $contenu[0]["first_name"]. "</td>";
-                    echo"<td>". $contenu[0]['module']. "</td>";
-                    echo"<td>". $contenu[0]['hours_count']. "</td>";
+                    foreach ($contenu as $element => $valeur){
+                        echo "<tr>";
+                        echo "<td>". $valeur["last_name"]. "</td>"; 
+                        echo"<td>". $valeur["first_name"]. "</td>";
+                        echo"<td>". $valeur['module']. "</td>";
+                        echo"<td>". $valeur['hours_count']. "</td>";
+                        ?><td class="table_align"><img src="assets/Oeil.png" alt="">
+                        <a href="">Accéder à la fiche</a></td>
+                        <?php
+                    }
 
-                    ?><td class="table_align"><img src="assets/Oeil.png" alt="">
-                    <a href="">Accéder à la fiche</a></td>
-                    <?php
 
                     echo "</tr>";
                 } 
