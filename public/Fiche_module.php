@@ -51,16 +51,20 @@
         <form action="" method="post">
             <div class="form-align">
                 <div>
-                    <label for="" name="name" require>Nom - champ obligatoire</label>
+                    <label for="" name="name" require>code - champ obligatoire</label>
                     <input type="text" name="name" value="<?php echo $contenu['name']?>">
                 </div>
                 <div>
-                    <label for="" name="color" require>Code couleur (hexadécimal) - champ obligatoire</label>
+                    <label for="" name="color" require>Noms - champ obligatoire</label>
                     <input type="text" name="color" value="<?php echo $contenu['color']?>">
                 </div>
             </div>
             <div class="desc_form_update">
-                <label for="" name="description" require>Description - champ obligatoire</label>
+                <label for="" name="description" require>Nombre d'heures</label>
+                <input class="input_desc" type="text" name="description" value="<?php echo $contenu['description']?>">
+            </div>
+             <div class="desc_form_update">
+                <label for="" name="description" require>Description</label>
                 <input class="input_desc" type="text" name="description" value="<?php echo $contenu['description']?>">
             </div>
 
