@@ -1,3 +1,12 @@
+nav{
+    position: fixed;
+}
+
+.page{
+    margin-left: 250px;
+    width: 1385px;
+}
+
 .yellow{
     color: #FFBD01;
     font-family: Poppins;
@@ -643,6 +652,9 @@ a {
     font-weight: 500;
     text-align: center;
 }
+
+/* Intervention Part */
+
 .page-shell {
     display: flex;
     min-height: 100vh;
@@ -663,25 +675,6 @@ a {
 .content-column {
     width: 100%;
     background: #f6f6fa;
-}
-
-.breadcrumb {
-    width: 100%;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 26px;
-    border-bottom: 1px solid #d7d9e4;
-    background: #f7f7fb;
-    font-size: 12px;
-    color: #2f3d57;
-}
-
-.breadcrumb img {
-    width: 12px;
-    height: 12px;
-    object-fit: contain;
 }
 
 .intervention-page {

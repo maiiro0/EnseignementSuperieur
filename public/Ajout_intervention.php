@@ -30,7 +30,7 @@
         <div class="breadcrumb">
             <img src="assets/home.png" alt="">
             <p>></p>
-            <p>Ajouter intervention</p>
+            <p>Ajouter type intervention</p>
         </div>
     
     <section class="intervention_sheet">

@@ -34,7 +34,7 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
     <nav>
         <?php include_once 'Menu_gestion_licence.php' ?>
     </nav>
-    <section class="teacher-information">
+    <section class="teacher-information page">
         <div class="breadcrumb">  
             <img src="assets/home.png" alt="">
             <p>></p>
@@ -100,9 +100,18 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
                             <?php
                                 $requete = $con->prepare("SELECT m.name FROM  module m;");
                                 $requete->execute();
-                                $nom_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC);
-                                foreach ($nom_intervenants as $valeurs=>$element) { 
-                                    echo "<option>". $element["name"]."</option>";
+                                $nom_module = $requete->fetchAll(\PDO::FETCH_ASSOC);
+
+                                $requete = $con->prepare("SELECT m.name FROM  module m JOIN instructor_module im ON m.id = im.module_id WHERE im.instructor_id = :id");
+                                $requete->bindParam(':id', $id);
+                                $requete->execute();
+                                $nom_module_selected = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                foreach ($nom_module as $valeurs=>$element) { 
+                                    if (in_array($element, $nom_module_selected)) {
+                                        echo "<option selected>". $element["name"]."</option>";
+                                    }else {
+                                        echo "<option>". $element["name"]."</option>";
+                                    }
                                 }
                             ?>
                     </select>
