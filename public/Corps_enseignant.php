@@ -41,29 +41,29 @@
 
                     <form action="" method="post">
                         <div class="form-width-max">
-                            <label for="role">Role</label> </br>
-                            <input type="text" placeholder="Saisissez un rôle de l'enseignant" name="role" id="role"></br>
+                            <label for="role_bdd">Role</label> </br>
+                            <input type="text" placeholder="Saisissez un rôle de l'enseignant" name="role_bdd" id="role_bdd"></br>
                         </div>
                         
                         <div class="form-width-max">
-                            <label for="email" require>Email</label></br>
-                            <input type="text" name="email" id="email"></br>
+                            <label for="email_bdd" require>Email</label></br>
+                            <input type="text" name="email_bdd" id="email_bdd"></br>
                         </div>
 
                         <div class="form-align">
                             <div>
-                                <label for="last_name" require>Nom</label></br>
-                                <input type="text" name="last_name" id="last_name"></br>
+                                <label for="last_name_bdd" require>Nom</label></br>
+                                <input type="text" name="last_name_bdd" id="last_name_bdd"></br>
                             </div>
 
                             <div>
-                                <label for="first_name" require>Prénom</label></br>
-                                <input type="text" name="first_name" id="first_name"></br>
+                                <label for="first_name_bdd" require>Prénom</label></br>
+                                <input type="text" name="first_name_bdd" id="first_name_bdd"></br>
                             </div>
                         </div>
 
-                        <label for="name">Modules enseignés - champ obligatoire</label><br>
-                        <select name="name[]" id="name" multiple class="select-multiple-form">
+                        <label for="module_bdd">Modules enseignés - champ obligatoire</label><br>
+                        <select name="module_bdd" id="module_bdd" multiple class="select-multiple-form">
                                 <?php
                                     $requete = $con->prepare("SELECT m.name FROM  module m;");
                                     $requete->execute();
@@ -188,3 +188,52 @@
 </html>
 
 
+<?php 
+if (!empty($_POST["role_bdd"]) && !empty($_POST["first_name_bdd"]) && !empty($_POST["last_name_bdd"]) && !empty($_POST["module_bdd"]) && !empty($_POST["email_bdd"])) {
+    $role = htmlspecialchars($_POST["role_bdd"]);
+    $email = htmlspecialchars($_POST["email_bdd"]);
+    $first_name = htmlspecialchars($_POST["first_name_bdd"]);
+    $last_name = htmlspecialchars($_POST["last_name_bdd"]);
+    $module = htmlspecialchars($_POST["module_bdd"]);
+
+    $requete = $con->prepare("INSERT INTO user (role, email, last_name, first_name) VALUES (:role, :email, :last_name, :first_name)");
+    $requete->bindParam(':role', $role);
+    $requete->bindParam(':email', $email);
+    $requete->bindParam(':last_name', $last_name);
+    $requete->bindParam(':first_name', $first_name);
+    $requete->execute();
+
+    $requete = $con->prepare("SELECT id FROM user WHERE role = :role AND email=:email AND last_name=:last_name AND first_name=:first_name");
+    $requete->bindParam(':role', $role);
+    $requete->bindParam(':email', $email);
+    $requete->bindParam(':last_name', $last_name);
+    $requete->bindParam(':first_name', $first_name);
+    $requete->execute();
+    $id = $requete->fetchAll(\PDO::FETCH_ASSOC);
+
+    var_dump($id["id"]);
+
+    $requete = $con->prepare("INSERT INTO instructor (user_id) VALUES (:id)");
+    $requete ->bindParam(':id', $id);
+    $requete->execute();
+
+    $requete = $con->prepare("SELECT id FROM instructor WHERE user_id = :user");
+    $requete->bindParam(':id', $id);
+    $requete->execute();
+    $id = $requete->fetchAll(\PDO::FETCH_ASSOC);
+
+
+    foreach ($module as $modules){
+        $requete = $con->prepare("SELECT id FROM module WHERE name=:name");
+        $requete->bindParam(':name', $modules);
+        $requete->execute();
+        $module_name = $requete->fetch(\PDO::FETCH_ASSOC);
+
+        $requete = $con->prepare("INSERT INTO instructor_module (instructor_id, module_id) VALUES (:instructor_id, :module_id)");
+        $requete->bindParam(':instructor_id', $id);
+        $requete->bindParam(':module_id', $module_name);
+        $requete->execute();
+    }
+}
+
+?>
