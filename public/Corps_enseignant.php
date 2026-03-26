@@ -25,82 +25,64 @@
             <div class="align">
                 <h3>Corps Enseignant</h3>
                 <div class="button">
-                    <button command="show-modal" commandfor="dialog" class="blue-button">Ajouter un nouvel Enseignant</button>
+                    <button command="show-modal" commandfor="dialogs" class="blue-button">Ajouter un nouvel Enseignant</button>
                 </div>
 
-                <dialog id="dialog">
-                    <button commandfor="dialog" command="close" class="invisible-button"><img src="assets/Frame 1041.png" alt="" id="quit"></button>
+                <dialog id="dialogs">
+                    <button commandfor="dialogs" command="close" class="invisible-button"><img src="assets/Frame 1041.png" alt="" id="quit"></button>
                     <div class="add-intervention">
                         <img src="assets/Frame.png" alt="">
                         <div>
-                            <h3>Ajouter une Enseignant</h3>
+                            <h3>Ajouter un Enseignant</h3>
                             <p>Remplissez les informations ci-dessous</p>
                         </div>
                     </div>
 
                     <form action="" method="post">
                         <div>
-                            <label for="title">Titre</label> </br>
-                            <input type="text" placeholder="Saisissez un titre sur l'intervention" name="title" id="title"></br>
+                            <label for="role">Role</label> </br>
+                            <input type="text" placeholder="Saisissez un rôle de l'enseignant" name="role" id="role"></br>
                         </div>
                         
-                        <div class="form-align">
-                            <div>
-                                <label for="date-start" require>Date de début - champ obligatoire</label></br>
-                                <input type="datetime-local" name="date-start" id="date-start"></br>
-                            </div>
-
-                            <div>
-                                <label for="date-end" require>Date de fin - champ obligatoire</label></br>
-                                <input type="datetime-local" name="date-end" id="date-end"></br>
-                            </div>
+                        <div>
+                            <label for="email" require>Email</label></br>
+                            <input type="text" name="email" id="email"></br>
                         </div>
 
-                        <div class="form-align">
-                            <div>
-                                <label for="module">Module - champ obligatoire</label></br>
-                                <select name="module" id="module">
-                                    <option value="">Sélectionner le module</option>
-                                    <?php
-                                    require_once "Connexion.php";
-                                    $requete = $con->prepare("SELECT id, name FROM module ORDER BY id");
-                                    $requete->execute();
-                                    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
-                                    foreach ($contenu as $valeurs=>$element) { 
-                                        echo "<option>". $element["name"] ."</option>";
-                                    }
-                                    ?>
-                                </select></br>
-                            </div>
-
-                            <div>
-                                <label for="intervrntion">Type d'intervention - champ obligatoire</label></br>
-                                <select name="intervention" id="intervention">
-                                    <option value="">Sélectionner le module</option>
-                                    <?php 
-                                    $requete = $con->prepare("SELECT name FROM intervention_type ORDER BY name");
-                                    $requete->execute();
-                                    $nom_intervention = $requete->fetchAll(\PDO::FETCH_ASSOC);
-                                    foreach ($nom_intervention as $valeurs=>$element) { 
-                                        echo "<option>". $element["name"]."</option>";
-                                    }
-                                    ?>
-                                </select></br>
-                            </div>
+                        <div>
+                            <label for="last_name" require>Nom</label></br>
+                            <input type="text" name="last_name" id="last_name"></br>
                         </div>
 
-                        <label for="inter">Intervenant - champ obligatoire</label></br>
-                        <select name="inter" id="inter">
-                                <option value="">Sélectionner des intervenants</option>
+                        <div>
+                            <label for="first_name" require>Prénom</label></br>
+                            <input type="text" name="first_name" id="first_name"></br>
+                        </div>
+
+                        <div class="align margin-null">
+                            <h3 class="margin-null"><span><?php echo $infos["first_name"] ?></span>
+                            <span><?php echo $infos["last_name"] ?></span></h3>
+                        </div>
+                        <p class="yellow-title">Modules enseignés</p>
+                        <div class="information-part">
+                        <?php
+                            $requete = $con->prepare("SELECT m.name, m.hours_count FROM instructor_module im JOIN module m ON im.module_id = m.id  WHERE im.instructor_id= :id ");
+                            $requete->bindParam(':id', $id);
+                            $requete->execute();
+                            $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+
+                            foreach ($contenu as $colonne => $element) {
+                                echo"<p>";
+                                echo "<span>". $element["name"]. "</span>"; ?>
+                                <span class="padding-5">:</span>
                                 <?php
-                                    $requete = $con->prepare("SELECT upper(last_name), first_name FROM user ORDER BY last_name");
-                                    $requete->execute();
-                                    $nom_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC);
-                                    foreach ($nom_intervenants as $valeurs=>$element) { 
-                                        echo "<option>". $element["upper(last_name)"]. " ". $element["first_name"] ."</option>";
-                                    }
-                                ?>
-                        </select></br>
+                                echo"<span>". $element['hours_count']. "</span>";
+                                echo"<span>"."h00". "</span>" ;
+                                echo"</p>";
+                            }
+                        ?> 
+
+
                         <div class="select-button">
                             <button commandfor="dialog" command="close" class="grey-button selection">Annuler</button>
                             <button type="submit" class="blue-button selection">Confirmer</button>
