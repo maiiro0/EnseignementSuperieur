@@ -915,10 +915,21 @@ a {
 .red-button {
     padding: 10px 20px;
     background-color: red;
-    border: rgb(0, 0, 0) solid 2px;
     color: white;
     text-align: center;
     border-radius: 5px;
     display: inline-block;
     cursor: pointer;
+}
+
+.select-multiple-form {
+    width: 100%;
+}
+
+dialog#dialogs {
+    width: 720px;
+}
+
+.form-width-max input {
+    width: 100%;
 }

@@ -26,7 +26,7 @@
         <?php require_once('Menu_gestion_licence.php'); ?>
     </nav>
 
-    <section class="intervention-type">
+    <section class="intervention-type page">
         <div class="breadcrumb">
             <img src="assets/home.png" alt="">
             <p>></p>
