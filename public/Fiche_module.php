@@ -83,37 +83,36 @@
                 <label for="description">Description</label>
                 <input class="input_desc" type="text" id="description" name="description" value="<?php echo htmlspecialchars($contenu['description']); ?>">
             </div>
-            <div>
-            <div class="button-intervention">
-                <a href="Liste_module.php" class="grey-button selection">Retour à la liste</a>
+              <div class="button-intervention">
+                <a href="Type_intervention.php" class="grey-button selection">Retour à la liste</a>
+                <button type="button" command="show-modal" commandfor="supp" class="red-button selection">Supprimer</button>
+                <button type="submit" class="blue-button selection">Enregistrer les informations</button>
             </div>
-
-            <button type="submit" class="blue-button selection">Enregistrer les informations</button>
         </form>
 
-        <button command="show-modal" commandfor="dialog" class="red-button selection">Supprimer</button>
-        <dialog id="dialog">
-            <button commandfor="dialog" command="close" class="invisible-button"><img src="assets/Frame 1041.png" alt="" id="quit"></button>
+
+        <dialog id="supp">
+            <button commandfor="supp" command="close" class="invisible-button"><img src="assets/Frame 1041.png" alt="" id="quit"></button>
             <div class="add-intervention">
                 <img src="assets/Croix.png" alt="">
                 <div>
-                    <h3>Supprimer le module</h3>
+                    <h3>Supprimer le type d'intervention</h3>
                     <p>Confirmation de l'action</p>
                 </div>
             </div>
             <div>
                 <div>
-                    <p>Vous vous apprêtez à supprimer ce module,</p>
+                    <p>Vous vous apprêtez à supprimer le type d'intervention,</p>
                     <p>cette action est irrévoquable.</p>
-                    <p>À noter qu'aucun cours ne doit être lié à ce module pour pouvoir le supprimer.</p>
+                    <p>A noter qu'aucune intervention de doit être liée à ce module pour pouvoir le supprimer.</p>
                     <br>
                     <p>Confirmez-vous l'action ?</p>
                 </div>
                 <form method="POST" action="">
                     <input type="hidden" name="pass">
                     <div class="button-form">
-                        <button class="grey-button selection" commandfor="dialog" command="close">Annuler</button>
-                        <button class="red-button selection" type="submit" name="action" value="confirm-delete">Confirmer</button>
+                        <button type="submit" class="grey-button selection" commandfor="supp" command="close">Annuler</button>
+                        <button class="red-button selection" type="submit" name="action" value="confirm-delete">Confirmer</button>  
                     </div>
                 </form>
             </div>
