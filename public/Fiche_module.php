@@ -35,7 +35,7 @@
     }
     ?>
 
-    <section class="intervention-type">
+    <section class="intervention-type page">
         <div class="breadcrumb">
             <img src="assets/home.png" alt="">
             <p>></p>
@@ -63,7 +63,7 @@
             <div class="form-align">
                 <div>
                     <label for="hours_count">Nombre d'heures</label>
-                    <input type="number" id="hours_count" name="hours_count" min="0" value="<?php echo htmlspecialchars($contenu['hours_count']); ?>">
+                    <input type="number" id="hours_count" name="hours_count" min="0" max="4" value="<?php echo htmlspecialchars($contenu['hours_count']); ?>">
                 </div>
                 <div>
                     <label for="parent_id">Module parent</label>
