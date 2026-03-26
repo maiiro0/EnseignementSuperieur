@@ -11,10 +11,10 @@
 </head>
 <body>
     <nav>
-        // en cours par Chloé
+        <?php require_once("Menu_gestion_licence.php"); ?>
     </nav>
 
-    <section class="calendar">
+    <section class="calendar page">
         <div class="breadcrumb">
             <img src="assets/home.png" alt="">
             <p>></p>

@@ -14,7 +14,7 @@
         <?php require_once('Menu_gestion_licence.php'); ?>
     </nav>
 
-    <section class="intervention-type">
+    <section class="intervention-type page">
         <div class="breadcrumb">
             <img src="assets/home.png" alt="">
             <p>></p>
@@ -54,12 +54,14 @@
 
             <div class="button-intervention">
                 <a href="Type_intervention.php" class="grey-button selection">Retour à la liste</a>
+                <button type="button" command="show-modal" commandfor="supp" class="red-button selection">Supprimer</button>
+                <button type="submit" class="blue-button selection">Enregistrer les informations</button>
             </div>
         </form>
 
-        <button command="show-modal" commandfor="dialog" class="red-button selection">Supprimer</button>
-        <dialog id="dialog">
-            <button commandfor="dialog" command="close" class="invisible-button"><img src="assets/Frame 1041.png" alt="" id="quit"></button>
+
+        <dialog id="supp">
+            <button commandfor="supp" command="close" class="invisible-button"><img src="assets/Frame 1041.png" alt="" id="quit"></button>
             <div class="add-intervention">
                 <img src="assets/Croix.png" alt="">
                 <div>
@@ -78,13 +80,12 @@
                 <form method="POST" action="">
                     <input type="hidden" name="pass">
                     <div class="button-form">
-                        <button class="grey-button selection" commandfor="dialog" command="close">Annuler</button>
+                        <button type="submit" class="grey-button selection" commandfor="supp" command="close">Annuler</button>
                         <button class="red-button selection" type="submit" name="action" value="confirm-delete">Confirmer</button>  
                     </div>
                 </form>
             </div>
         </dialog>
-        <button type="submit" class="blue-button selection">Enregistrer les informations</button>
     </section>
 </body>
 </html>

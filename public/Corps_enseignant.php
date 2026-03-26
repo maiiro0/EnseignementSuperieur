@@ -11,10 +11,11 @@
 </head>
 <body>
     <nav>
-        <?php require_once('Menu_gestion_licence.php'); ?>
+        <?php require_once('Menu_gestion_licence.php'); 
+        require_once('Connexion.php')?>
     </nav>
 
-    <section class="teaching_staff">
+    <section class="teaching_staff page">
         <div class="breadcrumb">
             <img src="assets/home.png" alt="">
             <p>></p>
@@ -39,52 +40,52 @@
                     </div>
 
                     <form action="" method="post">
-                        <div>
+                        <div class="form-width-max">
                             <label for="role">Role</label> </br>
                             <input type="text" placeholder="Saisissez un rôle de l'enseignant" name="role" id="role"></br>
                         </div>
                         
-                        <div>
+                        <div class="form-width-max">
                             <label for="email" require>Email</label></br>
                             <input type="text" name="email" id="email"></br>
                         </div>
 
-                        <div>
-                            <label for="last_name" require>Nom</label></br>
-                            <input type="text" name="last_name" id="last_name"></br>
+                        <div class="form-align">
+                            <div>
+                                <label for="last_name" require>Nom</label></br>
+                                <input type="text" name="last_name" id="last_name"></br>
+                            </div>
+
+                            <div>
+                                <label for="first_name" require>Prénom</label></br>
+                                <input type="text" name="first_name" id="first_name"></br>
+                            </div>
                         </div>
 
-                        <div>
-                            <label for="first_name" require>Prénom</label></br>
-                            <input type="text" name="first_name" id="first_name"></br>
-                        </div>
-
-                        <div class="align margin-null">
-                            <h3 class="margin-null"><span><?php echo $infos["first_name"] ?></span>
-                            <span><?php echo $infos["last_name"] ?></span></h3>
-                        </div>
-                        <p class="yellow-title">Modules enseignés</p>
-                        <div class="information-part">
-                        <?php
-                            $requete = $con->prepare("SELECT m.name, m.hours_count FROM instructor_module im JOIN module m ON im.module_id = m.id  WHERE im.instructor_id= :id ");
-                            $requete->bindParam(':id', $id);
-                            $requete->execute();
-                            $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
-
-                            foreach ($contenu as $colonne => $element) {
-                                echo"<p>";
-                                echo "<span>". $element["name"]. "</span>"; ?>
-                                <span class="padding-5">:</span>
+                        <label for="name">Modules enseignés - champ obligatoire</label><br>
+                        <select name="name[]" id="name" multiple class="select-multiple-form">
                                 <?php
-                                echo"<span>". $element['hours_count']. "</span>";
-                                echo"<span>"."h00". "</span>" ;
-                                echo"</p>";
-                            }
-                        ?> 
+                                    $requete = $con->prepare("SELECT m.name FROM  module m;");
+                                    $requete->execute();
+                                    $nom_module = $requete->fetchAll(\PDO::FETCH_ASSOC);
+
+                                    $requete = $con->prepare("SELECT m.name FROM  module m JOIN instructor_module im ON m.id = im.module_id WHERE im.instructor_id = :id");
+                                    $requete->bindParam(':id', $id);
+                                    $requete->execute();
+                                    $nom_module_selected = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                    foreach ($nom_module as $valeurs=>$element) { 
+                                        if (in_array($element, $nom_module_selected)) {
+                                            echo "<option selected>". $element["name"]."</option>";
+                                        }else {
+                                            echo "<option>". $element["name"]."</option>";
+                                        }
+                                    }
+                                ?>
+                        </select>
 
 
                         <div class="select-button">
-                            <button commandfor="dialog" command="close" class="grey-button selection">Annuler</button>
+                            <button type="submit" commandfor="dialogs" command="close" class="grey-button selection">Annuler</button>
                             <button type="submit" class="blue-button selection">Confirmer</button>
                         </div>
                     </form>
