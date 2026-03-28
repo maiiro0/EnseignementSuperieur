@@ -17,10 +17,10 @@ require_once 'header.php'?>
         <section class="titles-page">
             <div class="align">
                 <h3>Types intervention</h3>
-                <a href="Ajout_intervention.php" class="blue-button">Ajouter un type</a>
+                <a href="Ajout_type_intervention.php" class="blue-button">Ajouter un type</a>
             </div>
 
-            <form method="post" action="">
+            <form method="get" action="">
                 <h3 class="yellow">Filtres</h3>
                 <div class="intervention-row">
                     <div class="intervention-column">
@@ -49,8 +49,8 @@ require_once 'header.php'?>
                     <td></td>
                 </tr>
                 <?php
-                    if (!empty($_POST["name-filter"])){
-                        $filtre = $_POST["name-filter"];
+                    if (!empty($_GET["name-filter"])){
+                        $filtre = $_GET["name-filter"];
                         $contenu = select_id_intervention_type_where($con, $filtre);
                         
                         foreach ($contenu as $colonne => $element) {

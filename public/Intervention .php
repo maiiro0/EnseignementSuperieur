@@ -180,7 +180,7 @@ require_once 'header.php'?>
                                         <div class="icon-intervention">
                                             <img src="image/eyes.png">
                                         </div>
-                                        <a href="fiche_intervention.php?id=<?= $intervention['id'] ?>">
+                                        <a href="Fiche_intervention.php?id=<?= $intervention['id'] ?>">
                                             Accéder à la fiche
                                         </a>
                                     </div>
