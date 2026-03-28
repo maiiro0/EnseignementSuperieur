@@ -114,18 +114,24 @@ function nom_module_where_instructor($con, $id){
     return $nom_module_selected;
 }
 
-function infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email){
-    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name LIKE :first_name OR u.last_name LIKE :last_name OR u.email LIKE :email");
+function infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email, $offset){
+    $offend = $offset + 10;
+    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name LIKE :first_name OR u.last_name LIKE :last_name OR u.email LIKE :email LIMIT :offsetend OFFSET :offset");
     $requete->bindParam(':first_name', $filtre_prenom);
     $requete->bindParam(':last_name', $filtre_nom);
     $requete->bindParam(':email', $filtre_email);
+    $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
+    $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
 }
 
-function select_infos_table_corps_enseignant($con){
-    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id");
+function select_infos_table_corps_enseignant($con, $offset){
+    $offend = $offset + 10;
+    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id LIMIT :offsetend OFFSET :offset");
+    $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
+    $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
@@ -142,6 +148,23 @@ function insert_intervention_type($con, $name, $color, $description) {
 function select_id_intervention_type_where($con, $filtre) {
     $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type WHERE name=:filtre");
     $requete->bindParam(':filtre', $filtre);
+    $requete->execute();
+    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $contenu;
+}
+
+function select_nb_pages_entier($con){
+    $requete = $con->prepare("SELECT count(*) AS nblignes FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id");
+    $requete->execute();
+    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $contenu;
+}
+
+function select_nb_pages_filtre($con, $filtre_prenom, $filtre_nom, $filtre_email){
+    $requete = $con->prepare("SELECT count(*) AS nblignes FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name LIKE :first_name OR u.last_name LIKE :last_name OR u.email LIKE :email");
+    $requete->bindParam(':first_name', $filtre_prenom);
+    $requete->bindParam(':last_name', $filtre_nom);
+    $requete->bindParam(':email', $filtre_email);
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
