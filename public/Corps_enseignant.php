@@ -12,7 +12,7 @@ require_once 'inclus/Header.php'?>
         <div class="breadcrumb">
             <img src="assets/home.png" alt="">
             <p>></p>
-            <p>Corps Enseignant</p>
+            <a href="#">Corps Enseignant</a>
         </div>
 
         <section class="titles-page">

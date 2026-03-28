@@ -12,7 +12,7 @@ require_once 'inclus/Connexion.php';?>
         <div class="breadcrumb">
             <img src="assets/home.png" alt="">
             <p>></p>
-            <p>Types intervention</p>
+            <a href="#">Types intervention</a>
         </div>
 
         <section class="titles-page">

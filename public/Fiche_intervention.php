@@ -12,7 +12,9 @@ require_once '../database/User_database.php';?>
         <div class="breadcrumb">
             <img src="assets/home.png" alt="">
             <p>></p>
-            <p>Types intervention</p>
+            <a href="Type_intervention">Types intervention</a>
+            <p>></p>
+            <a href="#">Cours</a>
         </div>
 
     <?php 

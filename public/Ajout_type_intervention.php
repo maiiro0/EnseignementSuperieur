@@ -12,7 +12,9 @@ require_once 'inclus/Connexion.php';?>
         <div class="breadcrumb">
             <img src="assets/home.png" alt="">
             <p>></p>
-            <p>Ajouter type intervention</p>
+            <a href="Type_intervention.php">Types d'intervention</a>
+            <p>></p>
+            <a href="#">Ajouter type intervention</a>
         </div>
     
     <section class="intervention_sheet">
