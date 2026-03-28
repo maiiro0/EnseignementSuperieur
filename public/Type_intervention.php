@@ -70,10 +70,7 @@
                 <?php
                     if (!empty($_POST["name-filter"])){
                         $filtre = $_POST["name-filter"];
-                        $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type WHERE name=:filtre");
-                        $requete->bindParam(':filtre', $filtre);
-                        $requete->execute();
-                        $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                        $contenu = select_id_intervention_type_where($con, $filtre);
                         
                         foreach ($contenu as $colonne => $element) {
                         echo "<tr>";
@@ -88,9 +85,7 @@
                     }
 
                     else {
-                        $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type");
-                        $requete->execute();
-                        $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                        $contenu = infos_intervention_type_all($con);
 
                         foreach ($contenu as $colonne => $element) {
                             echo "<tr>";

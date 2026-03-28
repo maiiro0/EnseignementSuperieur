@@ -67,12 +67,7 @@ if ((!empty($_POST['name'])) && !empty($_POST['color']) && !empty($_POST['descri
     $name = htmlspecialchars($_POST['name']);
     $color = htmlspecialchars($_POST['color']);
     $description = htmlspecialchars($_POST['description']);
-
-    $requete = $con->prepare("INSERT INTO intervention_type (name, description, color) VALUES (:name, :description, :color);");
-    $requete->bindParam(':name', $name);
-    $requete->bindParam(':color', $color);
-    $requete->bindParam(':description', $description);
-    $requete->execute();
+    insert_intervention_type($con, $name, $color, $description);
 }
 
 ?>

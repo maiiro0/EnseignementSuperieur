@@ -8,6 +8,13 @@ function infos_intervention_type($con, $id){
     return $contenu[0];
 }
 
+function infos_intervention_type_all($con){
+    $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type");
+    $requete->execute();
+    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $contenu;
+}
+
 function id_course($id, $con){
     $requete = $con->prepare("SELECT id FROM course WHERE intervention_type_id = :id");
     $requete->bindParam(':id', $id);
@@ -119,6 +126,22 @@ function infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email){
 
 function select_infos_table_corps_enseignant($con){
     $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id");
+    $requete->execute();
+    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $contenu;
+}
+
+function insert_intervention_type($con, $name, $color, $description) {
+    $requete = $con->prepare("INSERT INTO intervention_type (name, description, color) VALUES (:name, :description, :color);");
+    $requete->bindParam(':name', $name);
+    $requete->bindParam(':color', $color);
+    $requete->bindParam(':description', $description);
+    $requete->execute();
+}
+
+function select_id_intervention_type_where($con, $filtre) {
+    $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type WHERE name=:filtre");
+    $requete->bindParam(':filtre', $filtre);
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
