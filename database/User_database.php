@@ -116,10 +116,11 @@ function nom_module_where_instructor($con, $id){
 
 function infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email, $offset){
     $offend = $offset + 10;
-    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name LIKE :first_name OR u.last_name LIKE :last_name OR u.email LIKE :email LIMIT :offsetend OFFSET :offset");
+    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name u.id AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name LIKE :first_name OR u.last_name LIKE :last_name OR u.email LIKE :email LIMIT :offsetend OFFSET :offset");
     $requete->bindParam(':first_name', $filtre_prenom);
     $requete->bindParam(':last_name', $filtre_nom);
     $requete->bindParam(':email', $filtre_email);
+    $requete->bindParam(':id', $id);
     $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
     $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
     $requete->execute();
@@ -129,9 +130,10 @@ function infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email, $o
 
 function select_infos_table_corps_enseignant($con, $offset){
     $offend = $offset + 10;
-    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id LIMIT :offsetend OFFSET :offset");
+    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name u.id AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id LIMIT :offsetend OFFSET :offset");
     $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
     $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+    $requete->bindParam(':id', $id);
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;

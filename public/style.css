@@ -498,6 +498,12 @@ select option:first {
     gap: 20px;
 }
 
+.form-align {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+
 button {
     font-weight: 500;
     font-size: 16px;
