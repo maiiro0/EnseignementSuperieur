@@ -61,9 +61,10 @@ if (isset($_GET['id'])) {
                 <a href="#"  class="link-select">Interventions</a>
             </div>
             <p class="yellow-title">Filtrer les interventions</p>
-            <form method="post" action="" class="teacher-information-form">
+            <form method="get" action="" class="teacher-information-form">
                 <div class="filter-row">
                     <div class="filter-column">
+                        <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>">+
                         <label name="start_date">Date de debut</label>
                         <input type="text" name="start_date" placeholder="Saisissez la date de debut">
                     </div>
@@ -99,6 +100,66 @@ if (isset($_GET['id'])) {
                     <td>En visio</td>
                 </tr>
                 <?php
+                if (!empty($_GET["start_date"]) || !empty($_GET["end_date"]) || !empty($_GET["name"])){
+                    $filtre_start_date = '%'.$_GET["start_date"].'%';
+                    $filtre_end_date = '%'.$_GET["end_date"].'%';
+                    $filtre_name = '%'.$_GET["name"].'%';
+
+
+                    if (empty($_GET["start_date"])){
+                        $filtre_start_date = '';
+                    }
+
+                    if (empty($_GET["end_date"])){
+                        $filtre_end_date = '';
+                    }
+
+                    if (empty($_GET["name"])){
+                        $filtre_name = '';
+                    }
+
+                    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id AND ( c.start_date LIKE :inter_start_date OR c.end_date LIKE :inter_end_date OR m.name LIKE :module_name )");
+                    $requete->bindParam(':id', $id);
+                    $requete->bindParam(':inter_start_date', $filtre_start_date);
+                    $requete->bindParam(':inter_end_date', $filtre_end_date);
+                    $requete->bindParam(':module_name', $filtre_name);
+                    $requete->execute();
+                    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+
+                    foreach ($contenu as $valeurs=>$element) {
+                        $debut = new DateTime($element["start_date"]);
+                        $fin = new DateTime($element["end_date"]);
+                        echo "<tr>";
+                        echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
+
+                        echo "<td>". $element["module"] . "</td>";
+
+                        echo "<td>". $element["type_name"] ."</td>";
+
+                    
+                        $requete = $con->prepare("SELECT upper(u.last_name), upper(u.first_name) FROM user u join instructor i ON i.user_id = u.id join course_instructor ci ON ci.instructor_id = i.id WHERE ci.course_id = :id");
+                        $requete -> bindParam(':id', $element["id"]); 
+                        $requete->execute();
+                        $noms_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC); //On récupère les noms et les prénoms en majuscule
+                        echo "<td>";
+                        $temporaire = "";
+                        foreach ($noms_intervenants as $colonne=>$noms){
+                            $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
+                        }
+                        echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
+                        echo "</td>";
+
+
+                        if ($element["remotely"] == 0){
+                            ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
+                        }   
+                        else {
+                            ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
+                        }
+                    }
+                }
+
+                else {
                     $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id LIMIT 10");
                     $requete->bindParam(':id', $id);
                     $requete->execute();
@@ -114,7 +175,7 @@ if (isset($_GET['id'])) {
 
                         echo "<td>". $element["type_name"] ."</td>";
 
-                        
+                    
                         $requete = $con->prepare("SELECT upper(u.last_name), upper(u.first_name) FROM user u join instructor i ON i.user_id = u.id join course_instructor ci ON ci.instructor_id = i.id WHERE ci.course_id = :id");
                         $requete -> bindParam(':id', $element["id"]); 
                         $requete->execute();
@@ -135,10 +196,9 @@ if (isset($_GET['id'])) {
                             ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
                         }
 
-                        
                     }
+                }
                 ?>
-
             </table>
         </section>
     </section>
