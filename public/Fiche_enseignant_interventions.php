@@ -1,22 +1,15 @@
 
 <?php 
 require_once 'inclus/Connexion.php';
-require_once 'inclus/Header.php'
+require_once 'inclus/Header.php';
 
-/*
 if (isset($_GET['id'])) {
     $id = htmlspecialchars($_GET['id']);
-    $requete = $con->prepare("SELECT email, last_name, first_name FROM user WHERE id=1");
-    // $requete->bindParam(':id', $id);
+    $requete = $con->prepare("SELECT email, last_name, first_name FROM user WHERE id=:id");
+    $requete->bindParam(':id', $id);
     $requete->execute();
-    $infos = $requete ->fetchAll(\PDO::FETCH_ASSOC);
+    $infos = $requete->fetch(PDO::FETCH_ASSOC);
 }
-*/
-$id =11;
-$requete = $con->prepare("SELECT email, last_name, first_name FROM user WHERE id=:id");
-$requete->bindParam(':id', $id);
-$requete->execute();
-$infos = $requete->fetch(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -26,20 +19,19 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
     </nav>
     <section class="teacher-information page">
         <div class="breadcrumb">  
-            <img src="assets/home.png" alt="">
+            <a href="Calendrier.php"><img src="assets/home.png" alt=""></a>
             <p>></p>
-            <p>Corps enseignant</p>
+            <a href="Corps_enseignant.php">Corps enseignant</a>
             <p>></p>
-            <p><?php echo $infos["first_name"] ?></p>
-            <p><?php echo $infos["last_name"] ?></p>
+            <a href="Fiche_enseignant_informations.php?id=<?php echo $id; ?>"> <span><?php echo $infos["first_name"];?></span> <span><?php echo $infos["last_name"];?></span> </a>
             <p>></p>
-            <p>Informations générales</p>
+            <a href="#">Interventions</a>
         </div>
 
         <section>
             <div class="align margin-null">
-                <h3 class="margin-null"><span><?php echo $infos["first_name"] ?></span>
-                <span><?php echo $infos["last_name"] ?></span></h3>
+                <h3 class="margin-null"><span><?php echo $infos["first_name"];?></span>
+                <span><?php echo $infos["last_name"];?></span></h3>
             </div>
             <p class="yellow-title">Modules enseignés</p>
             <div class="information-part">
@@ -62,49 +54,68 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
             </div>
         </section>
         <section class="form-part">
+
             <div class="link-part">
-                <a href="" class="link-unselected">Informations générales</a>
-                <a href=""  class="link-select">Interventions</a>
+                <a href="Fiche_enseignant_informations.php?id=<?php echo $id; ?>" class="link-unselected">Informations générales</a>
+                <a href="#"  class="link-select">Interventions</a>
             </div>
-            <div>
-                <p class="yellow-title">Filtrer les interventions</p>
-            </div>
-            
-            <table class="table">
+            <p class="yellow-title">Filtrer les interventions</p>
+            <form method="post" action="" class="teacher-information-form">
+                <div class="filter-row">
+                    <div class="filter-column">
+                        <label name="start_date">Date de debut</label>
+                        <input type="text" name="start_date" placeholder="Saisissez la date de debut">
+                    </div>
+                    <div class="filter-column">
+                        <label name="end_date">Date de fin</label>
+                        <input type="text" name="end_date" placeholder="Saisissez la date de fin">
+                    </div>
+                    <div class="filter-column">
+                        <label for="name">Module</label>
+                        <select name="name" id="name" >
+                                <option value="">Sélectionnez le module</option>
+                                <?php
+                                    $requete = $con->prepare("SELECT m.name FROM  module m;");
+                                    $requete->execute();
+                                    $nom_module = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                    foreach ($nom_module as $valeurs=>$element) { 
+                                        echo "<option>". $element["name"]."</option>";
+                                    }
+                                ?>
+                        </select>
+                    </div>
+                    <button class="yellow-button">Filtrer</button>
+                </div>
+            </form>
+            <h4>Interventions trouvées : </h4>
+
+            <table class="table_teacher_interventions">
                 <tr class="columns">
                     <td>Dates de l'intervention</td>
-                    <td>Modules & titre</td>
+                    <td>Module</td>
                     <td>Type</td>
                     <td>Intervenants</td>
                     <td>En visio</td>
-                    <td></td>
                 </tr>
                 <?php
-                    $requete = $con->prepare("SELECT id, start_date, end_date, intervention_type_id, module_id, remotely FROM course");
+                    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id LIMIT 10");
+                    $requete->bindParam(':id', $id);
                     $requete->execute();
                     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
 
                     foreach ($contenu as $valeurs=>$element) {
+                        $debut = new DateTime($element["start_date"]);
+                        $fin = new DateTime($element["end_date"]);
                         echo "<tr>";
-                        echo "<td>". $element["start_date"]. "</td>"; //Colonne Date de début. Il manque à mettre l'heure de fin
+                        echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
 
-                        $module_id = $element["module_id"];
-                        $requete = $con->prepare("SELECT name FROM module WHERE id = :module_id");
-                        $requete -> bindParam(':module_id', $module_id); 
-                        $requete->execute();
-                        $nom_module = $requete->fetch(\PDO::FETCH_ASSOC); // On va chercher le nom du module dans une autre table
-                        echo "<td>". $nom_module["name"] . "</td>";
+                        echo "<td>". $element["module"] . "</td>";
 
-                        $type_intervention = $element["intervention_type_id"];
-                        $requete = $con->prepare("SELECT name FROM intervention_type WHERE id = :type_intervention");
-                        $requete -> bindParam(':type_intervention', $type_intervention);
-                        $requete->execute();
-                        $nom_intervention = $requete->fetch(\PDO::FETCH_ASSOC); //On va chercher le nom de l'intervention dans la table intervention_type
-                        echo "<td>". $nom_intervention["name"] ."</td>";
+                        echo "<td>". $element["type_name"] ."</td>";
 
-                        $id = $element["id"];
-                        $requete = $con->prepare("SELECT upper(u.last_name), upper(u.first_name) FROM user u WHERE u.id IN (SELECT i.user_id FROM instructor i WHERE i.id in (SELECT c.instructor_id FROM course_instructor c WHERE c.course_id = :id))");
-                        $requete -> bindParam(':id', $id); 
+                        
+                        $requete = $con->prepare("SELECT upper(u.last_name), upper(u.first_name) FROM user u join instructor i ON i.user_id = u.id join course_instructor ci ON ci.instructor_id = i.id WHERE ci.course_id = :id");
+                        $requete -> bindParam(':id', $element["id"]); 
                         $requete->execute();
                         $noms_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC); //On récupère les noms et les prénoms en majuscule
                         echo "<td>";
@@ -123,11 +134,7 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
                             ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
                         }
 
-                        ?><td class="table_align"><img src="assets/Oeil.png" alt="">
-                        <a href="">Accéder à la fiche</a></td>
-                        <?php
-
-                        echo "</tr>";
+                        
                     }
                 ?>
 

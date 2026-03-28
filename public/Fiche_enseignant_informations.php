@@ -1,22 +1,15 @@
 
 <?php 
 require_once 'inclus/Connexion.php';
-require_once 'inclus/Header.php'
+require_once 'inclus/Header.php';
 
-/*
 if (isset($_GET['id'])) {
     $id = htmlspecialchars($_GET['id']);
-    $requete = $con->prepare("SELECT email, last_name, first_name FROM user WHERE id=1");
-    // $requete->bindParam(':id', $id);
+    $requete = $con->prepare("SELECT email, last_name, first_name FROM user WHERE id=:id");
+    $requete->bindParam(':id', $id);
     $requete->execute();
-    $infos = $requete ->fetchAll(\PDO::FETCH_ASSOC);
+    $infos = $requete->fetch(PDO::FETCH_ASSOC);
 }
-*/
-$id =11;
-$requete = $con->prepare("SELECT email, last_name, first_name FROM user WHERE id=:id");
-$requete->bindParam(':id', $id);
-$requete->execute();
-$infos = $requete->fetch(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -24,16 +17,15 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
     <nav>
         <?php include_once 'inclus/Menu_gestion_licence.php' ?>
     </nav>
-    <section class="teacher-information page">
+    <section class="teacher-information page">  
         <div class="breadcrumb">  
-            <img src="assets/home.png" alt="">
+            <a href="Calendrier.php"><img src="assets/home.png" alt=""></a>
             <p>></p>
-            <p>Corps enseignant</p>
+            <a href="Corps_enseignant.php">Corps enseignant</a>
             <p>></p>
-            <p><?php echo $infos["first_name"] ?></p>
-            <p><?php echo $infos["last_name"] ?></p>
+            <a href="#"><span><?php echo $infos["first_name"];?></span> <span><?php echo $infos["last_name"];?></span></a>
             <p>></p>
-            <p>Informations générales</p>
+            <a href="#">Informations générales</a>
         </div>
 
         <section>
@@ -63,8 +55,8 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
         </section>
         <section class="form-part">
             <div class="link-part">
-                <a href="" class="link-select">Informations générales</a>
-                <a href=""  class="link-unselected">Interventions</a>
+                <a href="#" class="link-select">Informations générales</a>
+                <a href="Fiche_enseignant_interventions.php?id=<?php echo $id; ?>"class="link-unselected">Interventions</a>
             </div>
             <div>
                 <p class="yellow-title">Informations générales</p>

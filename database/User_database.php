@@ -115,7 +115,7 @@ function nom_module_where_instructor($con, $id){
 }
 
 function infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email){
-    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name LIKE :first_name OR u.last_name LIKE :last_name OR u.email LIKE :email");
+    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count, u.id FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name LIKE :first_name OR u.last_name LIKE :last_name OR u.email LIKE :email");
     $requete->bindParam(':first_name', $filtre_prenom);
     $requete->bindParam(':last_name', $filtre_nom);
     $requete->bindParam(':email', $filtre_email);
@@ -125,7 +125,7 @@ function infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email){
 }
 
 function select_infos_table_corps_enseignant($con){
-    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id");
+    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count, u.id FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id");
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;

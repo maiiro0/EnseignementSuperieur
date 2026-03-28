@@ -10,9 +10,9 @@ require_once 'inclus/Header.php'?>
 
     <section class="teaching_staff page">
         <div class="breadcrumb">
-            <img src="assets/home.png" alt="">
+            <a href="Calendrier.php"><img src="assets/home.png" alt=""></a>
             <p>></p>
-            <p>Corps Enseignant</p>
+            <a href="Corps_enseignant.php">Corps enseignant</a>
         </div>
 
         <section class="titles-page">
@@ -134,7 +134,7 @@ require_once 'inclus/Header.php'?>
                         echo"<td>". $valeur['module']. "</td>";
                         echo"<td>". $valeur['hours_count']. "</td>";
                         ?><td class="table_align"><img src="assets/Oeil.png" alt="">
-                        <a href="">Accéder à la fiche</a></td>
+                        <a href="Fiche_enseignant_informations.php?id=<?php echo $valeur['id']; ?>">Accéder à la fiche</a></td>
                         <?php
                     }
                     echo "</tr>";
@@ -150,7 +150,7 @@ require_once 'inclus/Header.php'?>
                         echo"<td>". $element['hours_count']. "</td>";
 
                         ?><td class="table_align"><img src="assets/Oeil.png" alt="">
-                        <a href="">Accéder à la fiche</a></td>
+                        <a href="Fiche_enseignant_informations.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td>
                         <?php
 
                         echo "</tr>";

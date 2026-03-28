@@ -1,9 +1,10 @@
 <?php
-require_once 'header.php'?>
-
+require_once 'inclus/Header.php';
+?>
 <body>
     <nav>
-        <?php require_once("inclus/Menu_gestion_licence.php"); ?>
+        <?php require_once('inclus/Menu_gestion_licence.php'); 
+        require_once('inclus/Connexion.php');?>
     </nav>
 
     <section class="calendar page">
@@ -54,7 +55,6 @@ require_once 'header.php'?>
                                 <select name="module" id="module">
                                     <option value="">Sélectionner le module</option>
                                     <?php
-                                    require_once "Connexion.php";
                                     $requete = $con->prepare("SELECT id, name FROM module ORDER BY id");
                                     $requete->execute();
                                     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
