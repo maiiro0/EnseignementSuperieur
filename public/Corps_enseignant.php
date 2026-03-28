@@ -1,5 +1,15 @@
 <?php
-require_once 'inclus/Header.php'?>
+require_once 'inclus/Header.php';
+
+if (empty($_GET["page"])){
+    $page = 1;
+    $_GET["page"] = 1;
+}
+
+else {
+    $page = $_GET['page'];
+}
+?>
 
 <body>
     <nav>
@@ -116,6 +126,9 @@ require_once 'inclus/Header.php'?>
                     $filtre_nom = '%'.$_POST["last_name"].'%';
                     $filtre_email = '%'.$_POST["email"].'%';
 
+                    $limit = 10;
+                    $offset = $page + $limit - $limit;
+
                     if (empty($_POST['first_name'])) {
                         $filtre_prenom = '';
                     }
@@ -126,7 +139,7 @@ require_once 'inclus/Header.php'?>
                         $filtre_email = '';
                     }
 
-                    $contenu = infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email);
+                    $contenu = infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email, $offset);
                     foreach ($contenu as $element => $valeur){
                         echo "<tr>";
                         echo "<td>". $valeur["last_name"]. "</td>"; 
@@ -138,10 +151,17 @@ require_once 'inclus/Header.php'?>
                         <?php
                     }
                     echo "</tr>";
+
+
+                    $nb_pages = select_nb_pages_filtre($con, $filtre_prenom, $filtre_nom, $filtre_email);
+                    $nb_pages = $nb_pages[0]["nblignes"];
+                    $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
                 } 
 
                 else {
-                    $contenu = select_infos_table_corps_enseignant($con);
+                    $limit = 10;
+                    $offset = $page * $limit - $limit;
+                    $contenu = select_infos_table_corps_enseignant($con, $offset);
                     foreach ($contenu as $valeurs=>$element) {
                         echo "<tr>";
                         echo "<td>". $element["last_name"]. "</td>"; 
@@ -155,7 +175,27 @@ require_once 'inclus/Header.php'?>
 
                         echo "</tr>";
                     }
+
+                    $nb_pages = select_nb_pages_entier($con);
+                    $nb_pages = $nb_pages[0]["nblignes"];
+                    $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
                 }
+
+                if ($_GET["page"] == 1 && $nb_pages == 1){ ?>
+                    <?php
+                }
+                else if ($_GET["page"] == $nb_pages){?>
+                    <a href="Corps_enseignant.php?page=<?php echo $page - 1; ?>">Page précédente </a><?php
+                }
+                else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
+                    <a href="Corps_enseignant.php?page=<?php echo $page - 1; ?>">Page précédente </a>
+                    <a href="Corps_enseignant.php?page=<?php echo $page + 1; ?>"> Page suivante</a>
+                    <?php
+                } 
+                else { ?>
+                    <a href="Corps_enseignant.php?page=<?php echo $page + 1; ?>"> Page suivante</a><?php
+                }
+
                 ?>
 
             </table>
