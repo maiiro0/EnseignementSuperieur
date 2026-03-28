@@ -1,5 +1,8 @@
 <?php
 require_once 'inclus/Connexion.php';
+require_once 'inclus/Header.php';
+
+
 $dateStart = $_GET['date_start'] ?? '';
 $dateEnd = $_GET['date_end'] ?? '';
 $moduleId = $_GET['module_id'] ?? '';
@@ -24,7 +27,6 @@ $sql = "
     LEFT JOIN course_instructor ci ON ci.course_id = c.id
     LEFT JOIN instructor i ON ci.instructor_id = i.id
     LEFT JOIN user u ON i.user_id = u.id
-    WHERE 1 = 1
 ";
 
 $params = [];
@@ -52,7 +54,7 @@ $interventions = $requete->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <nav>
-    <?php require_once 'inclus/Header.php'?>
+    <?php require_once 'inclus/Menu_gestion_licence.php'?>
 </nav>
 
 <body>

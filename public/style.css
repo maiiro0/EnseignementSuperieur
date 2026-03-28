@@ -48,9 +48,9 @@ nav{
     border: none;
     border-radius: 10px;
     width: 153px;
-    padding: 14px 20px;
     cursor: pointer;
-    height: 44px;
+    height: 38px;
+    margin-bottom: 10px;
 }
 .yellow-border{
     border-bottom: 2px solid #FFBD01;
