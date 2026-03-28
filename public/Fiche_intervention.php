@@ -1,5 +1,5 @@
 <?php
-require_once 'inclus/Header.php'
+require_once 'inclus/Header.php';
 require_once 'inclus/Connexion.php';
 require_once '../database/User_database.php';?>
 
@@ -12,7 +12,7 @@ require_once '../database/User_database.php';?>
         <div class="breadcrumb">
             <img src="assets/home.png" alt="">
             <p>></p>
-            <a href="Type_intervention">Types intervention</a>
+            <a href="Type_intervention.php">Types intervention</a>
             <p>></p>
             <a href="#">Cours</a>
         </div>
