@@ -64,7 +64,7 @@ if (isset($_GET['id'])) {
             <form method="get" action="" class="teacher-information-form">
                 <div class="filter-row">
                     <div class="filter-column">
-                        <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>">+
+                        <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>">
                         <label name="start_date">Date de debut</label>
                         <input type="text" name="start_date" placeholder="Saisissez la date de debut">
                     </div>
