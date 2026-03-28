@@ -1,10 +1,10 @@
 <?php
-require_once 'header.php'?>
+require_once 'inclus/Header.php'?>
 
 <body>
     <nav>
-        <?php require_once('Menu_gestion_licence.php'); 
-        require_once('Connexion.php');
+        <?php require_once('inclus/Menu_gestion_licence.php'); 
+        require_once('inclus/Connexion.php');
         require_once '../database/User_database.php';?>
     </nav>
 

@@ -1,5 +1,5 @@
 <?php
-require_once 'Connexion.php';
+require_once 'inclus/Connexion.php';
 $dateStart = $_GET['date_start'] ?? '';
 $dateEnd = $_GET['date_end'] ?? '';
 $moduleId = $_GET['module_id'] ?? '';
@@ -51,8 +51,9 @@ $requete->execute($params);
 $interventions = $requete->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<?php
-require_once 'header.php'?>
+<nav>
+    <?php require_once 'inclus/Header.php'?>
+</nav>
 
 <body>
 

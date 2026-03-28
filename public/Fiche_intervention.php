@@ -1,9 +1,11 @@
 <?php
-require_once 'header.php'?>
+require_once 'inclus/Header.php'
+require_once 'inclus/Connexion.php';
+require_once '../database/User_database.php';?>
 
 <body>
     <nav>
-        <?php require_once('Menu_gestion_licence.php'); ?>
+        <?php require_once('inclus/Menu_gestion_licence.php'); ?>
     </nav>
 
     <section class="intervention-type page">
@@ -14,9 +16,6 @@ require_once 'header.php'?>
         </div>
 
     <?php 
-    require_once 'Connexion.php';
-    require_once '../database/User_database.php';
-
     if (isset($_GET['id'])) {
         $id = htmlspecialchars($_GET['id']);
         $contenu = infos_intervention_type($con, $id);

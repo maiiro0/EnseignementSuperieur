@@ -3,7 +3,7 @@ require_once 'header.php'?>
 
 <body>
     <nav>
-        <?php require_once("Menu_gestion_licence.php"); ?>
+        <?php require_once("inclus/Menu_gestion_licence.php"); ?>
     </nav>
 
     <section class="calendar page">

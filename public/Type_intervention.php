@@ -1,10 +1,11 @@
 <?php
-require_once 'header.php'?>
+require_once 'inclus/Header.php';
+require_once '../database/User_database.php';
+require_once 'inclus/Connexion.php';?>
 
 <body>
     <nav>
-        <?php require_once('Menu_gestion_licence.php'); 
-        require_once '../database/User_database.php';?>
+        <?php require_once('inclus/Menu_gestion_licence.php'); ?>
     </nav>
 
     <section class="intervention-type page">
@@ -32,8 +33,6 @@ require_once 'header.php'?>
             </form>
 
             <?php
-            require_once 'connexion.php';
-
             $requete = $con->prepare("SELECT count(id) FROM intervention_type");
             $requete -> execute();
             $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);

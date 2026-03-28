@@ -1,6 +1,7 @@
 
 <?php 
-require_once 'Connexion.php';
+require_once 'inclus/Connexion.php';
+require_once 'inclus/Header.php'
 
 /*
 if (isset($_GET['id'])) {
@@ -19,12 +20,9 @@ $infos = $requete->fetch(PDO::FETCH_ASSOC);
 
 ?>
 
-<?php
-require_once 'header.php'?>
-
 <body>
     <nav>
-        <?php include_once 'Menu_gestion_licence.php' ?>
+        <?php include_once 'inclus/Menu_gestion_licence.php' ?>
     </nav>
     <section class="teacher-information page">
         <div class="breadcrumb">  
