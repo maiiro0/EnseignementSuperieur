@@ -13,16 +13,16 @@ $active = "calendrier";
     </div>
     <div class="menu-section">
         <div class="menu-section-title">MENU</div>
-            <a href="#" class="menu-item <?php if($active=='calendrier') echo 'active-item-menu'; ?>">
+            <a href="Calendrier.php" class="menu-item <?php if($active=='calendrier') echo 'active-item-menu'; ?>">
             <img src="assets/icon1.png" class="menu-icon">
             Calendrier </a>
 
-            <a href="#" class="menu-item <?php if($active=='interventions') echo 'active-item-menu'; ?>">
+            <a href="Intervention.php" class="menu-item <?php if($active=='interventions') echo 'active-item-menu'; ?>">
             <img src="assets/icon2.png" class="menu-icon">
             Interventions
             </a>
 
-            <a href="#" class="menu-item <?php if($active=='enseignants') echo 'active-item-menu'; ?>">
+            <a href="Corps_enseignant.php" class="menu-item <?php if($active=='enseignants') echo 'active-item-menu'; ?>">
             <img src="assets/icon3.png" class="menu-icon">
             Corps enseignant
             </a>
@@ -35,7 +35,7 @@ $active = "calendrier";
                 Modules
                 </a>
 
-                <a href="#" class="menu-item <?php if($active=='types') echo 'active-item-menu'; ?>">
+                <a href="Type_intervention.php" class="menu-item <?php if($active=='types') echo 'active-item-menu'; ?>">
                 <img src="assets/icon5.png" class="menu-icon">
                 Types d’intervention
                 </a>
