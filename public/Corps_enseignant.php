@@ -63,7 +63,7 @@
                         </div>
 
                         <label for="module_bdd">Modules enseignés - champ obligatoire</label><br>
-                        <select name="module_bdd" id="module_bdd" multiple class="select-multiple-form">
+                        <select name="module_bdd[]" id="module_bdd" multiple class="select-multiple-form">
                                 <?php
                                     $requete = $con->prepare("SELECT m.name FROM  module m;");
                                     $requete->execute();
@@ -189,12 +189,12 @@
 
 
 <?php 
-if (!empty($_POST["role_bdd"]) && !empty($_POST["first_name_bdd"]) && !empty($_POST["last_name_bdd"]) && !empty($_POST["module_bdd"]) && !empty($_POST["email_bdd"])) {
+if (!empty($_POST["role_bdd"]) && !empty($_POST["first_name_bdd"]) && !empty($_POST["last_name_bdd"]) && !empty($_POST["module_bdd[]"]) && !empty($_POST["email_bdd"])) {
     $role = htmlspecialchars($_POST["role_bdd"]);
     $email = htmlspecialchars($_POST["email_bdd"]);
     $first_name = htmlspecialchars($_POST["first_name_bdd"]);
     $last_name = htmlspecialchars($_POST["last_name_bdd"]);
-    $module = htmlspecialchars($_POST["module_bdd"]);
+    $module = htmlspecialchars($_POST["module_bdd[]"]);
 
     $requete = $con->prepare("INSERT INTO user (role, email, last_name, first_name) VALUES (:role, :email, :last_name, :first_name)");
     $requete->bindParam(':role', $role);
@@ -211,18 +211,18 @@ if (!empty($_POST["role_bdd"]) && !empty($_POST["first_name_bdd"]) && !empty($_P
     $requete->execute();
     $id = $requete->fetchAll(\PDO::FETCH_ASSOC);
 
-    var_dump($id["id"]);
+    var_dump($id[0]["id"]);
 
     $requete = $con->prepare("INSERT INTO instructor (user_id) VALUES (:id)");
-    $requete ->bindParam(':id', $id);
+    $requete ->bindParam(':id', $id[0]["id"]);
     $requete->execute();
 
     $requete = $con->prepare("SELECT id FROM instructor WHERE user_id = :user");
-    $requete->bindParam(':id', $id);
+    $requete->bindParam(':user', $id[0]["id"]);
     $requete->execute();
     $id = $requete->fetchAll(\PDO::FETCH_ASSOC);
 
-
+    var_dump($module);
     foreach ($module as $modules){
         $requete = $con->prepare("SELECT id FROM module WHERE name=:name");
         $requete->bindParam(':name', $modules);
