@@ -1,5 +1,7 @@
 <?php
-require_once 'inclus/Header.php'?>
+require_once 'inclus/Header.php';
+require_once 'inclus/Connexion.php';
+?>
 
 <body>
     <div class="connexion-container">
@@ -33,17 +35,17 @@ require_once 'inclus/Header.php'?>
     session_start();
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = htmlspecialchars($_POST['username']);
+    $email = htmlspecialchars($_POST['email']);
     $typedPassword = ($_POST['password']);
 
-    $query = $con->prepare("SELECT username, password FROM utilisateurs WHERE username=:username");
-    $query->bindParam(':username', $username);
+    $query = $con->prepare("SELECT email, password FROM user WHERE email=:email");
+    $query->bindParam(':email', $email);
     $query->execute();
 
     $user = $query->fetch(PDO::FETCH_ASSOC);
     // comparaison du username et password saisis avec ceux en BD
-    if ($user['username'] && password_verify($typedPassword, $user['password'])) {
-        $_SESSION['username'] = $username;
+    if ($user['email'] && password_verify($typedPassword, $user['password'])) {
+        $_SESSION['email'] = $email;
         // redirection vers la page calendrier
         header('Location: Calendrier.php');
         exit();
