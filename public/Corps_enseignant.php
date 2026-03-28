@@ -222,7 +222,6 @@ if (!empty($_POST["role_bdd"]) && !empty($_POST["first_name_bdd"]) && !empty($_P
     $requete->execute();
     $id = $requete->fetchAll(\PDO::FETCH_ASSOC);
 
-    var_dump($module);
     foreach ($module as $modules){
         $requete = $con->prepare("SELECT id FROM module WHERE name=:name");
         $requete->bindParam(':name', $modules);
