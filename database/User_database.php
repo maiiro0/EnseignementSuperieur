@@ -146,3 +146,8 @@ function select_id_intervention_type_where($con, $filtre) {
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
 }
+
+
+
+
+
