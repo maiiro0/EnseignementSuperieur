@@ -12,7 +12,8 @@
 <body>
     <nav>
         <?php require_once('Menu_gestion_licence.php'); 
-        require_once('Connexion.php')?>
+        require_once('Connexion.php');
+        require_once '../database/User_database.php';?>
     </nav>
 
     <section class="teaching_staff page">
@@ -65,14 +66,9 @@
                         <label for="module_bdd">Modules enseignés - champ obligatoire</label><br>
                         <select name="module_bdd[]" id="module_bdd" multiple class="select-multiple-form">
                                 <?php
-                                    $requete = $con->prepare("SELECT m.name FROM  module m;");
-                                    $requete->execute();
-                                    $nom_module = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                    $nom_module = select_name_module($con);
+                                    $nom_module_selected = nom_module_where_instructor($con, $id);
 
-                                    $requete = $con->prepare("SELECT m.name FROM  module m JOIN instructor_module im ON m.id = im.module_id WHERE im.instructor_id = :id");
-                                    $requete->bindParam(':id', $id);
-                                    $requete->execute();
-                                    $nom_module_selected = $requete->fetchAll(\PDO::FETCH_ASSOC);
                                     foreach ($nom_module as $valeurs=>$element) { 
                                         if (in_array($element, $nom_module_selected)) {
                                             echo "<option selected>". $element["name"]."</option>";
@@ -138,13 +134,7 @@
                         $filtre_email = '';
                     }
 
-                    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name LIKE :first_name OR u.last_name LIKE :last_name OR u.email LIKE :email");
-                    $requete->bindParam(':first_name', $filtre_prenom);
-                    $requete->bindParam(':last_name', $filtre_nom);
-                    $requete->bindParam(':email', $filtre_email);
-                    $requete->execute();
-                    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
-
+                    $contenu = infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email);
                     foreach ($contenu as $element => $valeur){
                         echo "<tr>";
                         echo "<td>". $valeur["last_name"]. "</td>"; 
@@ -155,16 +145,11 @@
                         <a href="">Accéder à la fiche</a></td>
                         <?php
                     }
-
-
                     echo "</tr>";
                 } 
 
                 else {
-                    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id");
-                    $requete->execute();
-                    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
-
+                    $contenu = select_infos_table_corps_enseignant($con);
                     foreach ($contenu as $valeurs=>$element) {
                         echo "<tr>";
                         echo "<td>". $element["last_name"]. "</td>"; 
@@ -196,42 +181,14 @@ if (!empty($_POST["role_bdd"]) && !empty($_POST["first_name_bdd"]) && !empty($_P
     $last_name = htmlspecialchars($_POST["last_name_bdd"]);
     $module = htmlspecialchars($_POST["module_bdd[]"]);
 
-    $requete = $con->prepare("INSERT INTO user (role, email, last_name, first_name) VALUES (:role, :email, :last_name, :first_name)");
-    $requete->bindParam(':role', $role);
-    $requete->bindParam(':email', $email);
-    $requete->bindParam(':last_name', $last_name);
-    $requete->bindParam(':first_name', $first_name);
-    $requete->execute();
-
-    $requete = $con->prepare("SELECT id FROM user WHERE role = :role AND email=:email AND last_name=:last_name AND first_name=:first_name");
-    $requete->bindParam(':role', $role);
-    $requete->bindParam(':email', $email);
-    $requete->bindParam(':last_name', $last_name);
-    $requete->bindParam(':first_name', $first_name);
-    $requete->execute();
-    $id = $requete->fetchAll(\PDO::FETCH_ASSOC);
-
-    var_dump($id[0]["id"]);
-
-    $requete = $con->prepare("INSERT INTO instructor (user_id) VALUES (:id)");
-    $requete ->bindParam(':id', $id[0]["id"]);
-    $requete->execute();
-
-    $requete = $con->prepare("SELECT id FROM instructor WHERE user_id = :user");
-    $requete->bindParam(':user', $id[0]["id"]);
-    $requete->execute();
-    $id = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    insert_user($con, $role, $email, $last_name, $first_name);
+    $id = select_id_user_where($con, $role, $email, $last_name, $first_name);
+    insert_instructor($con, $id);
+    $id = select_id_instructor($con, $id);
 
     foreach ($module as $modules){
-        $requete = $con->prepare("SELECT id FROM module WHERE name=:name");
-        $requete->bindParam(':name', $modules);
-        $requete->execute();
-        $module_name = $requete->fetch(\PDO::FETCH_ASSOC);
-
-        $requete = $con->prepare("INSERT INTO instructor_module (instructor_id, module_id) VALUES (:instructor_id, :module_id)");
-        $requete->bindParam(':instructor_id', $id);
-        $requete->bindParam(':module_id', $module_name);
-        $requete->execute();
+        $module_name = select_id_module($con, $modules);
+        insert_instructor_module($con, $module_name);
     }
 }
 
