@@ -933,3 +933,13 @@ dialog#dialogs {
 .form-width-max input {
     width: 100%;
 }
+
+
+table.table_teacher_interventions{
+    width: 907px;
+    border-collapse: collapse;
+}
+
+table.table_teacher_interventions td{
+    font-size: 14px;
+}

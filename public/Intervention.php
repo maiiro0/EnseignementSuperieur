@@ -1,5 +1,5 @@
 <?php
-require_once 'Connexion.php';
+require_once 'inclus/Connexion.php';
 $dateStart = $_GET['date_start'] ?? '';
 $dateEnd = $_GET['date_end'] ?? '';
 $moduleId = $_GET['module_id'] ?? '';
@@ -51,17 +51,10 @@ $requete->execute($params);
 $interventions = $requete->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interventions</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-</head>
+<nav>
+    <?php require_once 'inclus/Header.php'?>
+</nav>
+
 <body>
 
 <div class="page-shell">
