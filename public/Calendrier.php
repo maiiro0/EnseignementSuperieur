@@ -1,5 +1,6 @@
 <?php
 require_once 'inclus/Header.php';
+$active = 'calendrier';
 ?>
 <body>
     <nav>

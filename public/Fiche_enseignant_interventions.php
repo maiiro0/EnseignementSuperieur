@@ -2,6 +2,7 @@
 <?php 
 require_once 'inclus/Connexion.php';
 require_once 'inclus/Header.php';
+$active='enseignants';
 
 if (isset($_GET['id'])) {
     $id = htmlspecialchars($_GET['id']);

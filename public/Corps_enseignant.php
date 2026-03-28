@@ -1,5 +1,6 @@
 <?php
 require_once 'inclus/Header.php';
+$active='enseignants';
 
 if (empty($_GET["page"])){
     $page = 1;

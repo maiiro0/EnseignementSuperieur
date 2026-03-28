@@ -1,8 +1,3 @@
-<?php 
-session_start();
-$active = "calendrier";
-?>
-
 <div class="lateral-menu">
     <div class="logo-menu">
         <img src="assets/logo1.png">
@@ -14,16 +9,16 @@ $active = "calendrier";
     <div class="menu-section">
         <div class="menu-section-title">MENU</div>
             <a href="Calendrier.php" class="menu-item <?php if($active=='calendrier') echo 'active-item-menu'; ?>">
-            <img src="assets/icon1.png" class="menu-icon">
+            <img src="<?php if($active=='calendrier') echo 'assets/icon1.png'; else echo 'assets/Blue-calendar.png'?>" class="menu-icon">
             Calendrier </a>
 
             <a href="Intervention.php" class="menu-item <?php if($active=='interventions') echo 'active-item-menu'; ?>">
-            <img src="assets/icon2.png" class="menu-icon">
+            <img src="<?php if($active=='interventions') echo 'assets/White-intervention.png'; else echo 'assets/icon2.png'?>" class="menu-icon">
             Interventions
             </a>
 
             <a href="Corps_enseignant.php" class="menu-item <?php if($active=='enseignants') echo 'active-item-menu'; ?>">
-            <img src="assets/icon3.png" class="menu-icon">
+            <img src="<?php if($active=='enseignants') echo 'assets/white-corps-enseignant.png'; else echo 'assets/icon3.png'?>" class="menu-icon">
             Corps enseignant
             </a>
         </div>
@@ -31,12 +26,12 @@ $active = "calendrier";
         <div class="menu-section">
             <div class="menu-section-title">PARAMÉTRAGE</div>
                 <a href="#" class="menu-item <?php if($active=='modules') echo 'active-item-menu'; ?>">
-                <img src="assets/icon4.png" class="menu-icon">
+                <img src="<?php if($active=='modules') echo 'assets/white-module.png'; else echo 'assets/icon4.png'?>" class="menu-icon">
                 Modules
                 </a>
 
                 <a href="Type_intervention.php" class="menu-item <?php if($active=='types') echo 'active-item-menu'; ?>">
-                <img src="assets/icon5.png" class="menu-icon">
+                <img src="<?php if($active=='types') echo 'assets/white-type-intervention.png'; else echo 'assets/icon5.png'?>" class="menu-icon">
                 Types d’intervention
                 </a>
             </div>
