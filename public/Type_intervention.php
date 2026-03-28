@@ -23,7 +23,8 @@
 </head>
 <body>
     <nav>
-        <?php require_once('Menu_gestion_licence.php'); ?>
+        <?php require_once('Menu_gestion_licence.php'); 
+        require_once '../database/User_database.php';?>
     </nav>
 
     <section class="intervention-type page">
