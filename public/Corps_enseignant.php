@@ -92,7 +92,7 @@ else {
 
             </div>
 
-            <form method="post" action="">
+            <form method="get" action="">
                 <h3 class="yellow">Filtre</h3>
                 <div class="filter-row">
                     <div class="filter-column">
@@ -122,21 +122,21 @@ else {
                     <td></td>
                 </tr>
                 <?php
-                if (!empty($_POST["first_name"]) || !empty($_POST["last_name"]) || !empty($_POST["email"])){
-                    $filtre_prenom = '%'.$_POST["first_name"].'%';
-                    $filtre_nom = '%'.$_POST["last_name"].'%';
-                    $filtre_email = '%'.$_POST["email"].'%';
+                if (!empty($_GET["first_name"]) || !empty($_GET["last_name"]) || !empty($_GET["email"])){
+                    $filtre_prenom = '%'.$_GET["first_name"].'%';
+                    $filtre_nom = '%'.$_GET["last_name"].'%';
+                    $filtre_email = '%'.$_GET["email"].'%';
 
                     $limit = 10;
                     $offset = $page + $limit - $limit;
 
-                    if (empty($_POST['first_name'])) {
+                    if (empty($_GET['first_name'])) {
                         $filtre_prenom = '';
                     }
-                    if (empty($_POST["last_name"])){
+                    if (empty($_GET["last_name"])){
                         $filtre_nom = '';
                     }
-                    if (empty($_POST["email"])){
+                    if (empty($_GET["email"])){
                         $filtre_email = '';
                     }
 

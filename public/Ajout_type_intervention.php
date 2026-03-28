@@ -1,7 +1,8 @@
 <?php
 require_once 'inclus/Header.php';
 require_once '../database/User_database.php';
-require_once 'inclus/Connexion.php';?>
+require_once 'inclus/Connexion.php';
+$active='types';?>
 
 <body>
     <nav>
@@ -10,7 +11,7 @@ require_once 'inclus/Connexion.php';?>
 
     <section class="intervention-type page">
         <div class="breadcrumb">
-            <img src="assets/home.png" alt="">
+            <a href="Calendrier.php"><img src="assets/home.png" alt=""></a>
             <p>></p>
             <a href="Type_intervention.php">Types d'intervention</a>
             <p>></p>

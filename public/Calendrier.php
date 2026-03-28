@@ -10,7 +10,7 @@ $active = 'calendrier';
 
     <section class="calendar page">
         <div class="breadcrumb">
-            <img src="assets/home.png" alt="">
+            <a href="#"><img src="assets/home.png" alt=""></a>
             <p>></p>
             <a href="#">Calendrier</a>
         </div>
