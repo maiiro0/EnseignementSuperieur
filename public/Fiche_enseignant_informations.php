@@ -2,14 +2,12 @@
 <?php 
 require_once 'inclus/Connexion.php';
 require_once 'inclus/Header.php';
+require_once '../database/User_database.php';
 $active='enseignants';
 
 if (isset($_GET['id'])) {
     $id = htmlspecialchars($_GET['id']);
-    $requete = $con->prepare("SELECT email, last_name, first_name FROM user WHERE id=:id");
-    $requete->bindParam(':id', $id);
-    $requete->execute();
-    $infos = $requete->fetch(PDO::FETCH_ASSOC);
+    $infos = select_infos_enseignant($con, $id);
 }
 
 ?>
@@ -37,10 +35,8 @@ if (isset($_GET['id'])) {
             <p class="yellow-title">Modules enseignés</p>
             <div class="information-part">
             <?php
-                $requete = $con->prepare("SELECT m.name, m.hours_count FROM instructor_module im JOIN module m ON im.module_id = m.id  WHERE im.instructor_id= :id ");
-                $requete->bindParam(':id', $id);
-                $requete->execute();
-                $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                
+                $contenu = select_infos_modules_enseignant($con, $id);
 
                 foreach ($contenu as $colonne => $element) {
                     echo"<p>";
@@ -81,14 +77,8 @@ if (isset($_GET['id'])) {
                     <label for="name">Modules enseignés - champ obligatoire</label><br>
                     <select name="name[]" id="name" multiple class="select-multiple">
                             <?php
-                                $requete = $con->prepare("SELECT m.name FROM  module m;");
-                                $requete->execute();
-                                $nom_module = $requete->fetchAll(\PDO::FETCH_ASSOC);
-
-                                $requete = $con->prepare("SELECT m.name FROM  module m JOIN instructor_module im ON m.id = im.module_id WHERE im.instructor_id = :id");
-                                $requete->bindParam(':id', $id);
-                                $requete->execute();
-                                $nom_module_selected = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                $nom_module = select_modules_corp_enseignant($con);
+                                $nom_module_selected = select_modules_enseignées($con, $id);
                                 foreach ($nom_module as $valeurs=>$element) { 
                                     if (in_array($element, $nom_module_selected)) {
                                         echo "<option selected>". $element["name"]."</option>";
@@ -109,37 +99,12 @@ if (isset($_GET['id'])) {
 </html>
 
 <?php
-if ((!empty($_POST['last_name'])) && !empty($_POST['first_name']) && !empty($_POST['email'])) {
+if ((!empty($_POST['last_name'])) && !empty($_POST['first_name']) && !empty($_POST['email']) && !empty($_POST['name'])) {
     $last_name = htmlspecialchars($_POST['last_name']);
     $first_name = htmlspecialchars($_POST['first_name']);
     $email = htmlspecialchars($_POST['email']);
-
-    $requete = $con->prepare("UPDATE user SET last_name = :last_name, first_name = :first_name, email = :email WHERE id=:id");
-    $requete->bindParam(':last_name', $last_name);
-    $requete->bindParam(':first_name', $first_name);
-    $requete->bindParam(':email', $email);
-    $requete->bindParam(':id', $id);
-    $requete->execute();
-
-    if(!empty($_POST['name'])){
-        $name = $_POST['name'];
-        $requete = $con->prepare("DELETE FROM instructor_module WHERE instructor_id = :id");
-        $requete->bindParam(':id', $id);
-        $requete->execute();
-    
-        foreach ($name as $colonne => $element) {
-            $requete = $con->prepare("SELECT id FROM module WHERE name = :element");
-            $requete->bindParam(':element', $element);
-            $requete->execute();
-            $module_id = $requete->fetch(PDO::FETCH_ASSOC);
-
-            $requete = $con->prepare("INSERT INTO instructor_module VALUES (:id ,:module_id)");
-            $requete->bindParam(':id', $id);
-            $requete->bindParam(':module_id', $module_id['id']);
-            $requete->execute();
-        }
-
-    }
+    $name = $_POST['name'];
+    update_infos_enseignant($con, $id, $last_name, $first_name, $email, $name);
 }
 
 ?>

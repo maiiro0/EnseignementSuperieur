@@ -1,22 +1,47 @@
 <?php
 require_once 'inclus/Header.php';
+require_once('inclus/Connexion.php');
+require_once '../database/User_database.php';
 $active='enseignants';
 
 if (empty($_GET["page"])){
     $page = 1;
     $_GET["page"] = 1;
 }
-
 else {
     $page = $_GET['page'];
 }
+
+
+if (empty($_GET['first_name'])) {
+    $filtre_prenom = '';
+    $_GET['first_name'] ="";
+}
+else {
+    $filtre_prenom = $_GET['first_name'];
+}
+
+if (empty($_GET["last_name"])){
+    $filtre_nom = '';
+    $_GET["last_name"] ="";
+}
+else {
+    $filtre_nom = $_GET["last_name"];
+}
+
+if (empty($_GET["email"])){
+    $filtre_email = '';
+    $_GET["email"] ="";
+}
+else {
+    $filtre_email = $_GET["email"];
+}
+
 ?>
 
 <body>
     <nav>
-        <?php require_once('inclus/Menu_gestion_licence.php'); 
-        require_once('inclus/Connexion.php');
-        require_once '../database/User_database.php';?>
+        <?php require_once('inclus/Menu_gestion_licence.php'); ;?>
     </nav>
 
     <section class="teaching_staff page">
@@ -92,7 +117,7 @@ else {
 
             </div>
 
-            <form method="post" action="">
+            <form method="get" action="">
                 <h3 class="yellow">Filtre</h3>
                 <div class="filter-row">
                     <div class="filter-column">
@@ -122,23 +147,24 @@ else {
                     <td></td>
                 </tr>
                 <?php
-                if (!empty($_POST["first_name"]) || !empty($_POST["last_name"]) || !empty($_POST["email"])){
-                    $filtre_prenom = '%'.$_POST["first_name"].'%';
-                    $filtre_nom = '%'.$_POST["last_name"].'%';
-                    $filtre_email = '%'.$_POST["email"].'%';
+                if (!empty($_GET["first_name"]) || !empty($_GET["last_name"]) || !empty($_GET["email"])){
+                    $filtre_prenom = '%'.$_GET["first_name"].'%';
+                    $filtre_nom = '%'.$_GET["last_name"].'%';
+                    $filtre_email = '%'.$_GET["email"].'%';
 
                     $limit = 10;
-                    $offset = $page + $limit - $limit;
+                    $offset = $page * $limit - $limit;
 
-                    if (empty($_POST['first_name'])) {
+                    if (empty($_GET['first_name'])) {
                         $filtre_prenom = '';
                     }
-                    if (empty($_POST["last_name"])){
+                    if (empty($_GET["last_name"])){
                         $filtre_nom = '';
                     }
-                    if (empty($_POST["email"])){
+                    if (empty($_GET["email"])){
                         $filtre_email = '';
                     }
+
 
                     $contenu = infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email, $offset);
                     foreach ($contenu as $element => $valeur){
@@ -186,17 +212,16 @@ else {
                     <?php
                 }
                 else if ($_GET["page"] == $nb_pages){?>
-                    <a href="Corps_enseignant.php?page=<?php echo $page - 1; ?>">Page précédente </a><?php
+                    <a href="Corps_enseignant.php?page=<?php echo $page - 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>">Page précédente </a><?php
                 }
                 else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
-                    <a href="Corps_enseignant.php?page=<?php echo $page - 1; ?>">Page précédente </a>
-                    <a href="Corps_enseignant.php?page=<?php echo $page + 1; ?>"> Page suivante</a>
+                    <a href="Corps_enseignant.php?page=<?php echo $page - 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>">Page précédente </a>
+                    <a href="Corps_enseignant.php?page=<?php echo $page + 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>"> Page suivante</a>
                     <?php
                 } 
                 else { ?>
-                    <a href="Corps_enseignant.php?page=<?php echo $page + 1; ?>"> Page suivante</a><?php
+                    <a href="Corps_enseignant.php?page=<?php echo $page + 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>"> Page suivante</a><?php
                 }
-
                 ?>
 
             </table>
@@ -207,21 +232,22 @@ else {
 
 
 <?php 
-if (!empty($_POST["role_bdd"]) && !empty($_POST["first_name_bdd"]) && !empty($_POST["last_name_bdd"]) && !empty($_POST["module_bdd[]"]) && !empty($_POST["email_bdd"])) {
+if (!empty($_POST["role_bdd"]) && !empty($_POST["first_name_bdd"]) && !empty($_POST["last_name_bdd"]) && !empty($_POST["module_bdd"]) && !empty($_POST["email_bdd"])) {
     $role = htmlspecialchars($_POST["role_bdd"]);
     $email = htmlspecialchars($_POST["email_bdd"]);
     $first_name = htmlspecialchars($_POST["first_name_bdd"]);
     $last_name = htmlspecialchars($_POST["last_name_bdd"]);
-    $module = htmlspecialchars($_POST["module_bdd[]"]);
+    $module = $_POST["module_bdd"];
 
     insert_user($con, $role, $email, $last_name, $first_name);
     $id = select_id_user_where($con, $role, $email, $last_name, $first_name);
     insert_instructor($con, $id);
     $id = select_id_instructor($con, $id);
+    $id = $id["id"];
 
     foreach ($module as $modules){
         $module_name = select_id_module($con, $modules);
-        insert_instructor_module($con, $module_name);
+        insert_instructor_module($con, $module_name['id'], $id);
     }
 }
 
