@@ -252,12 +252,15 @@ function update_infos_enseignant($con, $id, $last_name, $first_name, $email, $na
     }
 }
 
-function filtre_fiche_enseignant($con, $id,  $filtre_start_date, $filtre_end_date, $filtre_name){
-    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id AND ( c.start_date LIKE :inter_start_date OR c.end_date LIKE :inter_end_date OR m.name LIKE :module_name )");
+function filtre_fiche_enseignant($con, $id,  $filtre_start_date, $filtre_end_date, $filtre_name, $offset){
+    $offend = $offset + 10;
+    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id AND ( c.start_date LIKE :inter_start_date OR c.end_date LIKE :inter_end_date OR m.name LIKE :module_name) LIMIT :offsetend OFFSET :offset");
     $requete->bindParam(':id', $id);
     $requete->bindParam(':inter_start_date', $filtre_start_date);
     $requete->bindParam(':inter_end_date', $filtre_end_date);
     $requete->bindParam(':module_name', $filtre_name);
+    $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
+    $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
@@ -271,9 +274,24 @@ function fiche_enseignant_tableau_intervenants($con, $element ){
     return $noms_intervenants;
 }
 
-function fiche_enseignant_tableau($con, $id ){
-    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id LIMIT 10");
+function fiche_enseignant_tableau($con, $id ,$offset){
+    $offend = $offset + 10;
+    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id LIMIT :offsetend OFFSET :offset");
     $requete->bindParam(':id', $id);
+    $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
+    $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+    $requete->execute();
+    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $contenu;
+}
+
+
+function select_nb_pages_filtre_fiche_enseignant($con, $id, $filtre_start_date, $filtre_end_date, $filtre_name){
+    $requete = $con->prepare("SELECT count(*) AS nblignes FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id AND ( c.start_date LIKE :inter_start_date OR c.end_date LIKE :inter_end_date OR m.name LIKE :module_name )");
+    $requete->bindParam(':id', $id);
+    $requete->bindParam(':inter_start_date', $filtre_start_date);
+    $requete->bindParam(':inter_end_date', $filtre_end_date);
+    $requete->bindParam(':module_name', $filtre_name);
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;

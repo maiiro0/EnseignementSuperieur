@@ -4,11 +4,44 @@ require_once 'inclus/Connexion.php';
 require_once 'inclus/Header.php';
 require_once '../database/User_database.php';
 $active='enseignants';
+if (empty($_GET["page"])){
+    $page = 1;
+    $_GET["page"] = 1;
+}
+else {
+    $page = $_GET['page'];
+}
 
 if (isset($_GET['id'])) {
     $id = htmlspecialchars($_GET['id']);
     $infos = select_infos_enseignant($con, $id);
 }
+
+
+if (empty($_GET['start_date'])) {
+    $filtre_start_date = '';
+    $_GET['start_date'] ="";
+}
+else {
+    $filtre_prenom = $_GET['start_date'];
+}
+
+if (empty($_GET["end_date"])){
+    $filtre_end_date = '';
+    $_GET["end_date"] ="";
+}
+else {
+    $filtre_nom = $_GET["end_date"];
+}
+
+if (empty($_GET["name"])){
+    $filtre_name = '';
+    $_GET["name"] ="";
+}
+else {
+    $filtre_email = $_GET["name"];
+}
+
 
 ?>
 
@@ -83,7 +116,7 @@ if (isset($_GET['id'])) {
                     <button class="yellow-button">Filtrer</button>
                 </div>
             </form>
-            <h4>Interventions trouvées : </h4>
+            <h4>Interventions trouvées :</h4>
 
             <table class="table_teacher_interventions">
                 <tr class="columns">
@@ -99,6 +132,9 @@ if (isset($_GET['id'])) {
                     $filtre_end_date = '%'.$_GET["end_date"].'%';
                     $filtre_name = '%'.$_GET["name"].'%';
 
+                    $limit = 10;
+                    $offset = $page * $limit - $limit;
+
 
                     if (empty($_GET["start_date"])){
                         $filtre_start_date = '';
@@ -112,7 +148,7 @@ if (isset($_GET['id'])) {
                         $filtre_name = '';
                     }
 
-                    $contenu = filtre_fiche_enseignant($con, $id,  $filtre_start_date, $filtre_end_date, $filtre_name);
+                    $contenu = filtre_fiche_enseignant($con, $id,  $filtre_start_date, $filtre_end_date, $filtre_name, $offset);
 
                     foreach ($contenu as $valeurs=>$element) {
                         $debut = new DateTime($element["start_date"]);
@@ -140,11 +176,20 @@ if (isset($_GET['id'])) {
                         else {
                             ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
                         }
+                        echo "</tr>";
                     }
+                    
+
+                    $nb_pages = select_nb_pages_filtre_fiche_enseignant($con,$id, $filtre_start_date, $filtre_end_date, $filtre_name);
+                    $nb_pages = $nb_pages[0]["nblignes"];
+                    $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
+                    
                 }
 
                 else {
-                    $contenu = fiche_enseignant_tableau($con, $id );
+                    $limit = 10;
+                    $offset = $page * $limit - $limit;
+                    $contenu = fiche_enseignant_tableau($con, $id ,$offset);
 
                     foreach ($contenu as $valeurs=>$element) {
                         $debut = new DateTime($element["start_date"]);
@@ -172,12 +217,35 @@ if (isset($_GET['id'])) {
                         else {
                             ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
                         }
+                        echo "</tr>";
 
                     }
+                    $nb_pages = select_nb_pages_filtre_fiche_enseignant($con,$id, $filtre_start_date, $filtre_end_date, $filtre_name);
+                    $nb_pages = $nb_pages[0]["nblignes"];
+                    $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
+                }
+
+
+                if ($_GET["page"] == 1 && $nb_pages == 1){ ?>
+                    <?php
+                }
+                else if ($_GET["page"] == $nb_pages){?>
+                    <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>?page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>">Page précédente </a><?php
+                }
+                else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
+                    <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>?page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>">Page précédente </a>
+                    <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>?page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a>
+                    <?php
+                } 
+                else { ?>
+                    <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>?page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a><?php
                 }
                 ?>
+
+                
             </table>
         </section>
     </section>
 </body>
 </html>
+
