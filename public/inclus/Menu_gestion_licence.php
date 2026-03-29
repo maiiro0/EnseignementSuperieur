@@ -57,6 +57,10 @@
                             session_destroy();
                             header("Location: index.php");
                             exit();
+
+                            if (!isset($_SESSION['user'])){
+                                header('Location:index.php');
+                            }
                         }
                     ?>
                 </div>
