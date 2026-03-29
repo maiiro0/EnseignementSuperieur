@@ -1,3 +1,9 @@
+<?php
+    if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+    }
+?>
+
 <div class="lateral-menu">
     <div class="logo-menu">
         <img src="assets/logo1.png">
@@ -49,20 +55,9 @@
             <div class="modal-deco" id="dialog">
                 <div class="modal-content">
                     <a style="cursor-pointer" href="#">Annuler</a>
-                    <form action="#" method="get">
+                    <form action="Calendrier.php" method="get">
                         <input  class="red-button" type="submit" name="deconnexion" value="Déconnexion">
                     </form> 
-                    <?php
-                        if(isset($_GET['deconnexion'])) {
-                            session_destroy();
-                            header("Location: index.php");
-                            exit();
-
-                            if (!isset($_SESSION['user'])){
-                                header('Location:index.php');
-                            }
-                        }
-                    ?>
                 </div>
             </div>
         </div>

@@ -1,4 +1,5 @@
 <?php
+require_once 'inclus/auth_check.php';
 require_once 'inclus/Header.php';
 require_once '../database/User_database.php';
 require_once 'inclus/Connexion.php';

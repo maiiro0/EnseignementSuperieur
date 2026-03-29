@@ -1,4 +1,6 @@
-<?php require_once("inclus/Header.php")?>
+<?php 
+require_once 'inclus/auth_check.php';
+require_once("inclus/Header.php")?>
 <body>
     <nav>
         <?php require_once('inclus/Menu_gestion_licence.php'); ?>

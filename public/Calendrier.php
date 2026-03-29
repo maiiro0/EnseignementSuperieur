@@ -1,11 +1,12 @@
 <?php
+require_once 'inclus/auth_check.php';
+require_once('inclus/Connexion.php');
 require_once 'inclus/Header.php';
 $active = 'calendrier';
 ?>
 <body>
     <nav>
-        <?php require_once('inclus/Menu_gestion_licence.php'); 
-        require_once('inclus/Connexion.php');?>
+        <?php require_once('inclus/Menu_gestion_licence.php'); ?>
     </nav>
 
     <section class="calendar page">
