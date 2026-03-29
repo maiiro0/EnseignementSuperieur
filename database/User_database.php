@@ -83,7 +83,7 @@ function select_id_instructor($con, $id){
     $requete = $con->prepare("SELECT id FROM instructor WHERE user_id = :user");
     $requete->bindParam(':user', $id[0]["id"]);
     $requete->execute();
-    $id = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    $id = $requete->fetch(\PDO::FETCH_ASSOC);
     return $id;
 }
 
@@ -95,7 +95,7 @@ function select_id_module($con, $modules){
     return $module_name;
 }
 
-function insert_instructor_module($con, $module_name){
+function insert_instructor_module($con, $module_name, $id){
     $requete = $con->prepare("INSERT INTO instructor_module (instructor_id, module_id) VALUES (:instructor_id, :module_id)");
     $requete->bindParam(':instructor_id', $id);
     $requete->bindParam(':module_id', $module_name);

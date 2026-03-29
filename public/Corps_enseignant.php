@@ -16,11 +16,9 @@ else {
 if (empty($_GET['first_name'])) {
     $filtre_prenom = '';
     $_GET['first_name'] ="";
-    var_dump($filtre_prenom);
 }
 else {
     $filtre_prenom = $_GET['first_name'];
-    var_dump($filtre_prenom);
 }
 
 if (empty($_GET["last_name"])){
@@ -188,7 +186,6 @@ else {
                 } 
 
                 else {
-                    var_dump($page);
                     $limit = 10;
                     $offset = $page * $limit - $limit;
                     $contenu = select_infos_table_corps_enseignant($con, $offset);
@@ -235,21 +232,22 @@ else {
 
 
 <?php 
-if (!empty($_POST["role_bdd"]) && !empty($_POST["first_name_bdd"]) && !empty($_POST["last_name_bdd"]) && !empty($_POST["module_bdd[]"]) && !empty($_POST["email_bdd"])) {
+if (!empty($_POST["role_bdd"]) && !empty($_POST["first_name_bdd"]) && !empty($_POST["last_name_bdd"]) && !empty($_POST["module_bdd"]) && !empty($_POST["email_bdd"])) {
     $role = htmlspecialchars($_POST["role_bdd"]);
     $email = htmlspecialchars($_POST["email_bdd"]);
     $first_name = htmlspecialchars($_POST["first_name_bdd"]);
     $last_name = htmlspecialchars($_POST["last_name_bdd"]);
-    $module = htmlspecialchars($_POST["module_bdd[]"]);
+    $module = $_POST["module_bdd"];
 
     insert_user($con, $role, $email, $last_name, $first_name);
     $id = select_id_user_where($con, $role, $email, $last_name, $first_name);
     insert_instructor($con, $id);
     $id = select_id_instructor($con, $id);
+    $id = $id["id"];
 
     foreach ($module as $modules){
         $module_name = select_id_module($con, $modules);
-        insert_instructor_module($con, $module_name);
+        insert_instructor_module($con, $module_name['id'], $id);
     }
 }
 
