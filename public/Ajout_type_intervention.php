@@ -48,10 +48,18 @@ $active='types';?>
 
 <?php
 if ((!empty($_POST['name'])) && !empty($_POST['color']) && !empty($_POST['description'])) {
-    $name = htmlspecialchars($_POST['name']);
-    $color = htmlspecialchars($_POST['color']);
-    $description = htmlspecialchars($_POST['description']);
-    insert_intervention_type($con, $name, $color, $description);
+    if ($_POST['color'][0] == '#'){
+        $name = htmlspecialchars($_POST['name']);
+        $color = htmlspecialchars($_POST['color']);
+        $description = htmlspecialchars($_POST['description']);
+        insert_intervention_type($con, $name, $color, $description);
+    }
+    else {
+        echo "<p>"."Vous n'avez pas mis d'hexadecimal"."</p>";
+    }
+}
+else {
+    echo "<p>"."Erreur de saisie"."</p>";
 }
 
 ?>

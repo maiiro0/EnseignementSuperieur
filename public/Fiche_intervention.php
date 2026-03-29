@@ -96,8 +96,14 @@ if (isset($_POST['action']) && $_POST['action'] === 'confirm-delete') {
 
 
 if ((!empty($_POST['name'])) && !empty($_POST['color']) && !empty($_POST['description'])) {
-    $name = htmlspecialchars($_POST['name']);
-    $color = htmlspecialchars($_POST['color']);
-    $description = htmlspecialchars($_POST['description']);
-    update_intervention_type($con, $id, $name, $color, $description);
+    if ($_POST['color'][0] == "#"){
+        $name = htmlspecialchars($_POST['name']);
+        $color = htmlspecialchars($_POST['color']);
+        $description = htmlspecialchars($_POST['description']);
+        update_intervention_type($con, $id, $name, $color, $description);
+    }
+    else {
+        echo "<p>"."Vous n'avez pas mis d'hexadecimal"."</p>";
+    }
 }
+?>
