@@ -8,8 +8,11 @@ function infos_intervention_type($con, $id){
     return $contenu[0];
 }
 
-function infos_intervention_type_all($con){
-    $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type");
+function infos_intervention_type_all($con, $offset){
+    $offend = $offset + 10;
+    $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type LIMIT :offsetend OFFSET :offset");
+    $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
+    $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
@@ -145,9 +148,12 @@ function insert_intervention_type($con, $name, $color, $description) {
     $requete->execute();
 }
 
-function select_id_intervention_type_where($con, $filtre) {
-    $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type WHERE name=:filtre");
+function select_id_intervention_type_where($con, $filtre, $offset) {
+    $offend = $offset + 10;
+    $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type WHERE name LIKE :filtre LIMIT :offsetend OFFSET :offset");
     $requete->bindParam(':filtre', $filtre);
+    $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
+    $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
@@ -165,6 +171,21 @@ function select_nb_pages_filtre($con, $filtre_prenom, $filtre_nom, $filtre_email
     $requete->bindParam(':first_name', $filtre_prenom);
     $requete->bindParam(':last_name', $filtre_nom);
     $requete->bindParam(':email', $filtre_email);
+    $requete->execute();
+    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $contenu;
+}
+
+function select_nb_pages_filtre_intervention($con, $filtre){
+    $requete = $con->prepare("SELECT count(*) AS nblignes FROM intervention_type WHERE name=:filtre");
+    $requete->bindParam(':filtre', $filtre);
+    $requete->execute();
+    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $contenu;
+}
+
+function select_nb_pages_filtre_intervention_all($con){
+    $requete = $con->prepare("SELECT count(*) AS nblignes FROM intervention_type");
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;

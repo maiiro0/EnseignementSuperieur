@@ -1,22 +1,49 @@
 <?php
 require_once 'inclus/Header.php';
+require_once('inclus/Connexion.php');
+require_once '../database/User_database.php';
 $active='enseignants';
 
 if (empty($_GET["page"])){
     $page = 1;
     $_GET["page"] = 1;
 }
-
 else {
     $page = $_GET['page'];
 }
+
+
+if (empty($_GET['first_name'])) {
+    $filtre_prenom = '';
+    $_GET['first_name'] ="";
+    var_dump($filtre_prenom);
+}
+else {
+    $filtre_prenom = $_GET['first_name'];
+    var_dump($filtre_prenom);
+}
+
+if (empty($_GET["last_name"])){
+    $filtre_nom = '';
+    $_GET["last_name"] ="";
+}
+else {
+    $filtre_nom = $_GET["last_name"];
+}
+
+if (empty($_GET["email"])){
+    $filtre_email = '';
+    $_GET["email"] ="";
+}
+else {
+    $filtre_email = $_GET["email"];
+}
+
 ?>
 
 <body>
     <nav>
-        <?php require_once('inclus/Menu_gestion_licence.php'); 
-        require_once('inclus/Connexion.php');
-        require_once '../database/User_database.php';?>
+        <?php require_once('inclus/Menu_gestion_licence.php'); ;?>
     </nav>
 
     <section class="teaching_staff page">
@@ -128,7 +155,7 @@ else {
                     $filtre_email = '%'.$_GET["email"].'%';
 
                     $limit = 10;
-                    $offset = $page + $limit - $limit;
+                    $offset = $page * $limit - $limit;
 
                     if (empty($_GET['first_name'])) {
                         $filtre_prenom = '';
@@ -139,6 +166,7 @@ else {
                     if (empty($_GET["email"])){
                         $filtre_email = '';
                     }
+
 
                     $contenu = infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email, $offset);
                     foreach ($contenu as $element => $valeur){
@@ -160,6 +188,7 @@ else {
                 } 
 
                 else {
+                    var_dump($page);
                     $limit = 10;
                     $offset = $page * $limit - $limit;
                     $contenu = select_infos_table_corps_enseignant($con, $offset);
@@ -186,17 +215,16 @@ else {
                     <?php
                 }
                 else if ($_GET["page"] == $nb_pages){?>
-                    <a href="Corps_enseignant.php?page=<?php echo $page - 1; ?>">Page précédente </a><?php
+                    <a href="Corps_enseignant.php?page=<?php echo $page - 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>">Page précédente </a><?php
                 }
                 else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
-                    <a href="Corps_enseignant.php?page=<?php echo $page - 1; ?>">Page précédente </a>
-                    <a href="Corps_enseignant.php?page=<?php echo $page + 1; ?>"> Page suivante</a>
+                    <a href="Corps_enseignant.php?page=<?php echo $page - 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>">Page précédente </a>
+                    <a href="Corps_enseignant.php?page=<?php echo $page + 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>"> Page suivante</a>
                     <?php
                 } 
                 else { ?>
-                    <a href="Corps_enseignant.php?page=<?php echo $page + 1; ?>"> Page suivante</a><?php
+                    <a href="Corps_enseignant.php?page=<?php echo $page + 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>"> Page suivante</a><?php
                 }
-
                 ?>
 
             </table>

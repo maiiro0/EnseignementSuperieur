@@ -2,7 +2,25 @@
 require_once 'inclus/Header.php';
 require_once '../database/User_database.php';
 require_once 'inclus/Connexion.php';
-$active='types';?>
+$active='types';
+
+if (empty($_GET["page"])){
+    $page = 1;
+    $_GET["page"] = 1;
+}
+else {
+    $page = $_GET['page'];
+}
+
+
+if (empty($_GET["filtre"])){
+    $filtre = '';
+    $_GET["filtre"] = "";
+}
+else {
+    $filtre = $_GET["filtre"];
+}
+?>
 
 <body>
     <nav>
@@ -33,14 +51,6 @@ $active='types';?>
                 </div>
             </form>
 
-            <?php
-            $requete = $con->prepare("SELECT count(id) FROM intervention_type");
-            $requete -> execute();
-            $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
-            $contenu=(int)$contenu[0]["count(id)"];
-            echo "<h4>".$contenu." types</h4>";
-            ?>
-
             <table class="table">
                 <tr class="columns">
                     <td>Nom</td>
@@ -50,9 +60,18 @@ $active='types';?>
                 </tr>
                 <?php
                     if (!empty($_GET["name-filter"])){
-                        $filtre = $_GET["name-filter"];
-                        $contenu = select_id_intervention_type_where($con, $filtre);
-                        
+                        $filtre = '%'.$_GET["name-filter"].'%';
+                        $requete = $con->prepare("SELECT count(id) FROM intervention_type WHERE name LIKE :filtre");
+                        $requete->bindParam(':filtre', $filtre);
+                        $requete -> execute();
+                        $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                        $contenu=(int)$contenu[0]["count(id)"];
+                        echo "<h4>".$contenu." types</h4>";
+
+                        $limit = 10;
+                        $offset = $page * $limit - $limit;
+                        $contenu = select_id_intervention_type_where($con, $filtre, $offset);
+
                         foreach ($contenu as $colonne => $element) {
                         echo "<tr>";
                         echo "<td>". $element["name"]. "</td>";
@@ -63,10 +82,22 @@ $active='types';?>
                         <a href="Fiche_intervention.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td>
                         </tr><?php
                         }
+
+                        $nb_pages = select_nb_pages_filtre_intervention($con, $filtre);
+                        $nb_pages = $nb_pages[0]["nblignes"];
+                        $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
                     }
 
                     else {
-                        $contenu = infos_intervention_type_all($con);
+                        $requete = $con->prepare("SELECT count(id) FROM intervention_type");
+                        $requete -> execute();
+                        $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                        $contenu=(int)$contenu[0]["count(id)"];
+                        echo "<h4>".$contenu." types</h4>";
+
+                        $limit = 10;
+                        $offset = $page * $limit - $limit;
+                        $contenu = infos_intervention_type_all($con, $offset);
 
                         foreach ($contenu as $colonne => $element) {
                             echo "<tr>";
@@ -79,6 +110,25 @@ $active='types';?>
                             <?php
                             echo "</tr>";
                         }
+
+                        $nb_pages = select_nb_pages_filtre_intervention_all($con);
+                        $nb_pages = $nb_pages[0]["nblignes"];
+                        $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
+                    }
+
+                    if ($_GET["page"] == 1 && $nb_pages == 1){ ?>
+                    <?php
+                    }
+                    else if ($_GET["page"] == $nb_pages){?>
+                        <a href="Type_intervention.php?page=<?php echo $page - 1; ?>&filtre=<?php echo $filtre ?>">Page précédente </a><?php
+                    }
+                    else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
+                        <a href="Type_intervention.php?page=<?php echo $page - 1; ?>&filtre=<?php echo $filtre ?>">Page précédente </a>
+                        <a href="Type_intervention.php?page=<?php echo $page + 1; ?>&filtre=<?php echo $filtre ?>"> Page suivante</a>
+                        <?php
+                    } 
+                    else { ?>
+                        <a href="Type_intervention.php?page=<?php echo $page + 1; ?>&filtre=<?php echo $filtre ?>"> Page suivante</a><?php
                     }
                 ?>
 
