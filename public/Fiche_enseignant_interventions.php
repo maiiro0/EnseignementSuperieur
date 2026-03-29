@@ -2,14 +2,12 @@
 <?php 
 require_once 'inclus/Connexion.php';
 require_once 'inclus/Header.php';
+require_once '../database/User_database.php';
 $active='enseignants';
 
 if (isset($_GET['id'])) {
     $id = htmlspecialchars($_GET['id']);
-    $requete = $con->prepare("SELECT email, last_name, first_name FROM user WHERE id=:id");
-    $requete->bindParam(':id', $id);
-    $requete->execute();
-    $infos = $requete->fetch(PDO::FETCH_ASSOC);
+    $infos = select_infos_enseignant($con, $id);
 }
 
 ?>
@@ -37,10 +35,8 @@ if (isset($_GET['id'])) {
             <p class="yellow-title">Modules enseignés</p>
             <div class="information-part">
             <?php
-                $requete = $con->prepare("SELECT m.name, m.hours_count FROM instructor_module im JOIN module m ON im.module_id = m.id  WHERE im.instructor_id= :id ");
-                $requete->bindParam(':id', $id);
-                $requete->execute();
-                $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+
+                $contenu = select_infos_modules_enseignant($con, $id);
 
                 foreach ($contenu as $colonne => $element) {
                     echo"<p>";
@@ -77,9 +73,7 @@ if (isset($_GET['id'])) {
                         <select name="name" id="name" >
                                 <option value="">Sélectionnez le module</option>
                                 <?php
-                                    $requete = $con->prepare("SELECT m.name FROM  module m;");
-                                    $requete->execute();
-                                    $nom_module = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                    $nom_module = select_modules_corp_enseignant($con);
                                     foreach ($nom_module as $valeurs=>$element) { 
                                         echo "<option>". $element["name"]."</option>";
                                     }
@@ -118,13 +112,7 @@ if (isset($_GET['id'])) {
                         $filtre_name = '';
                     }
 
-                    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id AND ( c.start_date LIKE :inter_start_date OR c.end_date LIKE :inter_end_date OR m.name LIKE :module_name )");
-                    $requete->bindParam(':id', $id);
-                    $requete->bindParam(':inter_start_date', $filtre_start_date);
-                    $requete->bindParam(':inter_end_date', $filtre_end_date);
-                    $requete->bindParam(':module_name', $filtre_name);
-                    $requete->execute();
-                    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                    $contenu = filtre_fiche_enseignant($con, $id,  $filtre_start_date, $filtre_end_date, $filtre_name);
 
                     foreach ($contenu as $valeurs=>$element) {
                         $debut = new DateTime($element["start_date"]);
@@ -136,11 +124,7 @@ if (isset($_GET['id'])) {
 
                         echo "<td>". $element["type_name"] ."</td>";
 
-                    
-                        $requete = $con->prepare("SELECT upper(u.last_name), upper(u.first_name) FROM user u join instructor i ON i.user_id = u.id join course_instructor ci ON ci.instructor_id = i.id WHERE ci.course_id = :id");
-                        $requete -> bindParam(':id', $element["id"]); 
-                        $requete->execute();
-                        $noms_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC); //On récupère les noms et les prénoms en majuscule
+                        $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
                         echo "<td>";
                         $temporaire = "";
                         foreach ($noms_intervenants as $colonne=>$noms){
@@ -160,10 +144,7 @@ if (isset($_GET['id'])) {
                 }
 
                 else {
-                    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id LIMIT 10");
-                    $requete->bindParam(':id', $id);
-                    $requete->execute();
-                    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                    $contenu = fiche_enseignant_tableau($con, $id );
 
                     foreach ($contenu as $valeurs=>$element) {
                         $debut = new DateTime($element["start_date"]);
@@ -175,11 +156,7 @@ if (isset($_GET['id'])) {
 
                         echo "<td>". $element["type_name"] ."</td>";
 
-                    
-                        $requete = $con->prepare("SELECT upper(u.last_name), upper(u.first_name) FROM user u join instructor i ON i.user_id = u.id join course_instructor ci ON ci.instructor_id = i.id WHERE ci.course_id = :id");
-                        $requete -> bindParam(':id', $element["id"]); 
-                        $requete->execute();
-                        $noms_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC); //On récupère les noms et les prénoms en majuscule
+                        $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
                         echo "<td>";
                         $temporaire = "";
                         foreach ($noms_intervenants as $colonne=>$noms){
