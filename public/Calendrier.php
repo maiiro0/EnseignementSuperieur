@@ -33,11 +33,11 @@ else {
             <div class="align">
                 <h3>Calendrier</h3>
                 <div class="button">
-                    <button command="show-modal" commandfor="dialog" class="blue-button">Ajouter une nouvelle intervention</button>
+                    <button type="button" command="show-modal" commandfor="Ajout" class="blue-button">Ajouter une nouvelle intervention</button>
                 </div>
 
-                <dialog id="dialog">
-                    <button commandfor="dialog" command="close" class="invisible-button"><img src="assets/Frame 1041.png" alt="" id="quit"></button>
+                <dialog id="Ajout">
+                    <button type="button" command="close" commandfor="Ajout" class="invisible-button"><img src="assets/Frame 1041.png" alt=""></button>
                     <div class="add-intervention">
                         <img src="assets/Frame.png" alt="">
                         <div>
@@ -46,28 +46,28 @@ else {
                         </div>
                     </div>
 
-                    <form action="" method="post">
+                    <form action="" method="post" class="calendar-form">
                         <div>
                             <label for="title">Titre</label> </br>
-                            <input type="text" placeholder="Saisissez un titre sur l'intervention" name="title" id="title"></br>
+                            <input type="text" placeholder="Saisissez un titre sur l'intervention" name="title" id="title" class="input-size-long"></br>
                         </div>
                         
                         <div class="form-align">
                             <div>
                                 <label for="date-start" require>Date de début - champ obligatoire</label></br>
-                                <input type="datetime-local" name="date-start" id="date-start"></br>
+                                <input type="datetime-local" name="date-start" id="date-start" class="select-input-size"></br>
                             </div>
 
                             <div>
                                 <label for="date-end" require>Date de fin - champ obligatoire</label></br>
-                                <input type="datetime-local" name="date-end" id="date-end"></br>
+                                <input type="datetime-local" name="date-end" id="date-end" class="select-input-size"></br>
                             </div>
                         </div>
 
                         <div class="form-align">
                             <div>
                                 <label for="module">Module - champ obligatoire</label></br>
-                                <select name="module" id="module">
+                                <select name="module" id="module" class= "select-size">
                                     <option value="">Sélectionner le module</option>
                                     <?php
                                     $requete = $con->prepare("SELECT id, name FROM module ORDER BY id");
@@ -79,10 +79,9 @@ else {
                                     ?>
                                 </select></br>
                             </div>
-
                             <div>
                                 <label for="intervrntion">Type d'intervention - champ obligatoire</label></br>
-                                <select name="intervention" id="intervention">
+                                <select name="intervention" id="intervention" class= "select-size">
                                     <option value="">Sélectionner le module</option>
                                     <?php 
                                     $requete = $con->prepare("SELECT name FROM intervention_type ORDER BY name");
@@ -95,19 +94,24 @@ else {
                                 </select></br>
                             </div>
                         </div>
-
-                        <label for="inter">Intervenant - champ obligatoire</label></br>
-                        <select name="inter" id="inter">
-                                <option value="">Sélectionner des intervenants</option>
-                                <?php
-                                    $requete = $con->prepare("SELECT upper(last_name), first_name FROM user ORDER BY last_name");
-                                    $requete->execute();
-                                    $nom_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC);
-                                    foreach ($nom_intervenants as $valeurs=>$element) { 
-                                        echo "<option>". $element["upper(last_name)"]. " ". $element["first_name"] ."</option>";
-                                    }
-                                ?>
-                        </select></br>
+                        <div>
+                            <label for="inter">Intervenant - champ obligatoire</label></br>
+                            <select name="inter" id="inter" class="select-size-long">
+                                    <option value="">Sélectionner des intervenants</option>
+                                    <?php
+                                        $requete = $con->prepare("SELECT upper(last_name), first_name FROM user ORDER BY last_name");
+                                        $requete->execute();
+                                        $nom_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                        foreach ($nom_intervenants as $valeurs=>$element) { 
+                                            echo "<option>". $element["upper(last_name)"]. " ". $element["first_name"] ."</option>";
+                                        }
+                                    ?>
+                            </select>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="visio" name="visio" value="1" />
+                            <label for="visio">Intervention effectuée en visio</label>
+                        </div>
                         <div class="select-button">
                             <button commandfor="dialog" command="close" class="grey-button selection">Annuler</button>
                             <button type="submit" class="blue-button selection">Confirmer</button>
@@ -118,7 +122,7 @@ else {
             </div>
             <h4>Interventions de la semaine</h4>
 
- <table class="table">
+            <table class="table">
                 <tr class="columns">
                     <td>Dates de l'intervention</td>
                     <td>Module</td>
@@ -221,3 +225,4 @@ if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['
 }
 
 ?>
+
