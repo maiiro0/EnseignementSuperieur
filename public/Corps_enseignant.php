@@ -1,10 +1,11 @@
 <?php
-require_once 'inclus/auth_check.php';
-require_once('inclus/Connexion.php');
-require_once '../database/User_database.php';
-require_once 'inclus/Header.php';
+require_once 'inclus/auth_check.php'; // Vérification de la session
+require_once('inclus/Connexion.php'); // Connexion à la base de données
+require_once '../database/User_database.php'; // Fonctions liées à la table user
+require_once 'inclus/Header.php'; // Header de la page
+// Définition de la variable active pour le menu
 $active='enseignants';
-
+// Pagination
 if (empty($_GET["page"])){
     $page = 1;
     $_GET["page"] = 1;
