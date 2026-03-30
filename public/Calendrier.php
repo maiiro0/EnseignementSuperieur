@@ -2,8 +2,21 @@
 require_once 'inclus/auth_check.php';
 require_once('inclus/Connexion.php');
 require_once 'inclus/Header.php';
+require_once '../database/User_database.php';
 $active = 'calendrier';
+
+
+
+if (empty($_GET["page"])){
+    $page = 1;
+    $_GET["page"] = 1;
+}
+else {
+    $page = $_GET['page'];
+}
+
 ?>
+
 <body>
     <nav>
         <?php require_once('inclus/Menu_gestion_licence.php'); ?>
@@ -105,67 +118,72 @@ $active = 'calendrier';
             </div>
             <h4>Interventions de la semaine</h4>
 
-            <table class="table">
+ <table class="table">
                 <tr class="columns">
                     <td>Dates de l'intervention</td>
-                    <td>Modules & titre</td>
+                    <td>Module</td>
                     <td>Type</td>
                     <td>Intervenants</td>
                     <td>En visio</td>
                     <td></td>
                 </tr>
                 <?php
-                    $requete = $con->prepare("SELECT id, start_date, end_date, intervention_type_id, module_id, remotely FROM course");
-                    $requete->execute();
-                    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                $limit = 10;
+                $offset = $page * $limit - $limit;
+                $contenu = calendrier_tableau($con, $offset);
+                foreach ($contenu as $valeurs=>$element) {
+                    $debut = new DateTime($element["start_date"]);
+                    $fin = new DateTime($element["end_date"]);
+                    echo "<tr>";
+                    echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
 
-                    foreach ($contenu as $valeurs=>$element) {
-                        echo "<tr>";
-                        echo "<td>". $element["start_date"]. "</td>"; //Colonne Date de début. Il manque à mettre l'heure de fin
+                    echo "<td>". $element["module"] . "</td>";
 
-                        $module_id = $element["module_id"];
-                        $requete = $con->prepare("SELECT name FROM module WHERE id = :module_id");
-                        $requete -> bindParam(':module_id', $module_id); 
-                        $requete->execute();
-                        $nom_module = $requete->fetch(\PDO::FETCH_ASSOC); // On va chercher le nom du module dans une autre table
-                        echo "<td>". $nom_module["name"] . "</td>";
+                    echo "<td>". $element["type_name"] ."</td>";
 
-                        $type_intervention = $element["intervention_type_id"];
-                        $requete = $con->prepare("SELECT name FROM intervention_type WHERE id = :type_intervention");
-                        $requete -> bindParam(':type_intervention', $type_intervention);
-                        $requete->execute();
-                        $nom_intervention = $requete->fetch(\PDO::FETCH_ASSOC); //On va chercher le nom de l'intervention dans la table intervention_type
-                        echo "<td>". $nom_intervention["name"] ."</td>";
-
-                        $id = $element["id"];
-                        $requete = $con->prepare("SELECT upper(u.last_name), upper(u.first_name) FROM user u WHERE u.id IN (SELECT i.user_id FROM instructor i WHERE i.id in (SELECT c.instructor_id FROM course_instructor c WHERE c.course_id = :id))");
-                        $requete -> bindParam(':id', $id); 
-                        $requete->execute();
-                        $noms_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC); //On récupère les noms et les prénoms en majuscule
-                        echo "<td>";
-                        $temporaire = "";
-                        foreach ($noms_intervenants as $colonne=>$noms){
-                            $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
-                        }
-                        echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
-                        echo "</td>";
-
-
-                        if ($element["remotely"] == 0){
-                            ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
-                        }   
-                        else {
-                            ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
-                        }
-
-                        ?><td class="table_align"><img src="assets/Oeil.png" alt="">
-                        <a href="">Accéder à la fiche</a></td>
-                        <?php
-
-                        echo "</tr>";
+                    $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
+                    echo "<td>";
+                    $temporaire = "";
+                    foreach ($noms_intervenants as $colonne=>$noms){
+                        $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
                     }
-                ?>
+                    echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
+                    echo "</td>";
 
+
+                    if ($element["remotely"] == 0){
+                        ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
+                    }   
+                    else {
+                        ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
+                    }
+                    ?>
+                    <td class="table_align"><img src="assets/Oeil.png" alt="">
+                    <a href="">Accéder à la fiche</a></td>
+                    <?php
+                    echo "</tr>";
+
+                }
+                $nb_pages = select_nb_pages_calendrier($con);
+                $nb_pages = $nb_pages[0]["nblignes"];
+                $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
+
+
+                if ($_GET["page"] == 1 && $nb_pages == 1){ ?>
+                    <?php
+                }
+                else if ($_GET["page"] == $nb_pages){?>
+                    <a href="Calendrier.php?page=<?php echo $page - 1; ?>"> Page précédente </a><?php
+                }
+                else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
+                    <a href="Calendrier.php?page=<?php echo $page - 1; ?>">Page précédente </a>
+                    <a href="Calendrier.php?page=<?php echo $page + 1; ?>"> Page suivante</a>
+                    <?php
+                } 
+                else { ?>
+                    <a href="Calendrier.php?page=<?php echo $page + 1; ?>"> Page suivante</a><?php
+                }
+                ?>
             </table>
         </section>
     </section>
@@ -201,3 +219,5 @@ if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['
 
 
 }
+
+?>
