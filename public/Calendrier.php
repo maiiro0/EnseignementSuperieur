@@ -68,6 +68,7 @@ else {
                             <div>
                                 <label for="module">Module - champ obligatoire</label></br>
                                 <select name="module" id="module" class= "select-size">
+                                    
                                     <option value="">Sélectionner le module</option>
                                     <?php
                                     $requete = $con->prepare("SELECT id, name FROM module ORDER BY id");
@@ -80,8 +81,8 @@ else {
                                 </select></br>
                             </div>
                             <div>
-                                <label for="intervrntion">Type d'intervention - champ obligatoire</label></br>
-                                <select name="intervention" id="intervention" class= "select-size">
+                                <label for="typeintervention">Type d'intervention - champ obligatoire</label></br>
+                                <select name="typeintervention" id="typeintervention" class= "select-size">
                                     <option value="">Sélectionner le module</option>
                                     <?php 
                                     $requete = $con->prepare("SELECT name FROM intervention_type ORDER BY name");
@@ -95,8 +96,8 @@ else {
                             </div>
                         </div>
                         <div>
-                            <label for="inter">Intervenant - champ obligatoire</label></br>
-                            <select name="inter" id="inter" class="select-size-long">
+                            <label for="intervenant">Intervenant - champ obligatoire</label></br>
+                            <select name="intervenant[]" id="intervenant" multiple class="select-size-long">
                                     <option value="">Sélectionner des intervenants</option>
                                     <?php
                                         $requete = $con->prepare("SELECT upper(last_name), first_name FROM user ORDER BY last_name");
@@ -223,6 +224,21 @@ if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['
 
 
 }
+
+
+if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['typeintervention']) && !empty($_POST['intervenant']) && !empty($_POST['visio'])) {
+    $title = htmlspecialchars($_POST['title']);
+    $date-start = htmlspecialchars($_POST['date-start']);
+    $date-end = htmlspecialchars($_POST['date-end']);
+    $module = htmlspecialchars($_POST['module']);
+    $typeintervention = htmlspecialchars($_POST['typeintervention']);
+    $intervenant = $_POST['intervenant'];
+    $visio = $_POST['visio'];
+    insert_infos_intervention($title, $date-start, $date-end, $module, $typeintervention, $intervenant, $visio);
+}
+
+
+
 
 ?>
 
