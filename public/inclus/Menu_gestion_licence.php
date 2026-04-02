@@ -31,7 +31,7 @@
 
         <div class="menu-section">
             <div class="menu-section-title">PARAMÉTRAGE</div>
-                <a href="#" class="menu-item <?php if($active=='modules') echo 'active-item-menu'; ?>">
+                <a href="Modules.php" class="menu-item <?php if($active=='modules') echo 'active-item-menu'; ?>">
                 <img src="<?php if($active=='modules') echo 'assets/white-module.png'; else echo 'assets/icon4.png'?>" class="menu-icon">
                 Modules
                 </a>

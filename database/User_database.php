@@ -296,3 +296,10 @@ function select_nb_pages_filtre_fiche_enseignant($con, $id, $filtre_start_date, 
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
 }
+
+function select_parent($con) {
+    $requete = $con -> prepare("SELECT id,name FROM module WHERE parent_id IS NULL;");
+    $requete->execute();
+    $infos = $requete->fetchAll(PDO::FETCH_ASSOC);
+    return $infos;
+}

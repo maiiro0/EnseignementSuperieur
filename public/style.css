@@ -943,3 +943,23 @@ table.table_teacher_interventions{
 table.table_teacher_interventions td{
     font-size: 14px;
 }
+
+.dashed {
+    border: 1px dashed #F1F2F7;
+    border-radius: 5px;
+    width: 756px;
+}
+
+.dashed ul li {
+    color: #475467;
+    display: flex;
+    align-items: center;
+}
+
+.dashed ul {
+    list-style: none;
+}
+
+.dashed ul li img {
+    padding-right: 3px;
+}
