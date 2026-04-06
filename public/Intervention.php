@@ -2,85 +2,48 @@
 require_once 'inclus/auth_check.php';
 require_once 'inclus/Connexion.php';
 require_once 'inclus/Header.php';
+require_once '../database/User_database.php';
 $active='interventions';
+
+
+if (empty($_GET["page"])){
+    $page = 1;
+    $_GET["page"] = 1;
+}
+else {
+    $page = $_GET['page'];
+}
 
 
 $dateStart = $_GET['date_start'] ?? '';
 $dateEnd = $_GET['date_end'] ?? '';
 $moduleId = $_GET['module_id'] ?? '';
 
-$reqModule = $con->prepare("SELECT id, name FROM module ORDER BY name");
-$reqModule->execute();
-$modules = $reqModule->fetchAll(PDO::FETCH_ASSOC);
 
-$sql = "
-    SELECT 
-        c.id,
-        c.start_date,
-        c.end_date,
-        c.title,
-        c.remotely,
-        m.name AS module,
-        it.name AS type,
-        GROUP_CONCAT(CONCAT(u.first_name, ' ', UPPER(u.last_name)) SEPARATOR ', ') AS instructors
-    FROM course c
-    JOIN module m ON c.module_id = m.id
-    JOIN intervention_type it ON c.intervention_type_id = it.id
-    LEFT JOIN course_instructor ci ON ci.course_id = c.id
-    LEFT JOIN instructor i ON ci.instructor_id = i.id
-    LEFT JOIN user u ON i.user_id = u.id
-";
-
-$params = [];
-
-if (!empty($dateStart)) {
-    $sql .= " AND c.start_date >= :date_start";
-    $params[':date_start'] = $dateStart;
-}
-
-if (!empty($dateEnd)) {
-    $sql .= " AND c.end_date <= :date_end";
-    $params[':date_end'] = $dateEnd;
-}
-
-if (!empty($moduleId)) {
-    $sql .= " AND c.module_id = :module_id";
-    $params[':module_id'] = $moduleId;
-}
-
-$sql .= " GROUP BY c.id ORDER BY c.start_date ASC";
-
-$requete = $con->prepare($sql);
-$requete->execute($params);
-$interventions = $requete->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<nav>
-    <?php require_once 'inclus/Menu_gestion_licence.php'?>
-</nav>
 
 <body>
 
-<div class="page-shell">
-    <aside class="left-menu"></aside>
+    <nav>
+        <?php require_once 'inclus/Menu_gestion_licence.php'?>
+    </nav>
 
-    <main class="page-content">
-        <div class="content-column">
-            <div class="breadcrumb">
-                <div class="icon-intervention">
-                  <img src="assets/Home.png" alt="Accueil">
+    <section class="calendar page">
+        <div class="breadcrumb">
+            <a href="#"><img src="assets/home.png" alt=""></a>
+            <p>></p>
+            <a href="#">Interventions</a>
+        </div>
+
+        <section class="titles-page">
+            <div class="align">
+                <h3>Interventions</h3>
+                <div class="button">
+                    <button type="button" command="show-modal" commandfor="Ajout" class="blue-button">Ajouter une nouvelle intervention</button>
                 </div>
-                <span>›</span>
-                <span>Interventions</span>
-            </div>
 
-            <section class="intervention-page">
-                <div class="page-header">
-                    <h1>Interventions</h1>
-                    <a href="#dialog-intervention" class="button">Ajouter une nouvelle intervention</a>
-                </div>
-
-                <div class="modal-deco" id="dialog-intervention">
+                <dialog class="modal-deco" id="dialog-intervention">
                     <div class="modal-content">
                         <button commandfor="dialog" command="close" class="invisible-button"><img src="assets/Frame 1041.png" alt="" id="quit"></button>
                         <div class="add-intervention">
@@ -176,116 +139,172 @@ $interventions = $requete->fetchAll(PDO::FETCH_ASSOC);
                             ?>
                         </form>
                     </div>
-                </div>
+                </dialog>
+            </div>
 
-                <form method="GET" class="filter-form">
-                    <h2 class="filter-title">Filtres</h2>
-
-                    <div class="filter-row">
-                        <div class="filter-group filter-group-date">
-                            <label for="date_start">Date de début</label>
-                            <input
-                                type="datetime-local"
-                                name="date_start"
-                                id="date_start"
-                                value="<?= htmlspecialchars($dateStart) ?>"
-                            >
-                        </div>
-
-                        <div class="filter-group filter-group-date">
-                            <label for="date_end">Date de fin</label>
-                            <input
-                                type="datetime-local"
-                                name="date_end"
-                                id="date_end"
-                                value="<?= htmlspecialchars($dateEnd) ?>"
-                            >
-                        </div>
-
-                        <div class="filter-group filter-group-module">
-                            <label for="module_id">Module</label>
-                            <select name="module_id" id="module_id">
-                                <option value="">Sélectionnez le module</option>
-                                <?php foreach ($modules as $module): ?>
-                                    <option
-                                        value="<?= $module['id'] ?>"
-                                        <?= ($moduleId == $module['id']) ? 'selected' : '' ?>
-                                    >
-                                        <?= htmlspecialchars($module['name']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <button type="submit" class="button-filter">Filtrer</button>
+            <form method="GET" action="">
+                <h3 class="yellow">Filtre</h3>
+                <div class="filter-row">
+                    <div class="filter-column">
+                        <label for="date_start">Date de début</label>
+                        <input
+                            type="datetime-local"
+                            name="date_start"
+                            id="date_start"
+                            value="<?= htmlspecialchars($dateStart) ?>"
+                        >
                     </div>
-                </form>
 
-                <p class="result-count"><?= count($interventions) ?> intervention(s) trouvée(s)</p>
+                    <div class="filter-column">
+                        <label for="date_end">Date de fin</label>
+                        <input
+                            type="datetime-local"
+                            name="date_end"
+                            id="date_end"
+                            value="<?= htmlspecialchars($dateEnd) ?>"
+                        >
+                    </div>
 
-                <table class="intervention-table">
-                    <thead>
-                        <tr>
-                            <th class="col-date">Date de l'intervention</th>
-                            <th class="col-module">Module &amp; titre</th>
-                            <th class="col-type">Type</th>
-                            <th class="col-instructors">Intervenants</th>
-                            <th class="col-visio">En visio</th>
-                            <th class="col-action"></th>
-                        </tr>
-                    </thead>
+                    <div class="filter-column">
+                        <label for="module_id">Module</label>
+                        <select name="module_id" id="module_id">
+                            <option value="">Sélectionnez le module</option>
+                            <?php foreach ($modules as $module): ?>
+                                <option
+                                    value="<?= $module['id'] ?>"
+                                    <?= ($moduleId == $module['id']) ? 'selected' : '' ?>
+                                >
+                                    <?= htmlspecialchars($module['name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
-                    <tbody>
-                        <?php foreach ($interventions as $intervention): ?>
-                            <tr>
-                                <td class="col-date">
-                                    <?= date('d/m/Y', strtotime($intervention['start_date'])) ?><br>
-                                    <?= date('H\hi', strtotime($intervention['start_date'])) ?> à <?= date('H\hi', strtotime($intervention['end_date'])) ?>
-                                </td>
+                    <button class="yellow-button">Filtrer</button>
+                </div>
+            </form>
 
-                                <td class="col-module">
-                                    <div class="module-name"><?= htmlspecialchars($intervention['module']) ?></div>
-                                    <div class="course-title"><?= htmlspecialchars($intervention['title']) ?></div>
-                                </td>
+            <?php
+                $interventions = calendrier_tableau_Count($con);
+            ?>
 
-                                <td class="col-type">
-                                    <?= htmlspecialchars($intervention['type']) ?>
-                                </td>
+            <p class="result-count"><?= count($interventions) ?> interventions trouvées</p>
 
-                                <td class="col-instructors">
-                                    <?= htmlspecialchars($intervention['instructors']) ?>
-                                </td>
+            <table class="table">
+                <tr class="columns">
+                    <td>Dates de l'intervention</td>
+                    <td>Module</td>
+                    <td>Type</td>
+                    <td>Intervenants</td>
+                    <td>En visio</td>
+                    <td></td>
+                </tr>
+                <?php
+                $limit = 10;
+                $offset = $page * $limit - $limit;
+                $contenu = calendrier_tableau($con, $offset);
+                foreach ($contenu as $valeurs=>$element) {
+                    $debut = new DateTime($element["start_date"]);
+                    $fin = new DateTime($element["end_date"]);
+                    echo "<tr>";
+                    echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
 
-                                <td class="col-visio">
-                                    <?php if ((int)$intervention['remotely'] === 1): ?>
-                                        <div class="icon-intervention">
-                                          <image src="assets/VisioOn.png">
-                                        </div>
-                                    <?php else: ?>
-                                        <div class="icon-intervention">
-                                          <image src="assets/VisioOff.png">
-                                        </div>
-                                    <?php endif; ?>
-                                </td>
+                    echo "<td>". $element["module"] . "</td>";
 
-                                <td class="col-action">
-                                    <div class="action-link">
-                                        <div class="icon-intervention">
-                                            <img src="assets/Oeil.png">
-                                        </div>
-                                        <a href="fiche_intervention.php?id=<?= $intervention['id'] ?>">
-                                            Accéder à la fiche
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </section>
-        </div>
-    </main>
-</div>
+                    echo "<td>". $element["type_name"] ."</td>";
 
+                    $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
+                    echo "<td>";
+                    $temporaire = "";
+                    foreach ($noms_intervenants as $colonne=>$noms){
+                        $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
+                    }
+                    echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
+                    echo "</td>";
+
+
+                    if ($element["remotely"] == 0){
+                        ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
+                    }   
+                    else {
+                        ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
+                    }
+                    ?><td class="table_align"><img src="assets/Oeil.png" alt="">
+                    <a href="Fiche_enseignant_informations.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td>
+                    <?php
+                    echo "</tr>";
+                }
+                $nb_pages = select_nb_pages_calendrier($con);
+                $nb_pages = $nb_pages[0]["nblignes"];
+                $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
+
+
+                if ($_GET["page"] == 1 && $nb_pages == 1){ ?>
+                    <?php
+                }
+                else if ($_GET["page"] == $nb_pages){?>
+                    <a href="Intervention.php?page=<?php echo $page - 1; ?>"> Page précédente </a><?php
+                }
+                else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
+                    <a href="Intervention.php?page=<?php echo $page - 1; ?>">Page précédente </a>
+                    <a href="Intervention.php?page=<?php echo $page + 1; ?>"> Page suivante</a>
+                    <?php
+                } 
+                else { ?>
+                    <a href="Intervention.php?page=<?php echo $page + 1; ?>"> Page suivante</a><?php
+                }
+                ?>
+            </table>
+        </section>
+    </section>
 </body>
 </html>
+
+
+
+<?php
+if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['intervention']) && !empty($_POST['inter'])){
+    var_dump("Déjà ça c'est fait");
+    $title = htmlspecialchars($_POST['title']);
+    $date_start = htmlspecialchars($_POST['date-start']);
+    $date_end = htmlspecialchars($_POST['date-end']);
+    $module = htmlspecialchars($_POST['module']);
+    $intervention = htmlspecialchars($_POST['intervention']);
+    $intervenants = htmlspecialchars($_POST['inter']); //Ne pas oublier : intervenants peut contenir plusieurs intervenants
+
+    $requete = $con->prepare('SELECT id FROM intervention_type WHERE name = :intervention');
+    $requete->bindParam(':intervention', $intervention);
+    $requete->execute();
+    $id_intervention = $requete->fetchAll(\PDO::FETCH_ASSOC); //Récupère l'ID de l'intervention
+    
+    $requete = $con->prepare('SELECT id FROM module WHERE name = :module');
+    $requete->bindParam(':module', $module);
+    $requete->execute();
+    $id_module = $requete->fetchAll(\PDO::FETCH_ASSOC); //Récupère l'ID du module
+
+    $date_start = new \DateTime($date_start);
+    $date_end = new \DateTime($date_end);
+
+    $delais = $date_start->diff($date_end);
+    var_dump($delais);
+
+
+}
+
+
+if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['typeintervention']) && !empty($_POST['intervenant']) && !empty($_POST['visio'])) {
+    $title = htmlspecialchars($_POST['title']);
+    $date_start = htmlspecialchars($_POST['date-start']);
+    $date_end = htmlspecialchars($_POST['date-end']);
+    $module = htmlspecialchars($_POST['module']);
+    $typeintervention = htmlspecialchars($_POST['typeintervention']);
+    $intervenant = $_POST['intervenant'];
+    $visio = $_POST['visio'];
+    insert_infos_intervention($title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio);
+}
+
+
+
+
+?>
+

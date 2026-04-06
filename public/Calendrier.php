@@ -228,13 +228,13 @@ if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['
 
 if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['typeintervention']) && !empty($_POST['intervenant']) && !empty($_POST['visio'])) {
     $title = htmlspecialchars($_POST['title']);
-    $date-start = htmlspecialchars($_POST['date-start']);
-    $date-end = htmlspecialchars($_POST['date-end']);
+    $date_start = htmlspecialchars($_POST['date-start']);
+    $date_end = htmlspecialchars($_POST['date-end']);
     $module = htmlspecialchars($_POST['module']);
     $typeintervention = htmlspecialchars($_POST['typeintervention']);
     $intervenant = $_POST['intervenant'];
     $visio = $_POST['visio'];
-    insert_infos_intervention($title, $date-start, $date-end, $module, $typeintervention, $intervenant, $visio);
+    insert_infos_intervention($title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio);
 }
 
 
