@@ -100,11 +100,11 @@ else {
                             <select name="intervenant[]" id="intervenant" multiple class="select-size-long">
                                     <option value="">Sélectionner des intervenants</option>
                                     <?php
-                                        $requete = $con->prepare("SELECT upper(last_name), first_name FROM user ORDER BY last_name");
+                                        $requete = $con->prepare("SELECT id, upper(last_name), first_name FROM user ORDER BY last_name");
                                         $requete->execute();
                                         $nom_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC);
                                         foreach ($nom_intervenants as $valeurs=>$element) { 
-                                            echo "<option>". $element["upper(last_name)"]. " ". $element["first_name"] ."</option>";
+                                            echo "<option value = '{$element["id"]}' >". $element["upper(last_name)"]. " ". $element["first_name"] ."</option>";
                                         }
                                     ?>
                             </select>
@@ -197,8 +197,8 @@ else {
 
 
 <?php
+/*
 if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['intervention']) && !empty($_POST['inter'])){
-    var_dump("Déjà ça c'est fait");
     $title = htmlspecialchars($_POST['title']);
     $date_start = htmlspecialchars($_POST['date-start']);
     $date_end = htmlspecialchars($_POST['date-end']);
@@ -224,17 +224,22 @@ if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['
 
 
 }
+*/
 
-
-if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['typeintervention']) && !empty($_POST['intervenant']) && !empty($_POST['visio'])) {
+if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['typeintervention']) && !empty($_POST['intervenant'])) {
     $title = htmlspecialchars($_POST['title']);
     $date_start = htmlspecialchars($_POST['date-start']);
     $date_end = htmlspecialchars($_POST['date-end']);
     $module = htmlspecialchars($_POST['module']);
     $typeintervention = htmlspecialchars($_POST['typeintervention']);
     $intervenant = $_POST['intervenant'];
-    $visio = $_POST['visio'];
-    insert_infos_intervention($title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio);
+    if (empty($_POST['visio'])){
+        $visio = 0;
+    }
+    else{
+        $visio = $_POST['visio'];
+    }
+    insert_infos_intervention($con, $title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio);
 }
 
 

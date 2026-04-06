@@ -320,3 +320,40 @@ function select_nb_pages_calendrier($con){
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
 }
+
+function insert_infos_intervention($con, $title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio){
+
+    $requete = $con->prepare("SELECT it.id FROM intervention_type it WHERE name = :name ");
+    $requete->bindParam(':name', $typeintervention);
+    $requete->execute();
+    $typeintervention_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
+
+    $requete = $con->prepare("SELECT m.id FROM module m WHERE name = :name ");
+    $requete->bindParam(':name', $module);
+    $requete->execute();
+    $module_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
+
+
+    $requete = $con->prepare("INSERT INTO course (start_date, end_date, intervention_type_id, module_id, remotely, title) VALUES (:start_date, :end_date, :intervention_type_id, :module_id, :remotely, :title)");
+    $requete->bindParam(':start_date', $date_start);
+    $requete->bindParam(':end_date', $date_end);
+    $requete->bindParam(':intervention_type_id', $typeintervention_id);
+    $requete->bindParam(':module_id', $module_id);
+    $requete->bindParam(':remotely', $visio);
+    $requete->bindParam(':title', $title);
+
+    $requete->execute();
+
+
+    $requete = $con->prepare("SELECT c.id FROM course c WHERE title = :title ");
+    $requete->bindParam(':title', $title);
+    $requete->execute();
+    $course_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
+
+    foreach ($intervenant as $intervenant_id) {
+        $requete = $con->prepare("INSERT INTO course_instructor (course_id, instructor_id) VALUES (:course_id , :instructor_id)");
+        $requete->bindParam('course_id', $course_id);
+        $requete->bindParam(':instructor_id', $intervenant_id);
+        $requete->execute();
+    }
+}
