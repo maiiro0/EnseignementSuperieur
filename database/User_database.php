@@ -350,10 +350,63 @@ function insert_infos_intervention($con, $title, $date_start, $date_end, $module
     $requete->execute();
     $course_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
 
-    foreach ($intervenant as $intervenant_id) {
+
+    foreach ($intervenant as $id_user) {
+        $requete = $con->prepare("SELECT i.id FROM instructor i WHERE user_id = :id_user ");
+        $requete->bindParam(':id_user', $id_user);
+        $requete->execute();
+        $intervenant_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
+
         $requete = $con->prepare("INSERT INTO course_instructor (course_id, instructor_id) VALUES (:course_id , :instructor_id)");
         $requete->bindParam('course_id', $course_id);
         $requete->bindParam(':instructor_id', $intervenant_id);
         $requete->execute();
+    }
+}
+
+
+function verification_insert_intervention($con, $date_start, $date_end, $module, $intervenant){
+
+    $module_verification = 0;
+
+    $requete = $con->prepare("SELECT m.id FROM module m WHERE name = :name ");
+    $requete->bindParam(':name', $module);
+    $requete->execute();
+    $module_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
+
+    $start = new DateTime("$date_start");
+    $end = new DateTime("$date_end");
+    $time = $start->diff($end);
+    $hours = $time->h;
+
+    if (($start < $end) && ($hours<= 4) ){
+        foreach ($intervenant as $id_user) {
+            $requete = $con->prepare("SELECT i.id FROM instructor i WHERE user_id = :id_user ");
+            $requete->bindParam(':id_user', $id_user);
+            $requete->execute();
+            $intervenant_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
+
+            $requete = $con->prepare("SELECT m.id FROM  module m JOIN instructor_module im ON m.id = im.module_id WHERE im.instructor_id = :intervenant_id");
+            $requete->bindParam(':intervenant_id', $intervenant_id);
+            $requete->execute();
+            $module_intervenant = $requete->fetchAll(\PDO::FETCH_ASSOC);
+
+            foreach ($module_intervenant as $module) {
+                if ($module == $module_id){
+                    $module_verification +=1;
+                }
+            }
+        }
+        if ( $module_verification == count($intervenant)){
+            return True
+        }
+        else {
+            echo "module non enseigné par un des enseignants"
+            return False
+        }
+    }
+    else{
+        echo "horraire incorecte, une intervention dure entre 1 et 4 heures"
+        return False 
     }
 }
