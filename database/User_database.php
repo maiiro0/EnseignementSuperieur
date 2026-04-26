@@ -333,8 +333,12 @@ function insert_infos_intervention($con, $title, $date_start, $date_end, $module
     $requete->execute();
     $module_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
 
+    $course_id = select_nb_pages_calendrier($con);
+    $course_id= $course_id[0]["nblignes"];
+    $course_id= $course_id +1;
 
-    $requete = $con->prepare("INSERT INTO course (start_date, end_date, intervention_type_id, module_id, remotely, title) VALUES (:start_date, :end_date, :intervention_type_id, :module_id, :remotely, :title)");
+    $requete = $con->prepare("INSERT INTO course (id, start_date, end_date, intervention_type_id, module_id, remotely, title) VALUES (:id, :start_date, :end_date, :intervention_type_id, :module_id, :remotely, :title)");
+    $requete->bindParam(':id', $course_id);
     $requete->bindParam(':start_date', $date_start);
     $requete->bindParam(':end_date', $date_end);
     $requete->bindParam(':intervention_type_id', $typeintervention_id);
@@ -344,11 +348,6 @@ function insert_infos_intervention($con, $title, $date_start, $date_end, $module
 
     $requete->execute();
 
-
-    $requete = $con->prepare("SELECT c.id FROM course c WHERE title = :title ");
-    $requete->bindParam(':title', $title);
-    $requete->execute();
-    $course_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
 
 
     foreach ($intervenant as $id_user) {
@@ -377,7 +376,7 @@ function verification_insert_intervention($con, $date_start, $date_end, $module,
     $start = new DateTime("$date_start");
     $end = new DateTime("$date_end");
     $time = $start->diff($end);
-    $hours = $time->h;
+    $hours = ($time->days * 24) + $time->h;
 
     if (($start < $end) && ($hours<= 4) ){
         foreach ($intervenant as $id_user) {
@@ -389,24 +388,23 @@ function verification_insert_intervention($con, $date_start, $date_end, $module,
             $requete = $con->prepare("SELECT m.id FROM  module m JOIN instructor_module im ON m.id = im.module_id WHERE im.instructor_id = :intervenant_id");
             $requete->bindParam(':intervenant_id', $intervenant_id);
             $requete->execute();
-            $module_intervenant = $requete->fetchAll(\PDO::FETCH_ASSOC);
-
-            foreach ($module_intervenant as $module) {
-                if ($module == $module_id){
+            $modules_intervenant = $requete->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($modules_intervenant as $module_intervenant) {
+                if ($module_intervenant['id'] == $module_id){
                     $module_verification +=1;
                 }
             }
         }
         if ( $module_verification == count($intervenant)){
-            return True
+            return True;
         }
         else {
-            echo "module non enseigné par un des enseignants"
-            return False
+            echo "module non enseigné par un des enseignants";
+            return False;
         }
     }
     else{
-        echo "horraire incorecte, une intervention dure entre 1 et 4 heures"
-        return False 
+        echo "horraire incorecte, une intervention dure entre 1 minute et 4 heures";
+        return False ;
     }
 }

@@ -244,7 +244,7 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
     else{
         $title = htmlspecialchars($_POST['title']);
     }
-    $verification = verification_insert_intervention($con, $date_start, $date_end, $module, $intervenant)
+    $verification = verification_insert_intervention($con, $date_start, $date_end, $module, $intervenant);
     if ($verification== True){
         insert_infos_intervention($con, $title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio);
     }
