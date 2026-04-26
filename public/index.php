@@ -1,8 +1,8 @@
 <?php
-require_once 'inclus/Header.php';
-require_once 'inclus/Connexion.php';
+require_once 'inclus/Header.php'; // Header de la page
+require_once 'inclus/Connexion.php'; // Connexion à la base de données
 ?>
-
+<!-- Page de connexion -->
 <body>
     <div class="connexion-container">
         <div class="right-menu">
@@ -32,6 +32,7 @@ require_once 'inclus/Connexion.php';
 </html>
 
 <?php
+    // Traitement du formulaire de connexion
     session_start();
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {

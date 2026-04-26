@@ -2,8 +2,21 @@
 require_once 'inclus/auth_check.php';
 require_once('inclus/Connexion.php');
 require_once 'inclus/Header.php';
+require_once '../database/User_database.php';
 $active = 'calendrier';
+
+
+
+if (empty($_GET["page"])){
+    $page = 1;
+    $_GET["page"] = 1;
+}
+else {
+    $page = $_GET['page'];
+}
+
 ?>
+
 <body>
     <nav>
         <?php require_once('inclus/Menu_gestion_licence.php'); ?>
@@ -20,11 +33,11 @@ $active = 'calendrier';
             <div class="align">
                 <h3>Calendrier</h3>
                 <div class="button">
-                    <button command="show-modal" commandfor="dialog" class="blue-button">Ajouter une nouvelle intervention</button>
+                    <button type="button" command="show-modal" commandfor="Ajout" class="blue-button">Ajouter une nouvelle intervention</button>
                 </div>
 
-                <dialog id="dialog">
-                    <button commandfor="dialog" command="close" class="invisible-button"><img src="assets/Frame 1041.png" alt="" id="quit"></button>
+                <dialog id="Ajout">
+                    <button type="button" command="close" commandfor="Ajout" class="invisible-button"><img src="assets/Frame 1041.png" alt=""></button>
                     <div class="add-intervention">
                         <img src="assets/Frame.png" alt="">
                         <div>
@@ -33,28 +46,29 @@ $active = 'calendrier';
                         </div>
                     </div>
 
-                    <form action="" method="post">
+                    <form action="" method="post" class="calendar-form">
                         <div>
                             <label for="title">Titre</label> </br>
-                            <input type="text" placeholder="Saisissez un titre sur l'intervention" name="title" id="title"></br>
+                            <input type="text" placeholder="Saisissez un titre sur l'intervention" name="title" id="title" class="input-size-long"></br>
                         </div>
                         
                         <div class="form-align">
                             <div>
                                 <label for="date-start" require>Date de début - champ obligatoire</label></br>
-                                <input type="datetime-local" name="date-start" id="date-start"></br>
+                                <input type="datetime-local" name="date-start" id="date-start" class="select-input-size"></br>
                             </div>
 
                             <div>
                                 <label for="date-end" require>Date de fin - champ obligatoire</label></br>
-                                <input type="datetime-local" name="date-end" id="date-end"></br>
+                                <input type="datetime-local" name="date-end" id="date-end" class="select-input-size"></br>
                             </div>
                         </div>
 
                         <div class="form-align">
                             <div>
                                 <label for="module">Module - champ obligatoire</label></br>
-                                <select name="module" id="module">
+                                <select name="module" id="module" class= "select-size">
+                                    
                                     <option value="">Sélectionner le module</option>
                                     <?php
                                     $requete = $con->prepare("SELECT id, name FROM module ORDER BY id");
@@ -66,10 +80,9 @@ $active = 'calendrier';
                                     ?>
                                 </select></br>
                             </div>
-
                             <div>
-                                <label for="intervrntion">Type d'intervention - champ obligatoire</label></br>
-                                <select name="intervention" id="intervention">
+                                <label for="typeintervention">Type d'intervention - champ obligatoire</label></br>
+                                <select name="typeintervention" id="typeintervention" class= "select-size">
                                     <option value="">Sélectionner le module</option>
                                     <?php 
                                     $requete = $con->prepare("SELECT name FROM intervention_type ORDER BY name");
@@ -82,19 +95,24 @@ $active = 'calendrier';
                                 </select></br>
                             </div>
                         </div>
-
-                        <label for="inter">Intervenant - champ obligatoire</label></br>
-                        <select name="inter" id="inter">
-                                <option value="">Sélectionner des intervenants</option>
-                                <?php
-                                    $requete = $con->prepare("SELECT upper(last_name), first_name FROM user ORDER BY last_name");
-                                    $requete->execute();
-                                    $nom_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC);
-                                    foreach ($nom_intervenants as $valeurs=>$element) { 
-                                        echo "<option>". $element["upper(last_name)"]. " ". $element["first_name"] ."</option>";
-                                    }
-                                ?>
-                        </select></br>
+                        <div>
+                            <label for="intervenant">Intervenant - champ obligatoire</label></br>
+                            <select name="intervenant[]" id="intervenant" multiple class="select-size-long">
+                                    <option value="">Sélectionner des intervenants</option>
+                                    <?php
+                                        $requete = $con->prepare("SELECT id, upper(last_name), first_name FROM user ORDER BY last_name");
+                                        $requete->execute();
+                                        $nom_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                        foreach ($nom_intervenants as $valeurs=>$element) { 
+                                            echo "<option value = '{$element["id"]}' >". $element["upper(last_name)"]. " ". $element["first_name"] ."</option>";
+                                        }
+                                    ?>
+                            </select>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="visio" name="visio" value="1" />
+                            <label for="visio">Intervention effectuée en visio</label>
+                        </div>
                         <div class="select-button">
                             <button commandfor="dialog" command="close" class="grey-button selection">Annuler</button>
                             <button type="submit" class="blue-button selection">Confirmer</button>
@@ -108,64 +126,69 @@ $active = 'calendrier';
             <table class="table">
                 <tr class="columns">
                     <td>Dates de l'intervention</td>
-                    <td>Modules & titre</td>
+                    <td>Module</td>
                     <td>Type</td>
                     <td>Intervenants</td>
                     <td>En visio</td>
                     <td></td>
                 </tr>
                 <?php
-                    $requete = $con->prepare("SELECT id, start_date, end_date, intervention_type_id, module_id, remotely FROM course");
-                    $requete->execute();
-                    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                $limit = 10;
+                $offset = $page * $limit - $limit;
+                $contenu = calendrier_tableau($con, $offset);
+                foreach ($contenu as $valeurs=>$element) {
+                    $debut = new DateTime($element["start_date"]);
+                    $fin = new DateTime($element["end_date"]);
+                    echo "<tr>";
+                    echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
 
-                    foreach ($contenu as $valeurs=>$element) {
-                        echo "<tr>";
-                        echo "<td>". $element["start_date"]. "</td>"; //Colonne Date de début. Il manque à mettre l'heure de fin
+                    echo "<td>". $element["module"] . "</td>";
 
-                        $module_id = $element["module_id"];
-                        $requete = $con->prepare("SELECT name FROM module WHERE id = :module_id");
-                        $requete -> bindParam(':module_id', $module_id); 
-                        $requete->execute();
-                        $nom_module = $requete->fetch(\PDO::FETCH_ASSOC); // On va chercher le nom du module dans une autre table
-                        echo "<td>". $nom_module["name"] . "</td>";
+                    echo "<td>". $element["type_name"] ."</td>";
 
-                        $type_intervention = $element["intervention_type_id"];
-                        $requete = $con->prepare("SELECT name FROM intervention_type WHERE id = :type_intervention");
-                        $requete -> bindParam(':type_intervention', $type_intervention);
-                        $requete->execute();
-                        $nom_intervention = $requete->fetch(\PDO::FETCH_ASSOC); //On va chercher le nom de l'intervention dans la table intervention_type
-                        echo "<td>". $nom_intervention["name"] ."</td>";
-
-                        $id = $element["id"];
-                        $requete = $con->prepare("SELECT upper(u.last_name), upper(u.first_name) FROM user u WHERE u.id IN (SELECT i.user_id FROM instructor i WHERE i.id in (SELECT c.instructor_id FROM course_instructor c WHERE c.course_id = :id))");
-                        $requete -> bindParam(':id', $id); 
-                        $requete->execute();
-                        $noms_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC); //On récupère les noms et les prénoms en majuscule
-                        echo "<td>";
-                        $temporaire = "";
-                        foreach ($noms_intervenants as $colonne=>$noms){
-                            $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
-                        }
-                        echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
-                        echo "</td>";
-
-
-                        if ($element["remotely"] == 0){
-                            ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
-                        }   
-                        else {
-                            ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
-                        }
-
-                        ?><td class="table_align"><img src="assets/Oeil.png" alt="">
-                        <a href="">Accéder à la fiche</a></td>
-                        <?php
-
-                        echo "</tr>";
+                    $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
+                    echo "<td>";
+                    $temporaire = "";
+                    foreach ($noms_intervenants as $colonne=>$noms){
+                        $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
                     }
-                ?>
+                    echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
+                    echo "</td>";
 
+
+                    if ($element["remotely"] == 0){
+                        ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
+                    }   
+                    else {
+                        ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
+                    }
+                    ?>
+                    <td class="table_align"><img src="assets/Oeil.png" alt="">
+                    <a href="">Accéder à la fiche</a></td>
+                    <?php
+                    echo "</tr>";
+
+                }
+                $nb_pages = select_nb_pages_calendrier($con);
+                $nb_pages = $nb_pages[0]["nblignes"];
+                $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
+
+
+                if ($_GET["page"] == 1 && $nb_pages == 1){ ?>
+                    <?php
+                }
+                else if ($_GET["page"] == $nb_pages){?>
+                    <a href="Calendrier.php?page=<?php echo $page - 1; ?>"> Page précédente </a><?php
+                }
+                else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
+                    <a href="Calendrier.php?page=<?php echo $page - 1; ?>">Page précédente </a>
+                    <a href="Calendrier.php?page=<?php echo $page + 1; ?>"> Page suivante</a>
+                    <?php
+                } 
+                else { ?>
+                    <a href="Calendrier.php?page=<?php echo $page + 1; ?>"> Page suivante</a><?php
+                }
+                ?>
             </table>
         </section>
     </section>
@@ -174,8 +197,8 @@ $active = 'calendrier';
 
 
 <?php
+/*
 if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['intervention']) && !empty($_POST['inter'])){
-    var_dump("Déjà ça c'est fait");
     $title = htmlspecialchars($_POST['title']);
     $date_start = htmlspecialchars($_POST['date-start']);
     $date_end = htmlspecialchars($_POST['date-end']);
@@ -201,3 +224,26 @@ if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['
 
 
 }
+*/
+
+if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['typeintervention']) && !empty($_POST['intervenant'])) {
+    $title = htmlspecialchars($_POST['title']);
+    $date_start = htmlspecialchars($_POST['date-start']);
+    $date_end = htmlspecialchars($_POST['date-end']);
+    $module = htmlspecialchars($_POST['module']);
+    $typeintervention = htmlspecialchars($_POST['typeintervention']);
+    $intervenant = $_POST['intervenant'];
+    if (empty($_POST['visio'])){
+        $visio = 0;
+    }
+    else{
+        $visio = $_POST['visio'];
+    }
+    insert_infos_intervention($con, $title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio);
+}
+
+
+
+
+?>
+
