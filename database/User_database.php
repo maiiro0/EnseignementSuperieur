@@ -298,7 +298,7 @@ function select_nb_pages_filtre_fiche_enseignant($con, $id, $filtre_start_date, 
 }
 
 function select_parent($con) {
-    $requete = $con -> prepare("SELECT id,name FROM module WHERE parent_id IS NULL;");
+    $requete = $con -> prepare("SELECT id, name, hours_count FROM module WHERE parent_id IS NULL;");
     $requete->execute();
     $infos = $requete->fetchAll(PDO::FETCH_ASSOC);
     return $infos;
