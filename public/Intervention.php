@@ -43,6 +43,91 @@ $moduleId = $_GET['module_id'] ?? '';
                     <button type="button" command="show-modal" commandfor="Ajout" class="blue-button">Ajouter une nouvelle intervention</button>
                 </div>
 
+                <dialog id="Ajout">
+                    <button type="button" command="close" commandfor="Ajout" class="invisible-button"><img src="assets/Frame 1041.png" alt=""></button>
+                    <div class="add-intervention">
+                        <img src="assets/Frame.png" alt="">
+                        <div>
+                            <h3>Ajouter une intervention</h3>
+                            <p>Remplissez les informations ci-dessous</p>
+                        </div>
+                    </div>
+
+                    <form action="" method="post" class="calendar-form">
+                        <div>
+                            <label for="title">Titre</label> </br>
+                            <input type="text" placeholder="Saisissez un titre sur l'intervention" name="title" id="title" class="input-size-long"></br>
+                        </div>
+                        
+                        <div class="form-align">
+                            <div>
+                                <label for="date-start" require>Date de début - champ obligatoire</label></br>
+                                <input type="datetime-local" name="date-start" id="date-start" class="select-input-size"></br>
+                            </div>
+
+                            <div>
+                                <label for="date-end" require>Date de fin - champ obligatoire</label></br>
+                                <input type="datetime-local" name="date-end" id="date-end" class="select-input-size"></br>
+                            </div>
+                        </div>
+
+                        <div class="form-align">
+                            <div>
+                                <label for="module">Module - champ obligatoire</label></br>
+                                <select name="module" id="module" class= "select-size">
+                                    
+                                    <option value="">Sélectionner le module</option>
+                                    <?php
+                                    $requete = $con->prepare("SELECT id, name FROM module ORDER BY id");
+                                    $requete->execute();
+                                    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                    foreach ($contenu as $valeurs=>$element) { 
+                                        echo "<option>". $element["name"] ."</option>";
+                                    }
+                                    ?>
+                                </select></br>
+                            </div>
+                            <div>
+                                <label for="typeintervention">Type d'intervention - champ obligatoire</label></br>
+                                <select name="typeintervention" id="typeintervention" class= "select-size">
+                                    <option value="">Sélectionner le module</option>
+                                    <?php 
+                                    $requete = $con->prepare("SELECT name FROM intervention_type ORDER BY name");
+                                    $requete->execute();
+                                    $nom_intervention = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                    foreach ($nom_intervention as $valeurs=>$element) { 
+                                        echo "<option>". $element["name"]."</option>";
+                                    }
+                                    ?>
+                                </select></br>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="intervenant">Intervenant - champ obligatoire</label></br>
+                            <select name="intervenant[]" id="intervenant" multiple class="select-size-long">
+                                    <option value="">Sélectionner des intervenants</option>
+                                    <?php
+                                        $requete = $con->prepare("SELECT id, upper(last_name), first_name FROM user ORDER BY last_name");
+                                        $requete->execute();
+                                        $nom_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                        foreach ($nom_intervenants as $valeurs=>$element) { 
+                                            echo "<option value = '{$element["id"]}' >". $element["upper(last_name)"]. " ". $element["first_name"] ."</option>";
+                                        }
+                                    ?>
+                            </select>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="visio" name="visio" value="1" />
+                            <label for="visio">Intervention effectuée en visio</label>
+                        </div>
+                        <div class="select-button">
+                            <button commandfor="dialog" command="close" class="grey-button selection">Annuler</button>
+                            <button type="submit" class="blue-button selection">Confirmer</button>
+                        </div>
+                    </form>
+                </dialog>
+
+
                 <dialog class="modal-deco" id="dialog-intervention">
                     <div class="modal-content">
                         <button commandfor="dialog" command="close" class="invisible-button"><img src="assets/Frame 1041.png" alt="" id="quit"></button>
@@ -260,9 +345,8 @@ $moduleId = $_GET['module_id'] ?? '';
 </body>
 </html>
 
-
-
 <?php
+/*
 if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['intervention']) && !empty($_POST['inter'])){
     var_dump("Déjà ça c'est fait");
     $title = htmlspecialchars($_POST['title']);
@@ -304,7 +388,37 @@ if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['
 }
 
 
-
+*/
 
 ?>
+
+<?php
+
+if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['typeintervention']) && !empty($_POST['intervenant'])) {
+    $date_start = htmlspecialchars($_POST['date-start']);
+    $date_end = htmlspecialchars($_POST['date-end']);
+    $module = htmlspecialchars($_POST['module']);
+    $typeintervention = htmlspecialchars($_POST['typeintervention']);
+    $intervenant = $_POST['intervenant'];
+    if (empty($_POST['visio'])){
+        $visio = 0;
+    }
+    else{
+        $visio = $_POST['visio'];
+    }
+    if (empty($_POST['title'])){
+        $title = null;
+    }
+    else{
+        $title = htmlspecialchars($_POST['title']);
+    }
+    $verification = verification_insert_intervention($con, $date_start, $date_end, $module, $intervenant);
+    if ($verification== True){
+        insert_infos_intervention($con, $title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio);
+    }
+}
+
+?>
+
+
 
