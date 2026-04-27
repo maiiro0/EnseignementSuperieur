@@ -222,8 +222,5 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
     }
 }
 
-
-
-
 ?>
 
