@@ -141,7 +141,7 @@ else {
             <h4>Enseignements trouvés : </h4>
 
             <table class="table">
-                <tr class="columns">
+                <tr class="columns"> 
                     <td>Nom de famille</td>
                     <td>Prénom</td>
                     <td>Modules enseignés</td>
