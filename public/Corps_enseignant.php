@@ -120,7 +120,7 @@ else {
             </div>
 
             <form method="get" action="">
-                <h3 class="yellow">Filtre</h3>
+                <h3 class="yellow">Filtres</h3>
                 <div class="filter-row">
                     <div class="filter-column">
                         <label name="last_name">Nom de famille</label>
@@ -149,7 +149,7 @@ else {
                     <td></td>
                 </tr>
                 <?php
-                if (!empty($_GET["first_name"]) || !empty($_GET["last_name"]) || !empty($_GET["email"])){
+                if (!empty($_GET["first_name"]) || !empty($_GET["last_name"])){
                     $filtre_prenom = '%'.$_GET["first_name"].'%';
                     $filtre_nom = '%'.$_GET["last_name"].'%';
                     $filtre_email = '%'.$_GET["email"].'%';
