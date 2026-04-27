@@ -143,7 +143,7 @@ $moduleId = $_GET['module_id'] ?? '';
             </div>
 
             <form method="GET" action="">
-                <h3 class="yellow">Filtre</h3>
+                <h3 class="yellow">Filtres</h3>
                 <div class="filter-row">
                     <div class="filter-column">
                         <label for="date_start">Date de début</label>

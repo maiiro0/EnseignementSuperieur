@@ -86,13 +86,13 @@ $active='types';?>
 <?php
 if (isset($_POST['action']) && $_POST['action'] === 'confirm-delete') {
     $multi_id = id_course($id, $con);
-
-    foreach ($multi_id as $valeurs){
-        delete_course_instructor($con, $valeurs);
+    if (!empty($multi_id)) {
+        echo "<p>"."Il existe des cours liés à ce type d'intervention, veuillez les supprimer avant de supprimer ce type d'intervention"."</p>";
+        exit();
     }
-
-    delete_course($con, $id);
-    delete_intervention_type($con, $id);
+    else {
+        delete_intervention_type($con, $id);
+    }
 }
 
 

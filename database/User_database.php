@@ -19,7 +19,7 @@ function infos_intervention_type_all($con, $offset){
 }
 
 function id_course($id, $con){
-    $requete = $con->prepare("SELECT id FROM course WHERE intervention_type_id = :id");
+    $requete = $con->prepare("SELECT intervention_type_id FROM course WHERE intervention_type_id = :id");
     $requete->bindParam(':id', $id);
     $requete->execute();
     $multi_id = $requete->fetchAll(\PDO::FETCH_ASSOC);
