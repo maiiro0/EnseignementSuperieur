@@ -226,8 +226,7 @@ if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['
 }
 */
 
-if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['typeintervention']) && !empty($_POST['intervenant'])) {
-    $title = htmlspecialchars($_POST['title']);
+if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['typeintervention']) && !empty($_POST['intervenant'])) {
     $date_start = htmlspecialchars($_POST['date-start']);
     $date_end = htmlspecialchars($_POST['date-end']);
     $module = htmlspecialchars($_POST['module']);
@@ -239,7 +238,16 @@ if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['
     else{
         $visio = $_POST['visio'];
     }
-    insert_infos_intervention($con, $title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio);
+    if (empty($_POST['title'])){
+        $title = null;
+    }
+    else{
+        $title = htmlspecialchars($_POST['title']);
+    }
+    $verification = verification_insert_intervention($con, $date_start, $date_end, $module, $intervenant);
+    if ($verification== True){
+        insert_infos_intervention($con, $title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio);
+    }
 }
 
 
