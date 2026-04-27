@@ -103,4 +103,12 @@ if (!empty($_POST['code']) && !empty($_POST['name'])) {
     $requete->bindParam(':hours_count', $hours_count, \PDO::PARAM_INT);
     $requete->bindParam(':capstone_project', $capstone_project, \PDO::PARAM_INT);
     $requete->execute();
+
+    //MAJ des heures du parent
+    if ($parent_id) {
+        $requete = $con->prepare("UPDATE module SET hours_count = hours_count + :hours_count WHERE id = :parent_id");
+        $requete->bindParam(':hours_count', $hours_count, \PDO::PARAM_INT);
+        $requete->bindParam(':parent_id', $parent_id, \PDO::PARAM_INT);
+        $requete->execute();
+    }
 }

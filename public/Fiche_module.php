@@ -131,6 +131,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'confirm-delete') {
         $requete->bindParam(':id', $id);
         $requete->execute();
 
+        //Suppression du nombre d'heures du parent
+        $requete = $con->prepare("UPDATE module SET hours_count = hours_count - :hours_count WHERE id = :parent_id");
+        $requete->bindParam(':hours_count', $contenu['hours_count'], \PDO::PARAM_INT);
+        $requete->bindParam(':parent_id', $contenu['parent_id'], \PDO::PARAM_INT);
+        $requete->execute();
+
         // Suppression du module
         $requete = $con->prepare("DELETE FROM module WHERE id = :id");
         $requete->bindParam(':id', $id);
@@ -145,7 +151,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'confirm-delete') {
 
 // MISE À JOUR 
 if (!empty($_POST['code']) &&  !empty($_POST['name']) &&  isset($_POST['hours_count']) && isset($_POST['capstone_project'])) {
-    
     $code = htmlspecialchars($_POST['code']);
     $name = htmlspecialchars($_POST['name']);
     $description = htmlspecialchars($_POST['description'] ?? '');
