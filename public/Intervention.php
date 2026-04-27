@@ -127,8 +127,7 @@ $moduleId = $_GET['module_id'] ?? '';
                     </form>
                 </dialog>
 
-
-                <dialog class="modal-deco" id="dialog-intervention">
+                <dialog class="modal-deco" id="Modif">
                     <div class="modal-content">
                         <button commandfor="dialog" command="close" class="invisible-button"><img src="assets/Frame 1041.png" alt="" id="quit"></button>
                         <div class="add-intervention">
@@ -141,90 +140,104 @@ $moduleId = $_GET['module_id'] ?? '';
 
                         <form action="" method="post">
                             <div>
-                                <label for="title">Titre</label> </br>
-                                <input type="text" placeholder="Saisissez un titre sur l'intervention" name="title" id="title"></br>
+                                <label for="titre">Titre</label> </br>
+                                <input type="text" placeholder="Saisissez un titre sur l'intervention" name="titre" id="titre"></br>
                             </div>
                             
                             <div class="form-align">
                                 <div>
-                                    <label for="date-start" require>Date de début - champ obligatoire</label></br>
-                                    <input type="datetime-local" name="date-start" id="date-start"></br>
+                                    <label for="date-debut" require>Date de début - champ obligatoire</label></br>
+                                    <input type="datetime-local" name="date-debut" id="date-debut"></br>
                                 </div>
 
                                 <div>
-                                    <label for="date-end" require>Date de fin - champ obligatoire</label></br>
-                                    <input type="datetime-local" name="date-end" id="date-end"></br>
+                                    <label for="date-fin" require>Date de fin - champ obligatoire</label></br>
+                                    <input type="datetime-local" name="date-fin" id="date-fin"></br>
                                 </div>
                             </div>
 
                             <div class="form-align">
                                 <div>
-                                    <label for="module">Module - champ obligatoire</label></br>
-                                    <select name="module" id="module">
+                                    <label for="modif-module">Module - champ obligatoire</label></br>
+                                    <select name="modif-module" id="modif-module">
                                         <option value="">Sélectionner le module</option>
                                         <?php
+                                        
                                         $requete = $con->prepare("SELECT id, name FROM module ORDER BY id");
                                         $requete->execute();
                                         $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
                                         foreach ($contenu as $valeurs=>$element) { 
                                             echo "<option>". $element["name"] ."</option>";
                                         }
+                                            
                                         ?>
                                     </select></br>
                                 </div>
 
                                 <div>
-                                    <label for="intervrntion">Type d'intervention - champ obligatoire</label></br>
-                                    <select name="intervention" id="intervention">
+                                    <label for="modif-intervention">Type d'intervention - champ obligatoire</label></br>
+                                    <select name="modif-intervention" id="modif-intervention">
                                         <option value="">Sélectionner le module</option>
                                         <?php 
+                                        
                                         $requete = $con->prepare("SELECT name FROM intervention_type ORDER BY name");
                                         $requete->execute();
                                         $nom_intervention = $requete->fetchAll(\PDO::FETCH_ASSOC);
                                         foreach ($nom_intervention as $valeurs=>$element) { 
                                             echo "<option>". $element["name"]."</option>";
                                         }
+                                            
                                         ?>
                                     </select></br>
                                 </div>
                             </div>
 
-                            <label for="inter">Intervenant - champ obligatoire</label></br>
-                            <select name="inter" id="inter">
+                            <label for="modif-inter">Intervenant - champ obligatoire</label></br>
+                            <select name="modif-inter" id="modif-inter">
                                     <option value="">Sélectionner des intervenants</option>
                                     <?php
+                                    
                                         $requete = $con->prepare("SELECT upper(last_name), first_name FROM user ORDER BY last_name");
                                         $requete->execute();
                                         $nom_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC);
                                         foreach ($nom_intervenants as $valeurs=>$element) { 
                                             echo "<option>". $element["upper(last_name)"]. " ". $element["first_name"] ."</option>";
                                         }
+                                    
                                     ?>
+                                    
                             </select></br>
+                            <div>
+                                <input type="checkbox" id="modif-visio" name="modif-visio" value="1" />
+                                <label for="modif-visio">Intervention effectuée en visio</label>
+                            </div>
                             <div class="select-button">
                                 <a href="#" class="grey-button selection">Annuler</a>
                                 <input type="submit" name="supp-inter" value="Supprirmer" class="blue-button selection">
                                 <button type="submit" class="blue-button selection">Confirmer</button>
                             </div>
                             <?php
+                            
                                 if(isset($_POST['supp-inter'])) {
                                     $requete = $con->prepare("DELETE FROM course WHERE id = :id");
                                     $requete->bindParam(':id', $id);
                                     $requete->execute();
                                 }
-                                if(isset($_POST['title']) && isset($_POST['date-start']) && isset($_POST['date-end']) && isset($_POST['module']) && isset($_POST['intervention']) && isset($_POST['inter'])) {
+                                if(isset($_POST['titre']) && isset($_POST['date-debut']) && isset($_POST['date-fin']) && isset($_POST['modif-module']) && isset($_POST['modif-intervention']) && isset($_POST['modif-inter'])) {
                                     $requete = $con->prepare("INSERT INTO course (title, start_date, end_date, module_id, intervention_type_id) VALUES (:title, :start_date, :end_date, :module_id, :intervention_type_id)");
-                                    $requete->bindParam(':title', $_POST['title']);
-                                    $requete->bindParam(':start_date', $_POST['date-start']);
-                                    $requete->bindParam(':end_date', $_POST['date-end']);
-                                    $requete->bindParam(':module_id', $_POST['module']);
-                                    $requete->bindParam(':intervention_type_id', $_POST['intervention']);
+                                    $requete->bindParam(':title', $_POST['titre']);
+                                    $requete->bindParam(':start_date', $_POST['date-debut']);
+                                    $requete->bindParam(':end_date', $_POST['date-fin']);
+                                    $requete->bindParam(':module_id', $_POST['modif-module']);
+                                    $requete->bindParam(':intervention_type_id', $_POST['modif-intervention']);
                                     $requete->execute();
                                 }
+                            
                             ?>
                         </form>
                     </div>
                 </dialog>
+                        
             </div>
 
             <form method="GET" action="">
@@ -315,7 +328,7 @@ $moduleId = $_GET['module_id'] ?? '';
                         ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
                     }
                     ?><td class="table_align"><img src="assets/Oeil.png" alt="">
-                    <a href="Fiche_enseignant_informations.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td>
+                    <button type="button" command="show-modal" commandfor="Modif" value = '{<?php echo $element['id'] ?> }'>Accéder à la fiche</button></td>
                     <?php
                     echo "</tr>";
                 }
