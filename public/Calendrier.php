@@ -68,7 +68,6 @@ else {
                             <div>
                                 <label for="module">Module - champ obligatoire</label></br>
                                 <select name="module" id="module" class= "select-size">
-                                    
                                     <option value="">Sélectionner le module</option>
                                     <?php
                                     $requete = $con->prepare("SELECT id, name FROM module ORDER BY id");
@@ -110,7 +109,7 @@ else {
                             </select>
                         </div>
                         <div>
-                            <input type="checkbox" id="visio" name="visio" value="1" />
+                            <input type="checkbox" id="visio" name="visio" value="1">
                             <label for="visio">Intervention effectuée en visio</label>
                         </div>
                         <div class="select-button">

@@ -69,6 +69,12 @@ tr {
     color: black;
 }
 
+.modif-button{
+    border: none;
+    background: none;
+    text-align: left;
+}
+
 nav {
     width: 240px;
     background-color: #F1F2F7;
@@ -145,6 +151,13 @@ body {
     width: 100%;
     display: flex;
     justify-content: space-between;
+}
+
+.select-button-gap {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap : 10px;
 }
 
 .align {
@@ -295,6 +308,8 @@ form.calendar-form {
     width: 100%;
     padding-left: 10px;
 }
+
+
 
 .input-size-long{
     width: 98.5%;
@@ -682,7 +697,6 @@ a {
 /*DECONNEXION*/
 
 .modal-deco {
-    visibility: hidden;
     position: fixed;
     inset: 0;
     display: flex;
