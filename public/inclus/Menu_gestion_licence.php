@@ -55,7 +55,7 @@
             </div>
             <div class="modal-deco" id="dialog">
                 <div class="modal-content">
-                    <a style="cursor-pointer" href="#">Annuler</a>
+                    <a href="Intervention.php" style="cursor: pointer;">Annuler</a>
                     <form action="Calendrier.php" method="get">
                         <input  class="red-button" type="submit" name="deconnexion" value="Déconnexion">
                     </form> 
