@@ -11,6 +11,17 @@ if (isset($_GET['id'])) {
     $infos = select_infos_enseignant($con, $id);
 }
 
+if ((!empty($_POST['last_name'])) && !empty($_POST['first_name']) && !empty($_POST['email']) && !empty($_POST['name'])) {
+    $last_name = htmlspecialchars($_POST['last_name']);
+    $first_name = htmlspecialchars($_POST['first_name']);
+    $email = htmlspecialchars($_POST['email']);
+    $name = $_POST['name'];
+    update_infos_enseignant($con, $id, $last_name, $first_name, $email, $name);
+    header("Location: Fiche_enseignant_informations.php?id=" . $id);
+    exit();
+}
+
+
 ?>
 
 <body>
@@ -63,15 +74,15 @@ if (isset($_GET['id'])) {
                 <div class="form-gap">
                     <div>
                         <label for="last_name">Nom de famille - champ obligatoire</label> </br>
-                        <input class="form-input" type="text" placeholder=" <?php echo $infos["last_name"] ?>" name="last_name" id="last_name"></br>
+                        <input class="form-input" type="text" value=" <?php echo $infos["last_name"] ?>" name="last_name" id="last_name"></br>
                     </div>
                     <div>
                         <label for="first_name">Prénom - champ obligatoire</label> </br>
-                        <input class="form-input" type="text" placeholder=" <?php echo $infos["first_name"] ?>" name="first_name" id="first_name"></br>
+                        <input class="form-input" type="text" value=" <?php echo $infos["first_name"] ?>" name="first_name" id="first_name"></br>
                     </div>
                     <div>
                         <label for="email">Email - champ obligatoire</label> </br>
-                        <input class="form-input" type="text" placeholder=" <?php echo $infos["email"] ?>" name="email" id="email"></br>
+                        <input class="form-input" type="text" value=" <?php echo $infos["email"] ?>" name="email" id="email"></br>
                     </div>   
                 </div>
                 <div>
@@ -98,14 +109,3 @@ if (isset($_GET['id'])) {
     </section>
 </body>
 </html>
-
-<?php
-if ((!empty($_POST['last_name'])) && !empty($_POST['first_name']) && !empty($_POST['email']) && !empty($_POST['name'])) {
-    $last_name = htmlspecialchars($_POST['last_name']);
-    $first_name = htmlspecialchars($_POST['first_name']);
-    $email = htmlspecialchars($_POST['email']);
-    $name = $_POST['name'];
-    update_infos_enseignant($con, $id, $last_name, $first_name, $email, $name);
-}
-
-?>
