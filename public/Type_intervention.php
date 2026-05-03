@@ -52,12 +52,14 @@ else {
             </form>
 
             <table class="table">
-                <tr class="columns">
-                    <td>Nom</td>
-                    <td>Descriptif</td>
-                    <td>Couleur</td>
-                    <td></td>
-                </tr>
+                <thead>
+                    <tr class="columns">
+                        <td>Nom</td>
+                        <td>Descriptif</td>
+                        <td>Couleur</td>
+                        <td></td>
+                    </tr>
+                </thead>
                 <?php
                     if (!empty($_GET["name-filter"])){
                         $filtre = '%'.$_GET["name-filter"].'%';
@@ -71,18 +73,22 @@ else {
                         $limit = 10;
                         $offset = $page * $limit - $limit;
                         $contenu = select_id_intervention_type_where($con, $filtre, $offset);
+                        ?>
+                        <tbody>
+                            <?php
+                            foreach ($contenu as $colonne => $element) {
+                            echo "<tr>";
+                            echo "<td>". $element["name"]. "</td>";
+                            echo "<td>". $element["description"]. "</td>"; ?>
+                            <td style="color:<?php echo $element["color"]?>"><?php echo $element["color"] ?></td>
 
-                        foreach ($contenu as $colonne => $element) {
-                        echo "<tr>";
-                        echo "<td>". $element["name"]. "</td>";
-                        echo "<td>". $element["description"]. "</td>"; ?>
-                        <td style="color:<?php echo $element["color"]?>"><?php echo $element["color"] ?></td>
-
-                        <td class="table_align"><img src="assets/Oeil.png" alt="">
-                        <a href="Fiche_intervention.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td>
-                        </tr><?php
-                        }
-
+                            <td class="table_align"><img src="assets/Oeil.png" alt="">
+                            <a href="Fiche_intervention.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td>
+                            </tr><?php
+                            }
+                            ?>
+                        </tbody>
+                        <?php
                         $nb_pages = select_nb_pages_filtre_intervention($con, $filtre);
                         $nb_pages = $nb_pages[0]["nblignes"];
                         $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
@@ -98,41 +104,45 @@ else {
                         $limit = 10;
                         $offset = $page * $limit - $limit;
                         $contenu = infos_intervention_type_all($con, $offset);
-
-                        foreach ($contenu as $colonne => $element) {
-                            echo "<tr>";
-                            echo "<td>". $element["name"]. "</td>";
-                            echo "<td>". $element["description"]. "</td>"; ?>
-                            <td style="color:<?php echo $element["color"]?>"><?php echo $element["color"] ?></td>
-
-                            <td class="table_align"><img src="assets/Oeil.png" alt="">
-                            <a href="Fiche_intervention.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td>
+                        ?>
+                        <tbody>
                             <?php
-                            echo "</tr>";
-                        }
+                            foreach ($contenu as $colonne => $element) {
+                                echo "<tr>";
+                                echo "<td>". $element["name"]. "</td>";
+                                echo "<td>". $element["description"]. "</td>"; ?>
+                                <td style="color:<?php echo $element["color"]?>"><?php echo $element["color"] ?></td>
 
+                                <td class="table_align"><img src="assets/Oeil.png" alt="">
+                                <a href="Fiche_intervention.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td>
+                                <?php
+                                echo "</tr>";
+                            }
+                        ?>
+                        </tbody>
+                        <?php
                         $nb_pages = select_nb_pages_filtre_intervention_all($con);
                         $nb_pages = $nb_pages[0]["nblignes"];
                         $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
                     }
-
-                    if ($_GET["page"] == 1 && $nb_pages == 1){ ?>
+                    ?>
+                </table>
+                <?php 
+                if ($_GET["page"] == 1 && $nb_pages == 1){ ?>
+                <?php
+                }
+                else if ($_GET["page"] == $nb_pages){?>
+                    <a href="Type_intervention.php?page=<?php echo $page - 1; ?>&filtre=<?php echo $filtre ?>">Page précédente </a><?php
+                }
+                else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
+                    <a href="Type_intervention.php?page=<?php echo $page - 1; ?>&filtre=<?php echo $filtre ?>">Page précédente </a>
+                    <a href="Type_intervention.php?page=<?php echo $page + 1; ?>&filtre=<?php echo $filtre ?>"> Page suivante</a>
                     <?php
-                    }
-                    else if ($_GET["page"] == $nb_pages){?>
-                        <a href="Type_intervention.php?page=<?php echo $page - 1; ?>&filtre=<?php echo $filtre ?>">Page précédente </a><?php
-                    }
-                    else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
-                        <a href="Type_intervention.php?page=<?php echo $page - 1; ?>&filtre=<?php echo $filtre ?>">Page précédente </a>
-                        <a href="Type_intervention.php?page=<?php echo $page + 1; ?>&filtre=<?php echo $filtre ?>"> Page suivante</a>
-                        <?php
-                    } 
-                    else { ?>
-                        <a href="Type_intervention.php?page=<?php echo $page + 1; ?>&filtre=<?php echo $filtre ?>"> Page suivante</a><?php
-                    }
-                ?>
-
-            </table>
+                } 
+                else { ?>
+                    <a href="Type_intervention.php?page=<?php echo $page + 1; ?>&filtre=<?php echo $filtre ?>"> Page suivante</a><?php
+                }
+            ?>
         </section>
     </section>
 </body>
