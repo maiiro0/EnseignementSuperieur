@@ -228,6 +228,8 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
     if ($verification== True){
         insert_infos_intervention($con, $title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio);
     }
+    header('Location: Calendrier.php');
+    exit;
 }
 
 ?>
