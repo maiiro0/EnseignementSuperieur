@@ -19,7 +19,7 @@ function infos_intervention_type_all($con, $offset){
 }
 
 function id_course($id, $con){
-    $requete = $con->prepare("SELECT id FROM course WHERE intervention_type_id = :id");
+    $requete = $con->prepare("SELECT intervention_type_id FROM course WHERE intervention_type_id = :id");
     $requete->bindParam(':id', $id);
     $requete->execute();
     $multi_id = $requete->fetchAll(\PDO::FETCH_ASSOC);
@@ -298,7 +298,7 @@ function select_nb_pages_filtre_fiche_enseignant($con, $id, $filtre_start_date, 
 }
 
 function select_parent($con) {
-    $requete = $con -> prepare("SELECT id,name FROM module WHERE parent_id IS NULL;");
+    $requete = $con -> prepare("SELECT id, name, hours_count FROM module WHERE parent_id IS NULL;");
     $requete->execute();
     $infos = $requete->fetchAll(PDO::FETCH_ASSOC);
     return $infos;
