@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 25 mars 2026 à 15:48
+-- Généré le : dim. 29 mars 2026 à 21:18
 -- Version du serveur : 9.1.0
 -- Version de PHP : 8.3.14
 
@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `bdd_gestion_licence`
 --
-CREATE DATABASE IF NOT EXISTS `bdd_gestion_licence` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+CREATE DATABASE IF NOT EXISTS `bdd_gestion_licence` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `bdd_gestion_licence`;
 
 -- --------------------------------------------------------
@@ -37,29 +37,30 @@ CREATE TABLE IF NOT EXISTS `course` (
   `intervention_type_id` int NOT NULL,
   `module_id` int NOT NULL,
   `remotely` tinyint(1) DEFAULT NULL,
-  `title` varchar(255) NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_course_module` (`module_id`),
   KEY `id_intervention` (`intervention_type_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `course`
 --
 
 INSERT INTO `course` (`id`, `start_date`, `end_date`, `intervention_type_id`, `module_id`, `remotely`, `title`) VALUES
-(1, '2026-03-10 00:00:00', '2026-04-10 00:00:00', 1, 4, 0, 'Course 1'),
-(2, '2026-03-11 00:00:00', '2026-03-12 00:00:00', 2, 4, 1, 'Course 2'),
-(3, '2026-03-13 00:00:00', '2026-03-13 00:00:00', 2, 2, 0, 'Course 3'),
-(4, '2026-03-10 00:00:00', '2026-04-10 00:00:00', 12, 8, 0, 'course 4'),
-(5, '2026-03-14 00:00:00', '2026-03-14 00:00:00', 1, 2, 1, 'course 5'),
-(6, '2026-03-15 00:00:00', '2026-03-15 00:00:00', 5, 7, 0, 'course 6'),
-(7, '2026-03-15 00:00:00', '2026-03-15 00:00:00', 8, 4, 1, 'course 7'),
-(8, '2026-03-16 00:00:00', '2026-03-16 00:00:00', 8, 3, 0, 'course 8'),
-(9, '2026-03-17 00:00:00', '2026-03-17 00:00:00', 9, 6, 1, 'course 9'),
-(10, '2026-03-18 00:00:00', '2026-03-18 00:00:00', 1, 2, 1, 'course 10'),
-(11, '2026-03-19 00:00:00', '2026-03-19 00:00:00', 8, 1, 0, 'course 11'),
-(12, '2026-03-20 00:00:00', '2026-03-20 00:00:00', 8, 1, 0, 'course 12');
+(1, '2026-03-29 08:30:00', '2026-03-29 11:30:00', 5, 9, 1, 'Cours 1'),
+(2, '2026-03-29 14:30:00', '2026-03-29 16:30:00', 2, 2, 0, 'Cours 2'),
+(3, '2026-03-30 09:30:00', '2026-03-30 11:30:00', 7, 4, 1, 'Cour 3'),
+(4, '2026-03-10 10:00:00', '2026-04-10 12:00:00', 12, 1, 0, 'cours 4'),
+(5, '2026-03-30 13:30:00', '2026-03-30 15:30:00', 8, 6, 0, 'Cour 5'),
+(6, '2026-03-15 15:00:00', '2026-03-15 17:00:00', 5, 7, 0, 'cours 6'),
+(7, '2026-03-15 10:00:00', '2026-03-15 14:00:00', 8, 4, 1, 'cours 7'),
+(8, '2026-03-16 14:00:00', '2026-03-16 18:00:00', 8, 3, 0, 'cours 8'),
+(9, '2026-03-17 13:00:00', '2026-03-17 16:00:00', 9, 6, 1, 'cours 9'),
+(10, '2026-03-31 10:30:00', '2026-03-31 12:30:00', 6, 5, 0, 'Cour 10'),
+(11, '2026-03-19 09:00:00', '2026-03-19 11:00:00', 8, 1, 0, 'cours 11'),
+(12, '2026-03-20 08:00:00', '2026-03-20 10:00:00', 8, 1, 0, 'cours 12'),
+(13, '2026-03-31 15:30:00', '2026-03-31 17:30:00', 10, 5, 0, 'Cour 13');
 
 -- --------------------------------------------------------
 
@@ -73,25 +74,35 @@ CREATE TABLE IF NOT EXISTS `course_instructor` (
   `instructor_id` int NOT NULL,
   PRIMARY KEY (`course_id`,`instructor_id`),
   KEY `id_course_instructor` (`instructor_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `course_instructor`
 --
 
 INSERT INTO `course_instructor` (`course_id`, `instructor_id`) VALUES
+(1, 1),
 (3, 1),
-(4, 1),
-(1, 2),
-(2, 2),
-(4, 2),
-(1, 3),
+(5, 1),
+(7, 1),
+(9, 1),
+(11, 2),
 (2, 3),
-(5, 3),
-(5, 6),
-(2, 7),
-(4, 7),
-(12, 12);
+(8, 3),
+(10, 3),
+(13, 3),
+(3, 4),
+(11, 5),
+(12, 5),
+(4, 6),
+(3, 7),
+(4, 8),
+(6, 9),
+(10, 9),
+(6, 10),
+(6, 11),
+(10, 12),
+(13, 12);
 
 -- --------------------------------------------------------
 
@@ -105,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `instructor` (
   `user_id` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `instructor`
@@ -113,15 +124,15 @@ CREATE TABLE IF NOT EXISTS `instructor` (
 
 INSERT INTO `instructor` (`id`, `user_id`) VALUES
 (1, 1),
-(2, 1),
-(3, 2),
-(4, 3),
-(5, 4),
-(10, 5),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(10, 6),
 (7, 7),
-(8, 7),
-(11, 8),
-(6, 9),
+(8, 8),
+(11, 9),
+(6, 10),
 (12, 11),
 (9, 12);
 
@@ -137,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `instructor_module` (
   `module_id` int NOT NULL,
   PRIMARY KEY (`instructor_id`,`module_id`),
   KEY `id_module` (`module_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `instructor_module`
@@ -150,12 +161,17 @@ INSERT INTO `instructor_module` (`instructor_id`, `module_id`) VALUES
 (3, 2),
 (3, 3),
 (11, 3),
+(1, 4),
+(4, 4),
+(7, 4),
 (3, 5),
 (9, 5),
 (12, 5),
 (1, 6),
 (9, 7),
 (10, 7),
+(6, 8),
+(8, 8),
 (1, 9),
 (11, 10),
 (11, 11),
@@ -170,29 +186,30 @@ INSERT INTO `instructor_module` (`instructor_id`, `module_id`) VALUES
 DROP TABLE IF EXISTS `intervention_type`;
 CREATE TABLE IF NOT EXISTS `intervention_type` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  `color` varchar(20) NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text COLLATE utf8mb4_general_ci NOT NULL,
+  `color` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `intervention_type`
 --
 
 INSERT INTO `intervention_type` (`id`, `name`, `description`, `color`) VALUES
-(1, 'Présentation d\'entreprise', 'Présentation de l\'entreprise et des dernier projet de celle ci. ', '#FFFF00'),
-(2, 'Conférence ', 'Conférence sur la gestion de projet et de l\'importance des soft skils dans le monde du travail.', '#FF0000'),
-(3, 'Conférence sur L\'IA', 'conférence sur les bonnes conduites d\'un étudiant avec l\'IA', '#FF0000'),
-(4, 'cour de français', 'cour de communication et expression', '#0000FF'),
-(5, 'cour de Maths', 'cour de Mathématique pour l\'informatique', '#0000FF'),
-(6, 'cour d\'Algorithmie ', 'Cour d\'algorithmie encadré', '#0000FF'),
-(7, 'Projet', 'Séance sur un Projet', '#7F00FF'),
-(8, 'Cour sur Git', 'Apprentissage sur l\'utilisation de git', '#0000FF'),
-(9, 'Cour sur la gestion de base de données', 'Cour sur la gestion de base de données dans le cadre de projet.', '#0000FF'),
-(10, 'Conférence sur l\'attitude professionnelle', 'Conférence sur l\'attitude professionnelle à tenir en alternance ou stage', '#FF0000'),
-(11, 'Présentation de projet', 'Explication du projet et du cahier des charges', '#FFFF00'),
-(12, 'Conférence l\'importance du travail d\'équipe', 'conférence et atelier sur le thème du travail d\'équipe', '#FF0000');
+(1, 'Conférence', 'Intervention d\'un professionnel', '#FF0000'),
+(2, 'Cours', 'Cours théorique', '#FFFF00'),
+(3, 'Autonomie', 'Elèves en autonomie', '#FFFF00'),
+(4, 'Conseil de classe', 'Réunion sur le suivi de la classe', '#FF0000'),
+(5, 'TP', 'Travaux pratique', '#0000FF'),
+(6, 'Soutenance', 'Présentation oral des étudiant', '#0000FF'),
+(7, 'Projet encadré', 'Séance de travail sur un Projet', '#7F00FF'),
+(8, 'Evaluation', 'Vérification des connaissances ', '#0000FF'),
+(9, 'TD', 'Travaux dirigés', '#0000FF'),
+(10, 'Présentation d\'entreprise', 'Intervention d\'un professionnel pour présenter son entreprise', '#FF0000'),
+(11, 'Evènement', 'Activité spécifique', '#FFFF00'),
+(12, 'Veille technologique', 'Recherche des étudiants sur une techno', '#FF0000'),
+(13, 'Formation', 'Formation de l\'intervenant', '#0000FF');
 
 -- --------------------------------------------------------
 
@@ -203,32 +220,32 @@ INSERT INTO `intervention_type` (`id`, `name`, `description`, `color`) VALUES
 DROP TABLE IF EXISTS `module`;
 CREATE TABLE IF NOT EXISTS `module` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `code` varchar(50) NOT NULL,
+  `code` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
   `parent_id` int DEFAULT NULL,
-  `name` varchar(255) NOT NULL,
-  `description` text NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text COLLATE utf8mb4_general_ci NOT NULL,
   `hours_count` int DEFAULT NULL,
   `capstone_project` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `parent_id` (`parent_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `module`
 --
 
 INSERT INTO `module` (`id`, `code`, `parent_id`, `name`, `description`, `hours_count`, `capstone_project`) VALUES
-(1, '1', NULL, 'Algo', 'Cour d\'algo pour une logique de programmation.', 5, 1),
+(1, '1', NULL, 'Algorithmie', 'Cour d\'algorithmie pour une logique de programmation.', 5, 1),
 (2, '1.1', 1, 'Fonctions', 'Les Fonctions et procédures', 4, 1),
-(3, '1.2', 1, 'Poo', 'Programmation orienté objet', 1, 0),
-(4, '1.1.1', 2, 'Les Fonction', 'Cour sur les fonction', 2, 1),
+(3, '1.2', 1, 'POO', 'Programmation orientée objet', 1, 0),
+(4, '1.1.1', 2, 'Les Fonctions', 'Cour sur les fonctions', 2, 1),
 (5, '1.1.2', 2, 'Les Procédures', 'Cour sur les procédures', 6, 0),
 (6, '2', NULL, 'C#', 'Apprentissage du Langage C#', 15, 1),
-(7, '2.1', 6, 'Variable', 'Création de variable en C#', 1, 0),
-(8, '2.1.1', 7, 'Type de varaible', 'Apprentissage des différent de variable et et du \"tryparse\" ', 1, 0),
+(7, '2.1', 6, 'Variables', 'Création de variables en C#', 1, 0),
+(8, '2.1.1', 7, 'Type de variables', 'Apprentissage des différents types de variables et du \"tryparse\" ', 1, 0),
 (9, '2.2', 6, 'Les Constantes en C#', 'Apprentissage de l\'utilisation des constantes en C#', 2, 0),
-(10, '2.3', 6, 'Tableaux et Liste', 'Découverte des tableaux et des Listes en C#', 2, 1),
-(11, '2.3.1', 10, 'Les tableaux', 'Apprentissage des tableau en C#', 1, 0),
+(10, '2.3', 6, 'Tableaux et Listes', 'Découverte des tableaux et des Listes en C#', 2, 1),
+(11, '2.3.1', 10, 'Les tableaux', 'Apprentissage des tableaux en C#', 1, 0),
 (12, '2.3.2', 10, 'Les listes', 'Apprentissage des listes en C#', 1, 1);
 
 -- --------------------------------------------------------
@@ -240,20 +257,20 @@ INSERT INTO `module` (`id`, `code`, `parent_id`, `name`, `description`, `hours_c
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `role` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'Enseignant',
-  `email` varchar(255) NOT NULL,
-  `last_name` varchar(255) NOT NULL,
-  `first_name` varchar(255) NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `role` varchar(255) COLLATE utf8mb4_general_ci DEFAULT 'Enseignant',
+  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `last_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `first_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `user`
 --
 
 INSERT INTO `user` (`id`, `role`, `email`, `last_name`, `first_name`, `password`) VALUES
-(1, '', 'elenaL@gmail.com', 'Longuet', 'Elena', ''),
+(1, '', 'elenaL@gmail.com', 'Longuet', 'Elena', '$2y$10$Nb7Xdulwagu1C/bb9QkJWO1LHBtr0ipORsw6kV.4MAtNKrZ6Nm4ka'),
 (2, '', 'Leo@gmail.com', 'Martin', 'Léo', ''),
 (3, '', 'Cassandrechr@gmail.com', 'Chardron', 'Cassandre', ''),
 (4, '', 'Eloane@gmail.com', 'Chardron', 'Eloane', ''),
@@ -274,34 +291,34 @@ INSERT INTO `user` (`id`, `role`, `email`, `last_name`, `first_name`, `password`
 -- Contraintes pour la table `course`
 --
 ALTER TABLE `course`
-  ADD CONSTRAINT `id_course_module` FOREIGN KEY (`module_id`) REFERENCES `module` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `id_intervention` FOREIGN KEY (`intervention_type_id`) REFERENCES `intervention_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `id_course_module` FOREIGN KEY (`module_id`) REFERENCES `module` (`id`),
+  ADD CONSTRAINT `id_intervention` FOREIGN KEY (`intervention_type_id`) REFERENCES `intervention_type` (`id`);
 
 --
 -- Contraintes pour la table `course_instructor`
 --
 ALTER TABLE `course_instructor`
-  ADD CONSTRAINT `id_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `id_course_instructor` FOREIGN KEY (`instructor_id`) REFERENCES `instructor` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `id_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`),
+  ADD CONSTRAINT `id_course_instructor` FOREIGN KEY (`instructor_id`) REFERENCES `instructor` (`id`);
 
 --
 -- Contraintes pour la table `instructor`
 --
 ALTER TABLE `instructor`
-  ADD CONSTRAINT `id_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `id_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 --
 -- Contraintes pour la table `instructor_module`
 --
 ALTER TABLE `instructor_module`
-  ADD CONSTRAINT `id_instructor` FOREIGN KEY (`instructor_id`) REFERENCES `instructor` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `id_module` FOREIGN KEY (`module_id`) REFERENCES `module` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `id_instructor` FOREIGN KEY (`instructor_id`) REFERENCES `instructor` (`id`),
+  ADD CONSTRAINT `id_module` FOREIGN KEY (`module_id`) REFERENCES `module` (`id`);
 
 --
 -- Contraintes pour la table `module`
 --
 ALTER TABLE `module`
-  ADD CONSTRAINT `id_parent` FOREIGN KEY (`parent_id`) REFERENCES `module` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `id_parent` FOREIGN KEY (`parent_id`) REFERENCES `module` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

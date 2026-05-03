@@ -1,16 +1,48 @@
 
 <?php 
+require_once 'inclus/auth_check.php';
 require_once 'inclus/Connexion.php';
 require_once 'inclus/Header.php';
+require_once '../database/User_database.php';
 $active='enseignants';
+if (empty($_GET["page"])){
+    $page = 1;
+    $_GET["page"] = 1;
+}
+else {
+    $page = $_GET['page'];
+}
 
 if (isset($_GET['id'])) {
     $id = htmlspecialchars($_GET['id']);
-    $requete = $con->prepare("SELECT email, last_name, first_name FROM user WHERE id=:id");
-    $requete->bindParam(':id', $id);
-    $requete->execute();
-    $infos = $requete->fetch(PDO::FETCH_ASSOC);
+    $infos = select_infos_enseignant($con, $id);
 }
+
+
+if (empty($_GET['start_date'])) {
+    $filtre_start_date = '';
+    $_GET['start_date'] ="";
+}
+else {
+    $filtre_prenom = $_GET['start_date'];
+}
+
+if (empty($_GET["end_date"])){
+    $filtre_end_date = '';
+    $_GET["end_date"] ="";
+}
+else {
+    $filtre_nom = $_GET["end_date"];
+}
+
+if (empty($_GET["name"])){
+    $filtre_name = '';
+    $_GET["name"] ="";
+}
+else {
+    $filtre_email = $_GET["name"];
+}
+
 
 ?>
 
@@ -37,10 +69,8 @@ if (isset($_GET['id'])) {
             <p class="yellow-title">Modules enseignés</p>
             <div class="information-part">
             <?php
-                $requete = $con->prepare("SELECT m.name, m.hours_count FROM instructor_module im JOIN module m ON im.module_id = m.id  WHERE im.instructor_id= :id ");
-                $requete->bindParam(':id', $id);
-                $requete->execute();
-                $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+
+                $contenu = select_infos_modules_enseignant($con, $id);
 
                 foreach ($contenu as $colonne => $element) {
                     echo"<p>";
@@ -77,9 +107,7 @@ if (isset($_GET['id'])) {
                         <select name="name" id="name" >
                                 <option value="">Sélectionnez le module</option>
                                 <?php
-                                    $requete = $con->prepare("SELECT m.name FROM  module m;");
-                                    $requete->execute();
-                                    $nom_module = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                    $nom_module = select_modules_corp_enseignant($con);
                                     foreach ($nom_module as $valeurs=>$element) { 
                                         echo "<option>". $element["name"]."</option>";
                                     }
@@ -89,21 +117,26 @@ if (isset($_GET['id'])) {
                     <button class="yellow-button">Filtrer</button>
                 </div>
             </form>
-            <h4>Interventions trouvées : </h4>
+            <h4>Interventions trouvées :</h4>
 
             <table class="table_teacher_interventions">
-                <tr class="columns">
-                    <td>Dates de l'intervention</td>
-                    <td>Module</td>
-                    <td>Type</td>
-                    <td>Intervenants</td>
-                    <td>En visio</td>
-                </tr>
+                <thead>
+                    <tr class="columns">
+                        <td>Dates de l'intervention</td>
+                        <td>Module</td>
+                        <td>Type</td>
+                        <td>Intervenants</td>
+                        <td>En visio</td>
+                    </tr>
+                </thead>
                 <?php
                 if (!empty($_GET["start_date"]) || !empty($_GET["end_date"]) || !empty($_GET["name"])){
                     $filtre_start_date = '%'.$_GET["start_date"].'%';
                     $filtre_end_date = '%'.$_GET["end_date"].'%';
                     $filtre_name = '%'.$_GET["name"].'%';
+
+                    $limit = 10;
+                    $offset = $page * $limit - $limit;
 
 
                     if (empty($_GET["start_date"])){
@@ -118,89 +151,112 @@ if (isset($_GET['id'])) {
                         $filtre_name = '';
                     }
 
-                    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id AND ( c.start_date LIKE :inter_start_date OR c.end_date LIKE :inter_end_date OR m.name LIKE :module_name )");
-                    $requete->bindParam(':id', $id);
-                    $requete->bindParam(':inter_start_date', $filtre_start_date);
-                    $requete->bindParam(':inter_end_date', $filtre_end_date);
-                    $requete->bindParam(':module_name', $filtre_name);
-                    $requete->execute();
-                    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                    $contenu = filtre_fiche_enseignant($con, $id,  $filtre_start_date, $filtre_end_date, $filtre_name, $offset);
+                    ?>
+                    <tbody>
+                        <?php
+                        foreach ($contenu as $valeurs=>$element) {
+                            $debut = new DateTime($element["start_date"]);
+                            $fin = new DateTime($element["end_date"]);
+                            echo "<tr>";
+                            echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
 
-                    foreach ($contenu as $valeurs=>$element) {
-                        $debut = new DateTime($element["start_date"]);
-                        $fin = new DateTime($element["end_date"]);
-                        echo "<tr>";
-                        echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
+                            echo "<td>". $element["module"] . "</td>";
 
-                        echo "<td>". $element["module"] . "</td>";
+                            echo "<td>". $element["type_name"] ."</td>";
 
-                        echo "<td>". $element["type_name"] ."</td>";
+                            $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
+                            echo "<td>";
+                            $temporaire = "";
+                            foreach ($noms_intervenants as $colonne=>$noms){
+                                $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
+                            }
+                            echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
+                            echo "</td>";
 
+
+                            if ($element["remotely"] == 0){
+                                ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
+                            }   
+                            else {
+                                ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
+                            }
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>
+                    <?php
+                        
+
+                    $nb_pages = select_nb_pages_filtre_fiche_enseignant($con,$id, $filtre_start_date, $filtre_end_date, $filtre_name);
+                    $nb_pages = $nb_pages[0]["nblignes"];
+                    $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
                     
-                        $requete = $con->prepare("SELECT upper(u.last_name), upper(u.first_name) FROM user u join instructor i ON i.user_id = u.id join course_instructor ci ON ci.instructor_id = i.id WHERE ci.course_id = :id");
-                        $requete -> bindParam(':id', $element["id"]); 
-                        $requete->execute();
-                        $noms_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC); //On récupère les noms et les prénoms en majuscule
-                        echo "<td>";
-                        $temporaire = "";
-                        foreach ($noms_intervenants as $colonne=>$noms){
-                            $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
-                        }
-                        echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
-                        echo "</td>";
-
-
-                        if ($element["remotely"] == 0){
-                            ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
-                        }   
-                        else {
-                            ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
-                        }
-                    }
                 }
 
                 else {
-                    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id LIMIT 10");
-                    $requete->bindParam(':id', $id);
-                    $requete->execute();
-                    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                    $limit = 10;
+                    $offset = $page * $limit - $limit;
+                    $contenu = fiche_enseignant_tableau($con, $id ,$offset);
+                    ?>
+                    <tbody>
+                        <?php
+                        foreach ($contenu as $valeurs=>$element) {
+                            $debut = new DateTime($element["start_date"]);
+                            $fin = new DateTime($element["end_date"]);
+                            echo "<tr>";
+                            echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
 
-                    foreach ($contenu as $valeurs=>$element) {
-                        $debut = new DateTime($element["start_date"]);
-                        $fin = new DateTime($element["end_date"]);
-                        echo "<tr>";
-                        echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
+                            echo "<td>". $element["module"] . "</td>";
 
-                        echo "<td>". $element["module"] . "</td>";
+                            echo "<td>". $element["type_name"] ."</td>";
 
-                        echo "<td>". $element["type_name"] ."</td>";
+                            $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
+                            echo "<td>";
+                            $temporaire = "";
+                            foreach ($noms_intervenants as $colonne=>$noms){
+                                $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
+                            }
+                            echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
+                            echo "</td>";
 
-                    
-                        $requete = $con->prepare("SELECT upper(u.last_name), upper(u.first_name) FROM user u join instructor i ON i.user_id = u.id join course_instructor ci ON ci.instructor_id = i.id WHERE ci.course_id = :id");
-                        $requete -> bindParam(':id', $element["id"]); 
-                        $requete->execute();
-                        $noms_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC); //On récupère les noms et les prénoms en majuscule
-                        echo "<td>";
-                        $temporaire = "";
-                        foreach ($noms_intervenants as $colonne=>$noms){
-                            $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
+
+                            if ($element["remotely"] == 0){
+                                ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
+                            }   
+                            else {
+                                ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
+                            }
+                            echo "</tr>";
+
                         }
-                        echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
-                        echo "</td>";
-
-
-                        if ($element["remotely"] == 0){
-                            ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
-                        }   
-                        else {
-                            ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
-                        }
-
-                    }
+                        ?>
+                    </tbody>
+                    <?php
+                    $nb_pages = select_nb_pages_filtre_fiche_enseignant($con,$id, $filtre_start_date, $filtre_end_date, $filtre_name);
+                    $nb_pages = $nb_pages[0]["nblignes"];
+                    $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
                 }
                 ?>
             </table>
+            <?php
+            if ($_GET["page"] == 1 && $nb_pages == 1){ ?>
+                <?php
+            }
+            else if ($_GET["page"] == $nb_pages){?>
+                <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>">Page précédente </a><?php
+            }
+            else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
+                <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>">Page précédente </a>
+                <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a>
+                <?php
+            } 
+            else { ?>
+                <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a><?php
+            }
+            ?>    
         </section>
     </section>
 </body>
 </html>
+

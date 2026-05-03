@@ -1,4 +1,5 @@
 <?php
+require_once 'inclus/auth_check.php';
 require_once 'inclus/Header.php';
 require_once '../database/User_database.php';
 require_once 'inclus/Connexion.php';
@@ -42,8 +43,8 @@ else {
 
             <form method="get" action="">
                 <h3 class="yellow">Filtres</h3>
-                <div class="intervention-row">
-                    <div class="intervention-column">
+                <div class="filter-row">
+                    <div class="filter-column">
                         <label name="name-filter">Nom</label>
                         <input type="text" name="name-filter" placeholder="Saisissez le nom">
                     </div>

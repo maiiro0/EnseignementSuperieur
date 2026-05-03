@@ -1,3 +1,10 @@
+<?php
+    // Vérification de la session
+    if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+    }
+?>
+
 <div class="lateral-menu">
     <div class="logo-menu">
         <img src="assets/logo1.png">
@@ -25,7 +32,7 @@
 
         <div class="menu-section">
             <div class="menu-section-title">PARAMÉTRAGE</div>
-                <a href="#" class="menu-item <?php if($active=='modules') echo 'active-item-menu'; ?>">
+                <a href="Modules.php" class="menu-item <?php if($active=='modules') echo 'active-item-menu'; ?>">
                 <img src="<?php if($active=='modules') echo 'assets/white-module.png'; else echo 'assets/icon4.png'?>" class="menu-icon">
                 Modules
                 </a>
@@ -49,16 +56,9 @@
             <div class="modal-deco" id="dialog">
                 <div class="modal-content">
                     <a style="cursor-pointer" href="#">Annuler</a>
-                    <form action="#" method="get">
+                    <form action="Calendrier.php" method="get">
                         <input  class="red-button" type="submit" name="deconnexion" value="Déconnexion">
                     </form> 
-                    <?php
-                        if(isset($_GET['deconnexion'])) {
-                            session_destroy();
-                            header("Location: index.php");
-                            exit();
-                        }
-                    ?>
                 </div>
             </div>
         </div>

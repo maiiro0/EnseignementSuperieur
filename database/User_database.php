@@ -19,7 +19,7 @@ function infos_intervention_type_all($con, $offset){
 }
 
 function id_course($id, $con){
-    $requete = $con->prepare("SELECT id FROM course WHERE intervention_type_id = :id");
+    $requete = $con->prepare("SELECT intervention_type_id FROM course WHERE intervention_type_id = :id");
     $requete->bindParam(':id', $id);
     $requete->execute();
     $multi_id = $requete->fetchAll(\PDO::FETCH_ASSOC);
@@ -83,7 +83,7 @@ function select_id_instructor($con, $id){
     $requete = $con->prepare("SELECT id FROM instructor WHERE user_id = :user");
     $requete->bindParam(':user', $id[0]["id"]);
     $requete->execute();
-    $id = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    $id = $requete->fetch(\PDO::FETCH_ASSOC);
     return $id;
 }
 
@@ -95,7 +95,7 @@ function select_id_module($con, $modules){
     return $module_name;
 }
 
-function insert_instructor_module($con, $module_name){
+function insert_instructor_module($con, $module_name, $id){
     $requete = $con->prepare("INSERT INTO instructor_module (instructor_id, module_id) VALUES (:instructor_id, :module_id)");
     $requete->bindParam(':instructor_id', $id);
     $requete->bindParam(':module_id', $module_name);
@@ -189,4 +189,228 @@ function select_nb_pages_filtre_intervention_all($con){
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
+}
+
+function select_infos_enseignant($con, $id){
+    $requete = $con->prepare("SELECT email, last_name, first_name FROM user WHERE id=:id");
+    $requete->bindParam(':id', $id);
+    $requete->execute();
+    $infos = $requete->fetch(PDO::FETCH_ASSOC);
+    return $infos;
+}
+
+
+function select_infos_modules_enseignant($con, $id){
+    $requete = $con->prepare("SELECT m.name, m.hours_count FROM instructor_module im JOIN module m ON im.module_id = m.id  WHERE im.instructor_id= :id ");
+    $requete->bindParam(':id', $id);
+    $requete->execute();
+    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $contenu;
+}
+
+function select_modules_corp_enseignant($con){
+    $requete = $con->prepare("SELECT m.name FROM  module m;");
+    $requete->execute();
+    $nom_module = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $nom_module;
+}
+
+function select_modules_enseignées($con, $id){
+    $requete = $con->prepare("SELECT m.name FROM  module m JOIN instructor_module im ON m.id = im.module_id WHERE im.instructor_id = :id");
+    $requete->bindParam(':id', $id);
+    $requete->execute();
+    $nom_module_selected = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $nom_module_selected;
+}
+
+function update_infos_enseignant($con, $id, $last_name, $first_name, $email, $name){
+    $requete = $con->prepare("UPDATE user SET last_name = :last_name, first_name = :first_name, email = :email WHERE id=:id");
+    $requete->bindParam(':last_name', $last_name);
+    $requete->bindParam(':first_name', $first_name);
+    $requete->bindParam(':email', $email);
+    $requete->bindParam(':id', $id);
+    $requete->execute();
+
+    
+    
+    $requete = $con->prepare("DELETE FROM instructor_module WHERE instructor_id = :id");
+    $requete->bindParam(':id', $id);
+    $requete->execute();
+
+    foreach ($name as $colonne => $element) {
+        $requete = $con->prepare("SELECT id FROM module WHERE name = :element");
+        $requete->bindParam(':element', $element);
+        $requete->execute();
+        $module_id = $requete->fetch(PDO::FETCH_ASSOC);
+
+        $requete = $con->prepare("INSERT INTO instructor_module VALUES (:id ,:module_id)");
+        $requete->bindParam(':id', $id);
+        $requete->bindParam(':module_id', $module_id['id']);
+        $requete->execute();
+    
+
+    }
+}
+
+function filtre_fiche_enseignant($con, $id,  $filtre_start_date, $filtre_end_date, $filtre_name, $offset){
+    $offend = $offset + 10;
+    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id AND ( c.start_date LIKE :inter_start_date OR c.end_date LIKE :inter_end_date OR m.name LIKE :module_name) LIMIT :offsetend OFFSET :offset");
+    $requete->bindParam(':id', $id);
+    $requete->bindParam(':inter_start_date', $filtre_start_date);
+    $requete->bindParam(':inter_end_date', $filtre_end_date);
+    $requete->bindParam(':module_name', $filtre_name);
+    $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
+    $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+    $requete->execute();
+    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $contenu;
+}
+
+function fiche_enseignant_tableau_intervenants($con, $element ){
+    $requete = $con->prepare("SELECT upper(u.last_name), upper(u.first_name) FROM user u join instructor i ON i.user_id = u.id join course_instructor ci ON ci.instructor_id = i.id WHERE ci.course_id = :id");
+    $requete -> bindParam(':id', $element); 
+    $requete->execute();
+    $noms_intervenants = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $noms_intervenants;
+}
+
+function fiche_enseignant_tableau($con, $id ,$offset){
+    $offend = $offset + 10;
+    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id LIMIT :offsetend OFFSET :offset");
+    $requete->bindParam(':id', $id);
+    $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
+    $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+    $requete->execute();
+    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $contenu;
+}
+
+
+function select_nb_pages_filtre_fiche_enseignant($con, $id, $filtre_start_date, $filtre_end_date, $filtre_name){
+    $requete = $con->prepare("SELECT count(*) AS nblignes FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id AND ( c.start_date LIKE :inter_start_date OR c.end_date LIKE :inter_end_date OR m.name LIKE :module_name )");
+    $requete->bindParam(':id', $id);
+    $requete->bindParam(':inter_start_date', $filtre_start_date);
+    $requete->bindParam(':inter_end_date', $filtre_end_date);
+    $requete->bindParam(':module_name', $filtre_name);
+    $requete->execute();
+    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $contenu;
+}
+
+function select_parent($con) {
+    $requete = $con -> prepare("SELECT id, name, hours_count FROM module WHERE parent_id IS NULL;");
+    $requete->execute();
+    $infos = $requete->fetchAll(PDO::FETCH_ASSOC);
+    return $infos;
+}
+
+function calendrier_tableau($con, $offset){
+    $offend = $offset + 10;
+    $requete = $con->prepare("SELECT DISTINCT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id LIMIT :offsetend OFFSET :offset");
+    $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
+    $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+    $requete->execute();
+    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $contenu;
+}
+function calendrier_tableau_Count($con){
+    $requete = $con->prepare("SELECT DISTINCT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id ");
+    $requete->execute();
+    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $contenu;
+}
+
+function select_nb_pages_calendrier($con){
+    $requete = $con->prepare("SELECT DISTINCT count(*) AS nblignes FROM course c ");
+    $requete->execute();
+    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    return $contenu;
+}
+
+function insert_infos_intervention($con, $title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio){
+
+    $requete = $con->prepare("SELECT it.id FROM intervention_type it WHERE name = :name ");
+    $requete->bindParam(':name', $typeintervention);
+    $requete->execute();
+    $typeintervention_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
+
+    $requete = $con->prepare("SELECT m.id FROM module m WHERE name = :name ");
+    $requete->bindParam(':name', $module);
+    $requete->execute();
+    $module_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
+
+    $course_id = select_nb_pages_calendrier($con);
+    $course_id= $course_id[0]["nblignes"];
+    $course_id= $course_id +1;
+
+    $requete = $con->prepare("INSERT INTO course (id, start_date, end_date, intervention_type_id, module_id, remotely, title) VALUES (:id, :start_date, :end_date, :intervention_type_id, :module_id, :remotely, :title)");
+    $requete->bindParam(':id', $course_id);
+    $requete->bindParam(':start_date', $date_start);
+    $requete->bindParam(':end_date', $date_end);
+    $requete->bindParam(':intervention_type_id', $typeintervention_id);
+    $requete->bindParam(':module_id', $module_id);
+    $requete->bindParam(':remotely', $visio);
+    $requete->bindParam(':title', $title);
+
+    $requete->execute();
+
+
+
+    foreach ($intervenant as $id_user) {
+        $requete = $con->prepare("SELECT i.id FROM instructor i WHERE user_id = :id_user ");
+        $requete->bindParam(':id_user', $id_user);
+        $requete->execute();
+        $intervenant_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
+
+        $requete = $con->prepare("INSERT INTO course_instructor (course_id, instructor_id) VALUES (:course_id , :instructor_id)");
+        $requete->bindParam('course_id', $course_id);
+        $requete->bindParam(':instructor_id', $intervenant_id);
+        $requete->execute();
+    }
+}
+
+
+function verification_insert_intervention($con, $date_start, $date_end, $module, $intervenant){
+
+    $module_verification = 0;
+
+    $requete = $con->prepare("SELECT m.id FROM module m WHERE name = :name ");
+    $requete->bindParam(':name', $module);
+    $requete->execute();
+    $module_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
+
+    $start = new DateTime("$date_start");
+    $end = new DateTime("$date_end");
+    $time = $start->diff($end);
+    $hours = ($time->days * 24) + $time->h;
+
+    if (($start < $end) && ($hours<= 4) ){
+        foreach ($intervenant as $id_user) {
+            $requete = $con->prepare("SELECT i.id FROM instructor i WHERE user_id = :id_user ");
+            $requete->bindParam(':id_user', $id_user);
+            $requete->execute();
+            $intervenant_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
+
+            $requete = $con->prepare("SELECT m.id FROM  module m JOIN instructor_module im ON m.id = im.module_id WHERE im.instructor_id = :intervenant_id");
+            $requete->bindParam(':intervenant_id', $intervenant_id);
+            $requete->execute();
+            $modules_intervenant = $requete->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($modules_intervenant as $module_intervenant) {
+                if ($module_intervenant['id'] == $module_id){
+                    $module_verification +=1;
+                }
+            }
+        }
+        if ( $module_verification == count($intervenant)){
+            return True;
+        }
+        else {
+            echo "module non enseigné par un des enseignants";
+            return False;
+        }
+    }
+    else{
+        echo "horraire incorecte, une intervention dure entre 1 minute et 4 heures";
+        return False ;
+    }
 }

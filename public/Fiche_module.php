@@ -1,4 +1,6 @@
-<?php require_once("inclus/Header.php")?>
+<?php 
+require_once 'inclus/auth_check.php';
+require_once("inclus/Header.php")?>
 <body>
     <nav>
         <?php require_once('inclus/Menu_gestion_licence.php'); ?>
@@ -9,6 +11,7 @@
 
     if (isset($_GET['id'])) {
         $id = htmlspecialchars($_GET['id']);
+        $id = (int) $id;
 
         // Récupération du module 
         $requete = $con->prepare("SELECT code, name, description, hours_count, capstone_project, parent_id FROM module WHERE id = :id");
