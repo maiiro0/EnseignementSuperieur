@@ -74,15 +74,15 @@ if ((!empty($_POST['last_name'])) && !empty($_POST['first_name']) && !empty($_PO
                 <div class="form-gap">
                     <div>
                         <label for="last_name">Nom de famille - champ obligatoire</label> </br>
-                        <input class="form-input" type="text" value=" <?php echo $infos["last_name"] ?>" name="last_name" id="last_name"></br>
+                        <input class="form-input" type="text" value="<?php echo $infos["last_name"] ?>" name="last_name" id="last_name"></br>
                     </div>
                     <div>
                         <label for="first_name">Prénom - champ obligatoire</label> </br>
-                        <input class="form-input" type="text" value=" <?php echo $infos["first_name"] ?>" name="first_name" id="first_name"></br>
+                        <input class="form-input" type="text" value="<?php echo $infos["first_name"] ?>" name="first_name" id="first_name"></br>
                     </div>
                     <div>
                         <label for="email">Email - champ obligatoire</label> </br>
-                        <input class="form-input" type="text" value=" <?php echo $infos["email"] ?>" name="email" id="email"></br>
+                        <input class="form-input" type="text" value="<?php echo $infos["email"] ?>" name="email" id="email"></br>
                     </div>   
                 </div>
                 <div>
