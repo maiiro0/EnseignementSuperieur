@@ -10,7 +10,7 @@ function infos_intervention_type($con, $id){
 
 function infos_intervention_type_all($con, $offset){
     $offend = $offset + 10;
-    $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type LIMIT :offsetend OFFSET :offset");
+    $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type ORDER BY name ASC LIMIT :offsetend OFFSET :offset");
     $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
     $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
     $requete->execute();
@@ -150,7 +150,7 @@ function insert_intervention_type($con, $name, $color, $description) {
 
 function select_id_intervention_type_where($con, $filtre, $offset) {
     $offend = $offset + 10;
-    $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type WHERE name LIKE :filtre LIMIT :offsetend OFFSET :offset");
+    $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type WHERE name LIKE :filtre ORDER BY name ASC LIMIT :offsetend OFFSET :offset");
     $requete->bindParam(':filtre', $filtre);
     $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
     $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
@@ -306,7 +306,7 @@ function select_parent($con) {
 
 function calendrier_tableau($con, $offset){
     $offend = $offset + 10;
-    $requete = $con->prepare("SELECT DISTINCT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id LIMIT :offsetend OFFSET :offset");
+    $requete = $con->prepare("SELECT DISTINCT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id ORDER BY c.start_date ASC LIMIT :offsetend OFFSET :offset");
     $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
     $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
     $requete->execute();

@@ -359,50 +359,6 @@ $moduleId = $_GET['module_id'] ?? '';
 </html>
 
 <?php
-/*
-if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['intervention']) && !empty($_POST['inter'])){
-    var_dump("Déjà ça c'est fait");
-    $title = htmlspecialchars($_POST['title']);
-    $date_start = htmlspecialchars($_POST['date-start']);
-    $date_end = htmlspecialchars($_POST['date-end']);
-    $module = htmlspecialchars($_POST['module']);
-    $intervention = htmlspecialchars($_POST['intervention']);
-    $intervenants = htmlspecialchars($_POST['inter']); //Ne pas oublier : intervenants peut contenir plusieurs intervenants
-
-    $requete = $con->prepare('SELECT id FROM intervention_type WHERE name = :intervention');
-    $requete->bindParam(':intervention', $intervention);
-    $requete->execute();
-    $id_intervention = $requete->fetchAll(\PDO::FETCH_ASSOC); //Récupère l'ID de l'intervention
-    
-    $requete = $con->prepare('SELECT id FROM module WHERE name = :module');
-    $requete->bindParam(':module', $module);
-    $requete->execute();
-    $id_module = $requete->fetchAll(\PDO::FETCH_ASSOC); //Récupère l'ID du module
-
-    $date_start = new \DateTime($date_start);
-    $date_end = new \DateTime($date_end);
-
-    $delais = $date_start->diff($date_end);
-    var_dump($delais);
-
-
-}
-
-
-if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['typeintervention']) && !empty($_POST['intervenant']) && !empty($_POST['visio'])) {
-    $title = htmlspecialchars($_POST['title']);
-    $date_start = htmlspecialchars($_POST['date-start']);
-    $date_end = htmlspecialchars($_POST['date-end']);
-    $module = htmlspecialchars($_POST['module']);
-    $typeintervention = htmlspecialchars($_POST['typeintervention']);
-    $intervenant = $_POST['intervenant'];
-    $visio = $_POST['visio'];
-    insert_infos_intervention($title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio);
-}
-
-
-*/
-
 ?>
 
 <?php
