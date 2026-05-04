@@ -120,13 +120,15 @@ else {
             <h4>Interventions trouvées :</h4>
 
             <table class="table_teacher_interventions">
-                <tr class="columns">
-                    <td>Dates de l'intervention</td>
-                    <td>Module</td>
-                    <td>Type</td>
-                    <td>Intervenants</td>
-                    <td>En visio</td>
-                </tr>
+                <thead>
+                    <tr class="columns">
+                        <td>Dates de l'intervention</td>
+                        <td>Module</td>
+                        <td>Type</td>
+                        <td>Intervenants</td>
+                        <td>En visio</td>
+                    </tr>
+                </thead>
                 <?php
                 if (!empty($_GET["start_date"]) || !empty($_GET["end_date"]) || !empty($_GET["name"])){
                     $filtre_start_date = '%'.$_GET["start_date"].'%';
@@ -150,36 +152,41 @@ else {
                     }
 
                     $contenu = filtre_fiche_enseignant($con, $id,  $filtre_start_date, $filtre_end_date, $filtre_name, $offset);
+                    ?>
+                    <tbody>
+                        <?php
+                        foreach ($contenu as $valeurs=>$element) {
+                            $debut = new DateTime($element["start_date"]);
+                            $fin = new DateTime($element["end_date"]);
+                            echo "<tr>";
+                            echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
 
-                    foreach ($contenu as $valeurs=>$element) {
-                        $debut = new DateTime($element["start_date"]);
-                        $fin = new DateTime($element["end_date"]);
-                        echo "<tr>";
-                        echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
+                            echo "<td>". $element["module"] . "</td>";
 
-                        echo "<td>". $element["module"] . "</td>";
+                            echo "<td>". $element["type_name"] ."</td>";
 
-                        echo "<td>". $element["type_name"] ."</td>";
+                            $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
+                            echo "<td>";
+                            $temporaire = "";
+                            foreach ($noms_intervenants as $colonne=>$noms){
+                                $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
+                            }
+                            echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
+                            echo "</td>";
 
-                        $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
-                        echo "<td>";
-                        $temporaire = "";
-                        foreach ($noms_intervenants as $colonne=>$noms){
-                            $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
+
+                            if ($element["remotely"] == 0){
+                                ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
+                            }   
+                            else {
+                                ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
+                            }
+                            echo "</tr>";
                         }
-                        echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
-                        echo "</td>";
-
-
-                        if ($element["remotely"] == 0){
-                            ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
-                        }   
-                        else {
-                            ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
-                        }
-                        echo "</tr>";
-                    }
-                    
+                        ?>
+                    </tbody>
+                    <?php
+                        
 
                     $nb_pages = select_nb_pages_filtre_fiche_enseignant($con,$id, $filtre_start_date, $filtre_end_date, $filtre_name);
                     $nb_pages = $nb_pages[0]["nblignes"];
@@ -191,60 +198,63 @@ else {
                     $limit = 10;
                     $offset = $page * $limit - $limit;
                     $contenu = fiche_enseignant_tableau($con, $id ,$offset);
+                    ?>
+                    <tbody>
+                        <?php
+                        foreach ($contenu as $valeurs=>$element) {
+                            $debut = new DateTime($element["start_date"]);
+                            $fin = new DateTime($element["end_date"]);
+                            echo "<tr>";
+                            echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
 
-                    foreach ($contenu as $valeurs=>$element) {
-                        $debut = new DateTime($element["start_date"]);
-                        $fin = new DateTime($element["end_date"]);
-                        echo "<tr>";
-                        echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
+                            echo "<td>". $element["module"] . "</td>";
 
-                        echo "<td>". $element["module"] . "</td>";
+                            echo "<td>". $element["type_name"] ."</td>";
 
-                        echo "<td>". $element["type_name"] ."</td>";
+                            $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
+                            echo "<td>";
+                            $temporaire = "";
+                            foreach ($noms_intervenants as $colonne=>$noms){
+                                $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
+                            }
+                            echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
+                            echo "</td>";
 
-                        $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
-                        echo "<td>";
-                        $temporaire = "";
-                        foreach ($noms_intervenants as $colonne=>$noms){
-                            $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
+
+                            if ($element["remotely"] == 0){
+                                ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
+                            }   
+                            else {
+                                ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
+                            }
+                            echo "</tr>";
+
                         }
-                        echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
-                        echo "</td>";
-
-
-                        if ($element["remotely"] == 0){
-                            ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
-                        }   
-                        else {
-                            ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
-                        }
-                        echo "</tr>";
-
-                    }
+                        ?>
+                    </tbody>
+                    <?php
                     $nb_pages = select_nb_pages_filtre_fiche_enseignant($con,$id, $filtre_start_date, $filtre_end_date, $filtre_name);
                     $nb_pages = $nb_pages[0]["nblignes"];
                     $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
                 }
-
-
-                if ($_GET["page"] == 1 && $nb_pages == 1){ ?>
-                    <?php
-                }
-                else if ($_GET["page"] == $nb_pages){?>
-                    <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>?page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>">Page précédente </a><?php
-                }
-                else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
-                    <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>?page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>">Page précédente </a>
-                    <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>?page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a>
-                    <?php
-                } 
-                else { ?>
-                    <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>?page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a><?php
-                }
                 ?>
-
-                
             </table>
+            <?php
+            if ($_GET["page"] == 1 && $nb_pages == 1){ ?>
+                <?php
+            }
+            else if ($_GET["page"] == $nb_pages){?>
+                <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>">Page précédente </a><?php
+            }
+            else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
+                <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>">Page précédente </a>
+                <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a>
+                <?php
+            } 
+            else { ?>
+                <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a><?php
+            }
+            ?>    
         </section>
     </section>
 </body>

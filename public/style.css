@@ -761,6 +761,7 @@ table.table_teacher_interventions td{
     border: 1px dashed #F1F2F7;
     border-radius: 5px;
     width: 756px;
+    padding-right: 30px;
 }
 
 .dashed ul li {
@@ -774,5 +775,13 @@ table.table_teacher_interventions td{
 }
 
 .dashed ul li img {
-    padding-right: 3px;
+    padding-right: 20px;
+}
+
+.margin-top {
+    margin-top: 20px;
+}
+
+div.form-align.module a {
+    color: #98A2B3;
 }

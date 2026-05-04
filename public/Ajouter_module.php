@@ -3,7 +3,8 @@ require_once 'inclus/auth_check.php';
 require_once("inclus/Header.php")?>
 <body>
     <nav>
-        <?php require_once('inclus/Menu_gestion_licence.php'); ?>
+        <?php $active='modules';
+        require_once('inclus/Menu_gestion_licence.php'); ?>
     </nav>
 
      <?php require_once 'inclus/Connexion.php';
@@ -75,7 +76,7 @@ require_once("inclus/Header.php")?>
                 <input class="input_desc" type="text" id="description" name="description">
             </div>
               <div class="button-intervention">
-                <a href="Type_intervention.php" class="grey-button selection">Retour à la liste</a>
+                <a href="Modules.php" class="grey-button selection">Retour à la liste</a>
                 <button type="submit" class="blue-button selection">Ajouter le module</button>
             </div>
         </form>
@@ -103,4 +104,12 @@ if (!empty($_POST['code']) && !empty($_POST['name'])) {
     $requete->bindParam(':hours_count', $hours_count, \PDO::PARAM_INT);
     $requete->bindParam(':capstone_project', $capstone_project, \PDO::PARAM_INT);
     $requete->execute();
+
+    //MAJ des heures du parent
+    if ($parent_id) {
+        $requete = $con->prepare("UPDATE module SET hours_count = hours_count + :hours_count WHERE id = :parent_id");
+        $requete->bindParam(':hours_count', $hours_count, \PDO::PARAM_INT);
+        $requete->bindParam(':parent_id', $parent_id, \PDO::PARAM_INT);
+        $requete->execute();
+    }
 }
