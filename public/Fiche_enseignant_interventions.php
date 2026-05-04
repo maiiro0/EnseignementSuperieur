@@ -116,8 +116,7 @@ else {
                     </div>
                     <button class="yellow-button">Filtrer</button>
                 </div>
-            </form>
-            <h4>Interventions trouvées :</h4>
+            </form>         
 
             <table class="table_teacher_interventions">
                 <thead>
@@ -152,6 +151,7 @@ else {
                     }
 
                     $contenu = filtre_fiche_enseignant($con, $id,  $filtre_start_date, $filtre_end_date, $filtre_name, $offset);
+                    echo "<h4>".count($contenu)." interventions trouvées</h4>";
                     ?>
                     <tbody>
                         <?php
@@ -198,6 +198,7 @@ else {
                     $limit = 10;
                     $offset = $page * $limit - $limit;
                     $contenu = fiche_enseignant_tableau($con, $id ,$offset);
+                    echo "<h4>".count($contenu)." interventions trouvées</h4>";
                     ?>
                     <tbody>
                         <?php
