@@ -103,7 +103,7 @@ $moduleId = $_GET['module_id'] ?? '';
                             </div>
                         </div>
                         <div>
-                            <label for="intervenant">Intervenant - champ obligatoire</label></br>
+                            <label for="intervenant">Intervenant - champ obligatoire  - Ctrl pour sélectionner plusieurs intervenants</label></br>
                             <select name="intervenant[]" id="intervenant" multiple class="select-size-long">
                                     <option value="">Sélectionner des intervenants</option>
                                     <?php
@@ -121,7 +121,7 @@ $moduleId = $_GET['module_id'] ?? '';
                             <label for="visio">Intervention effectuée en visio</label>
                         </div>
                         <div class="select-button">
-                            <button commandfor="dialog" command="close" class="grey-button selection">Annuler</button>
+                            <button type="button" command="close" commandfor="Ajout" class="grey-button selection">Annuler</button>
                             <button type="submit" class="blue-button selection">Confirmer</button>
                         </div>
                     </form>
@@ -192,8 +192,31 @@ $moduleId = $_GET['module_id'] ?? '';
                                 </div>
                             </div>
 
+<<<<<<< Updated upstream
                             <label for="modif-inter">Intervenant - champ obligatoire</label></br>
                             <select name="modif-inter" id="modif-inter">
+=======
+                            <div>
+                                <label for="modif-intervention">Type d'intervention - champ obligatoire</label></br>
+                                <select name="modif-intervention" id="modif-intervention" class= "select-size">
+                                    <option value="">Sélectionner le module</option>
+                                    <?php 
+                                    
+                                    $requete = $con->prepare("SELECT name FROM intervention_type ORDER BY name");
+                                    $requete->execute();
+                                    $nom_intervention = $requete->fetchAll(\PDO::FETCH_ASSOC);
+                                    foreach ($nom_intervention as $valeurs=>$element) { 
+                                        echo "<option>". $element["name"]."</option>";
+                                    }
+                                        
+                                    ?>
+                                </select></br>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="modif-inter">Intervenant - champ obligatoire - Ctrl pour sélectionner plusieurs intervenants</label></br>
+                            <select name="intervenant[]" id="intervenant" multiple class="select-size-long">
+>>>>>>> Stashed changes
                                     <option value="">Sélectionner des intervenants</option>
                                     <?php
                                     
@@ -206,6 +229,7 @@ $moduleId = $_GET['module_id'] ?? '';
                                     
                                     ?>
                                     
+<<<<<<< Updated upstream
                             </select></br>
                             <div>
                                 <input type="checkbox" id="modif-visio" name="modif-visio" value="1" />
@@ -235,6 +259,38 @@ $moduleId = $_GET['module_id'] ?? '';
                             
                             ?>
                         </form>
+=======
+                            </select>
+                        <div>
+                        <div>
+                            <input type="checkbox" id="modif-visio" name="modif-visio" value="1" >
+                            <label for="modif-visio">Intervention effectuée en visio</label>
+                        </div>
+                        <div class="select-button-gap">
+                            <button type="button" command="close" commandfor="Modif" class="grey-button selection">Annuler</button>
+                            <button type="submit" name="supp-inter" class="red-button selection">Supprirmer</button>
+                            <button type="submit" class="blue-button selection">Confirmer</button>
+                        </div>
+                        <?php
+                        
+                            if(isset($_POST['supp-inter'])) {
+                                $requete = $con->prepare("DELETE FROM course WHERE id = :id");
+                                $requete->bindParam(':id', $id);
+                                $requete->execute();
+                            }
+                            if(isset($_POST['titre']) && isset($_POST['date-debut']) && isset($_POST['date-fin']) && isset($_POST['modif-module']) && isset($_POST['modif-intervention']) && isset($_POST['modif-inter'])) {
+                                $requete = $con->prepare("INSERT INTO course (title, start_date, end_date, module_id, intervention_type_id) VALUES (:title, :start_date, :end_date, :module_id, :intervention_type_id)");
+                                $requete->bindParam(':title', $_POST['titre']);
+                                $requete->bindParam(':start_date', $_POST['date-debut']);
+                                $requete->bindParam(':end_date', $_POST['date-fin']);
+                                $requete->bindParam(':module_id', $_POST['modif-module']);
+                                $requete->bindParam(':intervention_type_id', $_POST['modif-intervention']);
+                                $requete->execute();
+                            }
+                        
+                        ?>
+                    </form>
+>>>>>>> Stashed changes
                     </div>
                 </dialog>
                         
@@ -289,6 +345,7 @@ $moduleId = $_GET['module_id'] ?? '';
             <p class="result-count"><?= count($interventions) ?> interventions trouvées</p>
 
             <table class="table">
+<<<<<<< Updated upstream
                 <tr class="columns">
                     <td>Dates de l'intervention</td>
                     <td>Module</td>
@@ -297,6 +354,18 @@ $moduleId = $_GET['module_id'] ?? '';
                     <td>En visio</td>
                     <td></td>
                 </tr>
+=======
+                <thead>
+                    <tr class="columns">
+                        <td>Date de l'intervention</td>
+                        <td>Module</td>
+                        <td>Type</td>
+                        <td>Intervenants</td>
+                        <td>En visio</td>
+                        <td></td>
+                    </tr>
+                </thead>
+>>>>>>> Stashed changes
                 <?php
                 $limit = 10;
                 $offset = $page * $limit - $limit;

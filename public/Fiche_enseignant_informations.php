@@ -82,11 +82,11 @@ if ((!empty($_POST['last_name'])) && !empty($_POST['first_name']) && !empty($_PO
                     </div>
                     <div>
                         <label for="email">Email - champ obligatoire</label> </br>
-                        <input class="form-input" type="text" value="<?php echo $infos["email"] ?>" name="email" id="email"></br>
+                        <input class="form-input" type="email" value="<?php echo $infos["email"] ?>" name="email" id="email"></br>
                     </div>   
                 </div>
                 <div>
-                    <label for="name">Modules enseignés - champ obligatoire</label><br>
+                    <label for="name">Modules enseignés - champ obligatoire  - Ctrl pour sélectionner plusieurs intervenants</label><br>
                     <select name="name[]" id="name" multiple class="select-multiple">
                             <?php
                                 $nom_module = select_modules_corp_enseignant($con);

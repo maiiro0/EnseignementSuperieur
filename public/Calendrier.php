@@ -122,7 +122,7 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
                             </div>
                         </div>
                         <div>
-                            <label for="intervenant">Intervenant - champ obligatoire</label></br>
+                            <label for="intervenant">Intervenant - champ obligatoire  - Ctrl pour sélectionner plusieurs intervenants</label></br>
                             <select name="intervenant[]" id="intervenant" multiple class="select-size-long">
                                     <option value="">Sélectionner des intervenants</option>
                                     <?php
@@ -140,7 +140,7 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
                             <label for="visio">Intervention effectuée en visio</label>
                         </div>
                         <div class="select-button">
-                            <button commandfor="dialog" command="close" class="grey-button selection">Annuler</button>
+                            <button type="button" command="close" commandfor="Ajout" class="grey-button selection">Annuler</button>
                             <button type="submit" class="blue-button selection">Confirmer</button>
                         </div>
                     </form>
@@ -152,7 +152,7 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
             <table class="table">
                 <thead>
                     <tr class="columns">
-                        <td>Dates de l'intervention</td>
+                        <td>Date de l'intervention</td>
                         <td>Module</td>
                         <td>Type</td>
                         <td>Intervenants</td>
