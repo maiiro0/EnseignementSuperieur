@@ -120,7 +120,7 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
                             <div>
                                 <label for="typeintervention">Type d'intervention - champ obligatoire</label></br>
                                 <select name="typeintervention" id="typeintervention" class= "select-size">
-                                    <option value="">Sélectionner le module</option>
+                                    <option value="">Sélectionner le type d'intervention</option>
                                     <?php 
                                     $requete = $con->prepare("SELECT name FROM intervention_type ORDER BY name");
                                     $requete->execute();
@@ -205,7 +205,7 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
                             <div>
                                 <label for="modif-intervention">Type d'intervention - champ obligatoire</label></br>
                                 <select name="modif-intervention" id="modif-intervention" class= "select-size">
-                                    <option value="">Sélectionner le module</option>
+                                    <option value="">Sélectionner le type d'intervention</option>
                                     <?php 
                                     
                                     $requete = $con->prepare("SELECT name FROM intervention_type ORDER BY name");
