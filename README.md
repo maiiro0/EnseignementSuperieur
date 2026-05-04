@@ -1,4 +1,4 @@
-L'objectif de ce projet est de réaliser un site web pour la gestion des élèves de licence. Nous sommes un groupe de 4 personnes de BTS1.
+L'objectif de ce projet est de réaliser un site web pour la gestion des élèves de licence. Nous sommes un groupe de 4 personnes de BTS1. (Cassandre, HUgo, Chloé et Elena)
 
 ***Technologies et veilles :***
 - HTML
@@ -8,7 +8,7 @@ L'objectif de ce projet est de réaliser un site web pour la gestion des élève
 - Veille Markdown
 - Veille connextion BDD à PHP
 
-On se retrouvais tous les lundis pour voir notre avancée du projet. Nous avons travaillé par sprints et issues sur GitHub. Nous avons utilisé GitBash et GitHub Desktop.
+On se retrouvais tous les lundis pour voir notre avancée du projet. Nous avons travaillé par sprints et issues sur GitHub. On a travaillé avec la méthodologie AGILE. Nous avons utilisé GitBash et GitHub Desktop.
 
 Pour lancer le projet, il faut avoir xampp ou wampp et lancer Apache et MySQL. Le fichier à entrer sur MySQL se trouve dans le fichier database. Il faut ensuite lancer Apache, cliquer sur EnseignementSuperieur puis public.
 
