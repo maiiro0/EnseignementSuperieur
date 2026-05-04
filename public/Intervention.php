@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'inclus/auth_check.php';
 require_once 'inclus/Connexion.php';
 require_once '../database/User_database.php';
@@ -395,15 +395,71 @@ $modules = $requete->fetchAll(\PDO::FETCH_ASSOC);
                         </select>
                     </div>
 
-                    <button class="yellow-button">Filtrer</button>
+                    <button type="submit" class="yellow-button">Filtrer</button>
                 </div>
             </form>
 
             <?php
-                $interventions = calendrier_tableau_Count($con);
+                $where = [];
+                $params = [];
+
+                if (!empty($dateStart)) {
+                    $where[] = "c.start_date >= :date_start";
+                    $params[':date_start'] = str_replace('T', ' ', $dateStart);
+                }
+
+                if (!empty($dateEnd)) {
+                    $where[] = "c.end_date <= :date_end";
+                    $params[':date_end'] = str_replace('T', ' ', $dateEnd);
+                }
+
+                if (!empty($moduleId)) {
+                    $where[] = "c.module_id = :module_id";
+                    $params[':module_id'] = $moduleId;
+                }
+
+                $whereSql = "";
+                if (!empty($where)) {
+                    $whereSql = " WHERE " . implode(" AND ", $where);
+                }
+
+                $limit = 10;
+                $offset = $page * $limit - $limit;
+
+                $requete = $con->prepare("SELECT COUNT(*) AS total FROM course c $whereSql");
+                foreach ($params as $key => $value) {
+                    $requete->bindValue($key, $value);
+                }
+                $requete->execute();
+                $totalInterventions = (int) $requete->fetch(PDO::FETCH_ASSOC)['total'];
+
+                $sql = "
+                    SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely
+                    FROM course c
+                    JOIN module m ON c.module_id = m.id
+                    JOIN intervention_type it ON c.intervention_type_id = it.id
+                    $whereSql
+                    ORDER BY c.start_date
+                    LIMIT :limit OFFSET :offset
+                ";
+
+                $requete = $con->prepare($sql);
+                foreach ($params as $key => $value) {
+                    $requete->bindValue($key, $value);
+                }
+                $requete->bindValue(':limit', $limit, PDO::PARAM_INT);
+                $requete->bindValue(':offset', $offset, PDO::PARAM_INT);
+                $requete->execute();
+                $contenu = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+                $nb_pages = max(1, (int) ceil($totalInterventions / $limit));
+                $queryParams = $_GET;
+                unset($queryParams['page']);
+                $queryString = http_build_query($queryParams);
+                $queryString = $queryString ? '&' . $queryString : '';
             ?>
 
-            <p class="result-count"><?= count($interventions) ?> interventions trouvées</p>
+            <p class="result-count"><?= $totalInterventions ?> interventions trouvées</p>
 
             <table class="table">
                 <thead>
@@ -416,11 +472,6 @@ $modules = $requete->fetchAll(\PDO::FETCH_ASSOC);
                         <td></td>
                     </tr>
                 </thead>
-                <?php
-                $limit = 10;
-                $offset = $page * $limit - $limit;
-                $contenu = calendrier_tableau($con, $offset);
-                ?>
                 <tbody>
                     <?php
                     foreach ($contenu as $valeurs=>$element) {
@@ -428,10 +479,8 @@ $modules = $requete->fetchAll(\PDO::FETCH_ASSOC);
                         $fin = new DateTime($element["end_date"]);
                         echo "<tr>";
                         echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
-
-                        echo "<td>". $element["module"] . "</td>";
-
-                        echo "<td>". $element["type_name"] ."</td>";
+                        echo "<td>". htmlspecialchars($element["module"]) . "</td>";
+                        echo "<td>". htmlspecialchars($element["type_name"]) ."</td>";
 
                         $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
                         echo "<td>";
@@ -439,152 +488,32 @@ $modules = $requete->fetchAll(\PDO::FETCH_ASSOC);
                         foreach ($noms_intervenants as $colonne=>$noms){
                             $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
                         }
-                        echo substr($temporaire, 2); //substr recupère à partir d'un certain endroit la chaîne de caractère.
+                        echo htmlspecialchars(substr($temporaire, 2));
                         echo "</td>";
-
 
                         if ($element["remotely"] == 0){
                             ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
-                        }   
-                        else {
+                        } else {
                             ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
                         }
                         ?><td class="table_align"><img src="assets/Oeil.png" alt="">
-                        <a href="?course_id=<?php echo $element['id']; ?>" class="modification-button">Accéder à la fiche</a></td>
+                        <a href="?course_id=<?php echo htmlspecialchars($element['id']); ?>" class="modification-button">Accéder à la fiche</a></td>
                         <?php
                         echo "</tr>";
                     }
                     ?>
                 </tbody>
-                <?php
-                $nb_pages = select_nb_pages_calendrier($con);
-                $nb_pages = $nb_pages[0]["nblignes"];
-                $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
-                ?>
             </table>
-            <?php
-            if ($_GET["page"] == 1 && $nb_pages == 1){ ?>
-                <?php
-            }
-            else if ($_GET["page"] == $nb_pages){?>
-                <a href="Intervention.php?page=<?php echo $page - 1; ?>"> Page précédente </a><?php
-            }
-            else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
-                <a href="Intervention.php?page=<?php echo $page - 1; ?>">Page précédente </a>
-                <a href="Intervention.php?page=<?php echo $page + 1; ?>"> Page suivante</a>
-                <?php
-            } 
-            else { ?>
-                <a href="Intervention.php?page=<?php echo $page + 1; ?>"> Page suivante</a><?php
-            }
-            ?>
+
+            <?php if ($page > 1): ?>
+                <a href="Intervention.php?page=<?= $page - 1 . $queryString ?>">Page précédente</a>
+            <?php endif; ?>
+
+            <?php if ($page < $nb_pages): ?>
+                <a href="Intervention.php?page=<?= $page + 1 . $queryString ?>">Page suivante</a>
+            <?php endif; ?>
         </section>
     </section>
 </body>
 </html>
-<?php?>
-
-<?php
-
-
-if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['typeintervention']) && !empty($_POST['intervenant']) && empty($_POST['course_id_hidden'])) {
-    $date_start = htmlspecialchars($_POST['date-start']);
-    $date_end = htmlspecialchars($_POST['date-end']);
-    $module_id = htmlspecialchars($_POST['module']);
-    $type_id = htmlspecialchars($_POST['typeintervention']);
-    $intervenant = $_POST['intervenant'];
-    
-
-    $requete = $con->prepare("SELECT name FROM module WHERE id = :id");
-    $requete->bindParam(':id', $module_id);
-    $requete->execute();
-    $module_name = $requete->fetch(\PDO::FETCH_ASSOC)['name'];
-    
-    $requete = $con->prepare("SELECT name FROM intervention_type WHERE id = :id");
-    $requete->bindParam(':id', $type_id);
-    $requete->execute();
-    $type_name = $requete->fetch(\PDO::FETCH_ASSOC)['name'];
-    
-    if (empty($_POST['visio'])){
-        $visio = 0;
-    }
-    else{
-        $visio = $_POST['visio'];
-    }
-    if (empty($_POST['title'])){
-        $title = null;
-    }
-    else{
-        $title = htmlspecialchars($_POST['title']);
-    }
-    $verification = verification_insert_intervention($con, $date_start, $date_end, $module_name, $intervenant);
-    if ($verification == True){
-        insert_infos_intervention($con, $title, $date_start, $date_end, $module_name, $type_name, $intervenant, $visio);
-        header('Location: Intervention.php');
-        exit;
-    }
-}
-
-    if(isset($_POST['supp-inter']) && !empty($_POST['course_id_hidden'])) {
-    $course_id = htmlspecialchars($_POST['course_id_hidden']);
-    
-    $requete = $con->prepare("DELETE FROM course_instructor WHERE course_id = :id");
-    $requete->bindParam(':id', $course_id);
-    $requete->execute();
-    
-    $requete = $con->prepare("DELETE FROM course WHERE id = :id");
-    $requete->bindParam(':id', $course_id);
-    $requete->execute();
-    
-    header('Location: Intervention.php');
-    exit;
-}
-
-if(isset($_POST['modif-course']) && !empty($_POST['course_id_hidden'])) {
-    $course_id = htmlspecialchars($_POST['course_id_hidden']);
-    $title = !empty($_POST['titre']) ? htmlspecialchars($_POST['titre']) : null;
-    $date_start = htmlspecialchars($_POST['date-debut']);
-    $date_end = htmlspecialchars($_POST['date-fin']);
-    $module_id = htmlspecialchars($_POST['modif-module']);
-    $type_id = htmlspecialchars($_POST['modif-intervention']);
-    $intervenant = $_POST['intervenant'] ?? [];
-    $visio = !empty($_POST['modif-visio']) ? 1 : 0;
-    
-    if (!empty($date_start) && !empty($date_end) && !empty($module_id) && !empty($type_id) && !empty($intervenant)) {
-        $requete = $con->prepare("UPDATE course SET title = :title, start_date = :start_date, end_date = :end_date, module_id = :module_id, intervention_type_id = :type_id, remotely = :remotely WHERE id = :id");
-        $requete->bindParam(':title', $title);
-        $requete->bindParam(':start_date', $date_start);
-        $requete->bindParam(':end_date', $date_end);
-        $requete->bindParam(':module_id', $module_id);
-        $requete->bindParam(':type_id', $type_id);
-        $requete->bindParam(':remotely', $visio);
-        $requete->bindParam(':id', $course_id);
-        $requete->execute();
-        
-        $requete = $con->prepare("DELETE FROM course_instructor WHERE course_id = :id");
-        $requete->bindParam(':id', $course_id);
-        $requete->execute();
-        
-        foreach ($intervenant as $user_id) {
-            $requete = $con->prepare("SELECT i.id FROM instructor i WHERE user_id = :user_id");
-            $requete->bindParam(':user_id', $user_id);
-            $requete->execute();
-            $instructor = $requete->fetch(\PDO::FETCH_ASSOC);
-            
-            if ($instructor) {
-                $requete = $con->prepare("INSERT INTO course_instructor (course_id, instructor_id) VALUES (:course_id, :instructor_id)");
-                $requete->bindParam(':course_id', $course_id);
-                $requete->bindParam(':instructor_id', $instructor['id']);
-                $requete->execute();
-            }
-        }
-        
-        header('Location: Intervention.php');
-        exit;
-    }
-}
-
-?>
-
-
 
