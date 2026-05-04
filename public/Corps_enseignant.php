@@ -78,18 +78,18 @@ else {
                         
                         <div class="form-width-max">
                             <label for="email_bdd" require>Email</label></br>
-                            <input type="text" name="email_bdd" id="email_bdd"></br>
+                            <input type="text" placeholder="Saisissez l'email de l'enseignant" name="email_bdd" id="email_bdd"></br>
                         </div>
 
                         <div class="form-align">
                             <div>
                                 <label for="last_name_bdd" require>Nom</label></br>
-                                <input type="text" name="last_name_bdd" id="last_name_bdd"></br>
+                                <input type="text" placeholder="Saisissez le nom de famille" name="last_name_bdd" id="last_name_bdd"></br>
                             </div>
 
                             <div>
                                 <label for="first_name_bdd" require>Prénom</label></br>
-                                <input type="text" name="first_name_bdd" id="first_name_bdd"></br>
+                                <input type="text" placeholder="Saisissez le prénom" name="first_name_bdd" id="first_name_bdd"></br>
                             </div>
                         </div>
 
