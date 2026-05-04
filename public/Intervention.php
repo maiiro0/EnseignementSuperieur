@@ -362,7 +362,7 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
                             ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
                         }
                         ?><td class="table_align"><img src="assets/Oeil.png" alt="">
-                        <button type="button" command="show-modal" commandfor="Modif" value = '{<?php echo $element['id'] ?> }' class= "modification-button">Accéder à la fiche</button></td>
+                        <button type="button" command="show-modal" commandfor="Modif" value = '{<?php echo $element['id'] ?> }' class= "modif-button">Accéder à la fiche</button></td>
                         <?php
                         echo "</tr>";
                     }
