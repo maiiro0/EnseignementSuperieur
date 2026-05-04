@@ -4,9 +4,6 @@ require_once 'inclus/Connexion.php';
 require_once '../database/User_database.php';
 $active='interventions';
 
-// ========== TRAITEMENT DES FORMULAIRES (AVANT HEADER.PHP) ==========
-
-// Traiter la soumission du formulaire d'ajout d'intervention
 if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['typeintervention']) && !empty($_POST['intervenant']) && empty($_POST['course_id_hidden'])) {
     $date_start = htmlspecialchars($_POST['date-start']);
     $date_end = htmlspecialchars($_POST['date-end']);
@@ -14,7 +11,7 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
     $type_id = htmlspecialchars($_POST['typeintervention']);
     $intervenant = $_POST['intervenant'];
     
-    // Récupérer les noms correspondant aux IDs
+
     $requete = $con->prepare("SELECT name FROM module WHERE id = :id");
     $requete->bindParam(':id', $module_id);
     $requete->execute();
@@ -63,7 +60,7 @@ if(isset($_POST['supp-inter']) && !empty($_POST['course_id_hidden'])) {
     exit;
 }
 
-// Traiter la modification d'intervention
+
 if(isset($_POST['modif-course']) && !empty($_POST['course_id_hidden'])) {
     $course_id = htmlspecialchars($_POST['course_id_hidden']);
     $title = !empty($_POST['titre']) ? htmlspecialchars($_POST['titre']) : null;
@@ -75,7 +72,6 @@ if(isset($_POST['modif-course']) && !empty($_POST['course_id_hidden'])) {
     $visio = !empty($_POST['modif-visio']) ? 1 : 0;
     
     if (!empty($date_start) && !empty($date_end) && !empty($module_id) && !empty($type_id) && !empty($intervenant)) {
-        // Mettre à jour la course
         $requete = $con->prepare("UPDATE course SET title = :title, start_date = :start_date, end_date = :end_date, module_id = :module_id, intervention_type_id = :type_id, remotely = :remotely WHERE id = :id");
         $requete->bindParam(':title', $title);
         $requete->bindParam(':start_date', $date_start);
@@ -86,12 +82,11 @@ if(isset($_POST['modif-course']) && !empty($_POST['course_id_hidden'])) {
         $requete->bindParam(':id', $course_id);
         $requete->execute();
         
-        // Supprimer les anciens intervenants
         $requete = $con->prepare("DELETE FROM course_instructor WHERE course_id = :id");
         $requete->bindParam(':id', $course_id);
         $requete->execute();
         
-        // Ajouter les nouveaux intervenants
+
         foreach ($intervenant as $user_id) {
             $requete = $con->prepare("SELECT i.id FROM instructor i WHERE user_id = :user_id");
             $requete->bindParam(':user_id', $user_id);
@@ -111,7 +106,6 @@ if(isset($_POST['modif-course']) && !empty($_POST['course_id_hidden'])) {
     }
 }
 
-// ========== FIN DU TRAITEMENT DES FORMULAIRES ==========
 
 require_once 'inclus/Header.php';
 
@@ -129,7 +123,6 @@ $dateEnd = $_GET['date_end'] ?? '';
 $moduleId = $_GET['module_id'] ?? '';
 $courseId = $_GET['course_id'] ?? '';
 
-// Récupérer les informations de la course si l'ID est fourni
 $courseData = null;
 $courseInstructorIds = [];
 if (!empty($courseId)) {
@@ -446,7 +439,7 @@ $modules = $requete->fetchAll(\PDO::FETCH_ASSOC);
                         foreach ($noms_intervenants as $colonne=>$noms){
                             $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
                         }
-                        echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
+                        echo substr($temporaire, 2); //substr recupère à partir d'un certain endroit la chaîne de caractère.
                         echo "</td>";
 
 
@@ -489,57 +482,11 @@ $modules = $requete->fetchAll(\PDO::FETCH_ASSOC);
     </section>
 </body>
 </html>
-
-<?php
-/*
-if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['intervention']) && !empty($_POST['inter'])){
-    var_dump("Déjà ça c'est fait");
-    $title = htmlspecialchars($_POST['title']);
-    $date_start = htmlspecialchars($_POST['date-start']);
-    $date_end = htmlspecialchars($_POST['date-end']);
-    $module = htmlspecialchars($_POST['module']);
-    $intervention = htmlspecialchars($_POST['intervention']);
-    $intervenants = htmlspecialchars($_POST['inter']); //Ne pas oublier : intervenants peut contenir plusieurs intervenants
-
-    $requete = $con->prepare('SELECT id FROM intervention_type WHERE name = :intervention');
-    $requete->bindParam(':intervention', $intervention);
-    $requete->execute();
-    $id_intervention = $requete->fetchAll(\PDO::FETCH_ASSOC); //Récupère l'ID de l'intervention
-    
-    $requete = $con->prepare('SELECT id FROM module WHERE name = :module');
-    $requete->bindParam(':module', $module);
-    $requete->execute();
-    $id_module = $requete->fetchAll(\PDO::FETCH_ASSOC); //Récupère l'ID du module
-
-    $date_start = new \DateTime($date_start);
-    $date_end = new \DateTime($date_end);
-
-    $delais = $date_start->diff($date_end);
-    var_dump($delais);
-
-
-}
-
-
-if ((!empty($_POST['title'])) && !empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['typeintervention']) && !empty($_POST['intervenant']) && !empty($_POST['visio'])) {
-    $title = htmlspecialchars($_POST['title']);
-    $date_start = htmlspecialchars($_POST['date-start']);
-    $date_end = htmlspecialchars($_POST['date-end']);
-    $module = htmlspecialchars($_POST['module']);
-    $typeintervention = htmlspecialchars($_POST['typeintervention']);
-    $intervenant = $_POST['intervenant'];
-    $visio = $_POST['visio'];
-    insert_infos_intervention($title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio);
-}
-
-
-*/
-
-?>
+<?php?>
 
 <?php
 
-// Traiter la soumission du formulaire d'ajout d'intervention
+
 if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['typeintervention']) && !empty($_POST['intervenant']) && empty($_POST['course_id_hidden'])) {
     $date_start = htmlspecialchars($_POST['date-start']);
     $date_end = htmlspecialchars($_POST['date-end']);
@@ -547,7 +494,7 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
     $type_id = htmlspecialchars($_POST['typeintervention']);
     $intervenant = $_POST['intervenant'];
     
-    // Récupérer les noms correspondant aux IDs
+
     $requete = $con->prepare("SELECT name FROM module WHERE id = :id");
     $requete->bindParam(':id', $module_id);
     $requete->execute();
@@ -578,16 +525,13 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
     }
 }
 
-// Traiter la suppression d'intervention
-if(isset($_POST['supp-inter']) && !empty($_POST['course_id_hidden'])) {
+    if(isset($_POST['supp-inter']) && !empty($_POST['course_id_hidden'])) {
     $course_id = htmlspecialchars($_POST['course_id_hidden']);
     
-    // Supprimer les instructeurs associés
     $requete = $con->prepare("DELETE FROM course_instructor WHERE course_id = :id");
     $requete->bindParam(':id', $course_id);
     $requete->execute();
     
-    // Supprimer la course
     $requete = $con->prepare("DELETE FROM course WHERE id = :id");
     $requete->bindParam(':id', $course_id);
     $requete->execute();
@@ -596,7 +540,6 @@ if(isset($_POST['supp-inter']) && !empty($_POST['course_id_hidden'])) {
     exit;
 }
 
-// Traiter la modification d'intervention
 if(isset($_POST['modif-course']) && !empty($_POST['course_id_hidden'])) {
     $course_id = htmlspecialchars($_POST['course_id_hidden']);
     $title = !empty($_POST['titre']) ? htmlspecialchars($_POST['titre']) : null;
@@ -608,7 +551,6 @@ if(isset($_POST['modif-course']) && !empty($_POST['course_id_hidden'])) {
     $visio = !empty($_POST['modif-visio']) ? 1 : 0;
     
     if (!empty($date_start) && !empty($date_end) && !empty($module_id) && !empty($type_id) && !empty($intervenant)) {
-        // Mettre à jour la course
         $requete = $con->prepare("UPDATE course SET title = :title, start_date = :start_date, end_date = :end_date, module_id = :module_id, intervention_type_id = :type_id, remotely = :remotely WHERE id = :id");
         $requete->bindParam(':title', $title);
         $requete->bindParam(':start_date', $date_start);
@@ -619,12 +561,10 @@ if(isset($_POST['modif-course']) && !empty($_POST['course_id_hidden'])) {
         $requete->bindParam(':id', $course_id);
         $requete->execute();
         
-        // Supprimer les anciens intervenants
         $requete = $con->prepare("DELETE FROM course_instructor WHERE course_id = :id");
         $requete->bindParam(':id', $course_id);
         $requete->execute();
         
-        // Ajouter les nouveaux intervenants
         foreach ($intervenant as $user_id) {
             $requete = $con->prepare("SELECT i.id FROM instructor i WHERE user_id = :user_id");
             $requete->bindParam(':user_id', $user_id);
