@@ -78,7 +78,7 @@ require_once("inclus/Header.php")?>
                 <input class="input_desc" type="text" id="description" name="description" value="<?php echo htmlspecialchars($contenu['description']); ?>">
             </div>
               <div class="button-intervention">
-                <a href="Type_intervention.php" class="grey-button selection">Retour à la liste</a>
+                <a href="Modules.php" class="grey-button selection">Retour à la liste</a>
                 <button type="button" command="show-modal" commandfor="supp" class="red-button selection">Supprimer</button>
                 <button type="submit" class="blue-button selection">Enregistrer les informations</button>
             </div>
