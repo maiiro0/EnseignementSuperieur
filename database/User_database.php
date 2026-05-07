@@ -1,6 +1,6 @@
 <?php
 
-function infos_intervention_type($con, $id){
+function infos_intervention_type($con, $id){ // Récupération des informations d'un type d'intervention à partir de son id
     $requete = $con->prepare("SELECT name, description, color FROM intervention_type WHERE id=:id");
     $requete->bindParam(':id', $id);
     $requete->execute();
@@ -8,7 +8,7 @@ function infos_intervention_type($con, $id){
     return $contenu[0];
 }
 
-function infos_intervention_type_all($con, $offset){
+function infos_intervention_type_all($con, $offset){ // Récupération de tous les types d'intervention avec une pagination de 10 types par page
     $offend = $offset + 10;
     $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type ORDER BY name ASC LIMIT :offsetend OFFSET :offset");
     $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
@@ -18,7 +18,7 @@ function infos_intervention_type_all($con, $offset){
     return $contenu;
 }
 
-function id_course($id, $con){
+function id_course($id, $con){ // Récupération de tous les id des cours associés à un type d'intervention à partir de l'id du type d'intervention
     $requete = $con->prepare("SELECT intervention_type_id FROM course WHERE intervention_type_id = :id");
     $requete->bindParam(':id', $id);
     $requete->execute();
@@ -26,25 +26,25 @@ function id_course($id, $con){
     return $multi_id;
 }
 
-function delete_course_instructor($con, $valeurs){
+function delete_course_instructor($con, $valeurs){ // Suppression de tous les cours associés à un type d'intervention à partir de l'id du type d'intervention
     $requete = $con->prepare("DELETE FROM course_instructor WHERE course_id = :multi_id");
     $requete->bindParam(':multi_id', $valeurs["id"]);
     $requete->execute();
 }
 
-function delete_course($con, $id){
+function delete_course($con, $id){ // Suppression de tous les cours associés à un type d'intervention à partir de l'id du type d'intervention
     $requete = $con->prepare("DELETE FROM course WHERE intervention_type_id = :id");
     $requete->bindParam(':id', $id);
     $requete->execute();
 }
 
-function delete_intervention_type($con, $id){
+function delete_intervention_type($con, $id){ // Suppression d'un type d'intervention à partir de son id, avant de supprimer le type d'intervention, on supprime tous les cours associés à ce type d'intervention et tous les liens entre ces cours et les intervenants
     $requete = $con->prepare("DELETE FROM intervention_type WHERE id = :id");
     $requete->bindParam(':id', $id);
     $requete->execute();
 }
 
-function update_intervention_type($con, $id, $name, $color, $description){
+function update_intervention_type($con, $id, $name, $color, $description){ // Mise à jour des informations d'un type d'intervention à partir de son id, on peut mettre à jour le nom, la couleur et la description du type d'intervention
     $requete = $con->prepare("UPDATE intervention_type SET name = :name, color = :color, description = :description WHERE id=:id");
     $requete->bindParam(':id', $id);
     $requete->bindParam(':name', $name);
@@ -53,7 +53,7 @@ function update_intervention_type($con, $id, $name, $color, $description){
     $requete->execute();
 }
 
-function insert_user($con, $role, $email, $last_name, $first_name){
+function insert_user($con, $role, $email, $last_name, $first_name){ // Insertion d'un nouvel utilisateur dans la base de données, on doit préciser son rôle, son email, son nom et son prénom
     $requete = $con->prepare("INSERT INTO user (role, email, last_name, first_name) VALUES (:role, :email, :last_name, :first_name)");
     $requete->bindParam(':role', $role);
     $requete->bindParam(':email', $email);
@@ -62,7 +62,7 @@ function insert_user($con, $role, $email, $last_name, $first_name){
     $requete->execute();
 }
 
-function select_id_user_where($con, $role, $email, $last_name, $first_name){
+function select_id_user_where($con, $role, $email, $last_name, $first_name){ // Récupération de l'id d'un utilisateur à partir de son rôle, son email, son nom et son prénom, cette fonction est utilisée après l'insertion d'un nouvel utilisateur pour récupérer son id et pouvoir l'utiliser pour insérer un nouvel intervenant dans la table instructor
     $requete = $con->prepare("SELECT id FROM user WHERE role = :role AND email=:email AND last_name=:last_name AND first_name=:first_name");
     $requete->bindParam(':role', $role);
     $requete->bindParam(':email', $email);
@@ -73,13 +73,13 @@ function select_id_user_where($con, $role, $email, $last_name, $first_name){
     return $id;
 }
 
-function insert_instructor($con, $id) {
+function insert_instructor($con, $id) { // Insertion d'un nouvel intervenant dans la base de données, on doit préciser l'id de l'utilisateur associé à cet intervenant, cette fonction est utilisée après l'insertion d'un nouvel utilisateur pour insérer un nouvel intervenant dans la table instructor
     $requete = $con->prepare("INSERT INTO instructor (user_id) VALUES (:id)");
     $requete ->bindParam(':id', $id[0]["id"]);
     $requete->execute();
 }
 
-function select_id_instructor($con, $id){
+function select_id_instructor($con, $id){ // Récupération de l'id d'un intervenant à partir de l'id de l'utilisateur associé à cet intervenant, cette fonction est utilisée après l'insertion d'un nouvel intervenant pour récupérer son id et pouvoir l'utiliser pour insérer les liens entre cet intervenant et les modules qu'il enseigne dans la table instructor_module
     $requete = $con->prepare("SELECT id FROM instructor WHERE user_id = :user");
     $requete->bindParam(':user', $id[0]["id"]);
     $requete->execute();
@@ -87,7 +87,7 @@ function select_id_instructor($con, $id){
     return $id;
 }
 
-function select_id_module($con, $modules){
+function select_id_module($con, $modules){ // Récupération de l'id d'un module à partir de son nom, cette fonction est utilisée après l'insertion d'un nouvel intervenant pour récupérer l'id des modules qu'il enseigne et pouvoir les utiliser pour insérer les liens entre cet intervenant et les modules qu'il enseigne dans la table instructor_module
     $requete = $con->prepare("SELECT id FROM module WHERE name=:name");
     $requete->bindParam(':name', $modules);
     $requete->execute();
@@ -95,21 +95,21 @@ function select_id_module($con, $modules){
     return $module_name;
 }
 
-function insert_instructor_module($con, $module_name, $id){
+function insert_instructor_module($con, $module_name, $id){ // Insertion des liens entre un intervenant et les modules qu'il enseigne dans la table instructor_module, on doit préciser l'id de l'intervenant et l'id du module, cette fonction est utilisée après l'insertion d'un nouvel intervenant pour insérer les liens entre cet intervenant et les modules qu'il enseigne dans la table instructor_module
     $requete = $con->prepare("INSERT INTO instructor_module (instructor_id, module_id) VALUES (:instructor_id, :module_id)");
     $requete->bindParam(':instructor_id', $id);
     $requete->bindParam(':module_id', $module_name);
     $requete->execute();
 }
 
-function select_name_module($con) {
+function select_name_module($con) { // Récupération de tous les noms des modules, cette fonction est utilisée pour afficher la liste des modules dans le formulaire d'ajout ou de modification d'un intervenant pour permettre à l'utilisateur de sélectionner les modules que l'intervenant enseigne
     $requete = $con->prepare("SELECT m.name FROM  module m;");
     $requete->execute();
     $nom_module = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $nom_module;
 }
 
-function nom_module_where_instructor($con, $id){
+function nom_module_where_instructor($con, $id){ // Récupération de tous les noms des modules enseignés par un intervenant à partir de l'id de cet intervenant, cette fonction est utilisée pour afficher la liste des modules enseignés par un intervenant dans la fiche de cet intervenant et pour pré-sélectionner les modules enseignés par cet intervenant dans le formulaire de modification de cet intervenant
     $requete = $con->prepare("SELECT m.name FROM  module m JOIN instructor_module im ON m.id = im.module_id WHERE im.instructor_id = :id");
     $requete->bindParam(':id', $id);
     $requete->execute();
@@ -117,7 +117,7 @@ function nom_module_where_instructor($con, $id){
     return $nom_module_selected;
 }
 
-function infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email, $offset){
+function infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email, $offset){ // Récupération de tous les modules enseignés par les intervenants qui correspondent aux filtres de recherche, avec une pagination de 10 modules par page, cette fonction est utilisée pour afficher la liste des modules enseignés par les intervenants qui correspondent aux filtres de recherche dans la page de gestion des intervenants
     $offend = $offset + 10;
     $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count,  u.id FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name LIKE :first_name OR u.last_name LIKE :last_name OR u.email LIKE :email ORDER BY u.last_name ASC LIMIT :offsetend OFFSET :offset");
     $requete->bindParam(':first_name', $filtre_prenom);
@@ -130,7 +130,14 @@ function infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email, $o
     return $contenu;
 }
 
-function select_infos_table_corps_enseignant($con, $offset){
+function select_nom_prenom_distinct($con){ // Récupération de tous les prénoms et noms distincts des intervenants, cette fonction est utilisée pour afficher la liste des prénoms et noms dans les filtres de recherche de la page de gestion des intervenants pour permettre à l'utilisateur de sélectionner un prénom ou un nom pour filtrer la liste des intervenants
+    $requete = $con -> prepare("SELECT DISTINCT first_name, last_name FROM user");
+    $requete->execute();
+    $infos = $requete->fetchAll(PDO::FETCH_ASSOC);
+    return $infos;
+}
+
+function select_infos_table_corps_enseignant($con, $offset){ // Récupération de tous les intervenants avec leurs modules enseignés, avec une pagination de 10 intervenants par page, cette fonction est utilisée pour afficher la liste des intervenants avec leurs modules enseignés dans la page de gestion des intervenants
     $offend = $offset + 10;
     $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count, u.id FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id ORDER BY u.last_name ASC LIMIT :offsetend OFFSET :offset");
     $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
@@ -140,7 +147,7 @@ function select_infos_table_corps_enseignant($con, $offset){
     return $contenu;
 }
 
-function insert_intervention_type($con, $name, $color, $description) {
+function insert_intervention_type($con, $name, $color, $description) { // Insertion d'un nouveau type d'intervention dans la base de données, on doit préciser le nom, la couleur et la description du type d'intervention
     $requete = $con->prepare("INSERT INTO intervention_type (name, description, color) VALUES (:name, :description, :color);");
     $requete->bindParam(':name', $name);
     $requete->bindParam(':color', $color);
@@ -148,7 +155,7 @@ function insert_intervention_type($con, $name, $color, $description) {
     $requete->execute();
 }
 
-function select_id_intervention_type_where($con, $filtre, $offset) {
+function select_id_intervention_type_where($con, $filtre, $offset) { // Récupération de tous les types d'intervention qui correspondent au filtre de recherche, avec une pagination de 10 types d'intervention par page, cette fonction est utilisée pour afficher la liste des types d'intervention qui correspondent au filtre de recherche dans la page de gestion des types d'intervention
     $offend = $offset + 10;
     $requete = $con->prepare("SELECT id, name, description, color FROM intervention_type WHERE name LIKE :filtre ORDER BY name ASC LIMIT :offsetend OFFSET :offset");
     $requete->bindParam(':filtre', $filtre);
@@ -159,14 +166,14 @@ function select_id_intervention_type_where($con, $filtre, $offset) {
     return $contenu;
 }
 
-function select_nb_pages_entier($con){
+function select_nb_pages_entier($con){ // Récupération du nombre total de modules enseignés par les intervenants, cette fonction est utilisée pour calculer le nombre de pages nécessaires pour afficher la liste des modules enseignés par les intervenants dans la page de gestion des intervenants
     $requete = $con->prepare("SELECT count(*) AS nblignes FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id");
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
 }
 
-function select_nb_pages_filtre($con, $filtre_prenom, $filtre_nom, $filtre_email){
+function select_nb_pages_filtre($con, $filtre_prenom, $filtre_nom, $filtre_email){ // Récupération du nombre total de modules enseignés par les intervenants qui correspondent aux filtres de recherche, cette fonction est utilisée pour calculer le nombre de pages nécessaires pour afficher la liste des modules enseignés par les intervenants qui correspondent aux filtres de recherche dans la page de gestion des intervenants
     $requete = $con->prepare("SELECT count(*) AS nblignes FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name LIKE :first_name OR u.last_name LIKE :last_name OR u.email LIKE :email");
     $requete->bindParam(':first_name', $filtre_prenom);
     $requete->bindParam(':last_name', $filtre_nom);
@@ -176,7 +183,7 @@ function select_nb_pages_filtre($con, $filtre_prenom, $filtre_nom, $filtre_email
     return $contenu;
 }
 
-function select_nb_pages_filtre_intervention($con, $filtre){
+function select_nb_pages_filtre_intervention($con, $filtre){ // Récupération du nombre total de types d'intervention qui correspondent au filtre de recherche, cette fonction est utilisée pour calculer le nombre de pages nécessaires pour afficher la liste des types d'intervention qui correspondent au filtre de recherche dans la page de gestion des types d'intervention
     $requete = $con->prepare("SELECT count(*) AS nblignes FROM intervention_type WHERE name=:filtre");
     $requete->bindParam(':filtre', $filtre);
     $requete->execute();
@@ -184,14 +191,14 @@ function select_nb_pages_filtre_intervention($con, $filtre){
     return $contenu;
 }
 
-function select_nb_pages_filtre_intervention_all($con){
+function select_nb_pages_filtre_intervention_all($con){ // Récupération du nombre total de types d'intervention, cette fonction est utilisée pour calculer le nombre de pages nécessaires pour afficher la liste de tous les types d'intervention dans la page de gestion des types d'intervention
     $requete = $con->prepare("SELECT count(*) AS nblignes FROM intervention_type");
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
 }
 
-function select_infos_enseignant($con, $id){
+function select_infos_enseignant($con, $id){ // Récupération des informations d'un intervenant à partir de son id, cette fonction est utilisée pour afficher les informations d'un intervenant dans la fiche de cet intervenant et pour pré-remplir les champs du formulaire de modification de cet intervenant
     $requete = $con->prepare("SELECT email, last_name, first_name FROM user WHERE id=:id");
     $requete->bindParam(':id', $id);
     $requete->execute();
@@ -200,7 +207,7 @@ function select_infos_enseignant($con, $id){
 }
 
 
-function select_infos_modules_enseignant($con, $id){
+function select_infos_modules_enseignant($con, $id){ // Récupération des informations des modules enseignés par un intervenant à partir de l'id de cet intervenant, cette fonction est utilisée pour afficher les informations des modules enseignés par un intervenant dans la fiche de cet intervenant et pour pré-sélectionner les modules enseignés par cet intervenant dans le formulaire de modification
     $requete = $con->prepare("SELECT m.name, m.hours_count FROM instructor_module im JOIN module m ON im.module_id = m.id  WHERE im.instructor_id= :id ");
     $requete->bindParam(':id', $id);
     $requete->execute();
@@ -208,14 +215,14 @@ function select_infos_modules_enseignant($con, $id){
     return $contenu;
 }
 
-function select_modules_corp_enseignant($con){
+function select_modules_corp_enseignant($con){ // Récupération de tous les modules enseignés par les intervenants, cette fonction est utilisée pour afficher la liste de tous les modules enseignés par les intervenants dans la page de gestion des intervenants
     $requete = $con->prepare("SELECT m.name FROM  module m;");
     $requete->execute();
     $nom_module = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $nom_module;
 }
 
-function select_modules_enseignées($con, $id){
+function select_modules_enseignées($con, $id){ // Récupération de tous les modules enseignés par un intervenant à partir de l'id de cet intervenant, cette fonction est utilisée pour afficher la liste de tous les modules enseignés par un intervenant dans la fiche de cet intervenant et pour pré-sélectionner les modules enseignés par cet intervenant dans le formulaire de modification
     $requete = $con->prepare("SELECT m.name FROM  module m JOIN instructor_module im ON m.id = im.module_id WHERE im.instructor_id = :id");
     $requete->bindParam(':id', $id);
     $requete->execute();
@@ -223,7 +230,7 @@ function select_modules_enseignées($con, $id){
     return $nom_module_selected;
 }
 
-function update_infos_enseignant($con, $id, $last_name, $first_name, $email, $name){
+function update_infos_enseignant($con, $id, $last_name, $first_name, $email, $name){ // Mise à jour des informations d'un intervenant à partir de son id, on peut mettre à jour le nom, le prénom, l'email et les modules enseignés par cet intervenant, pour mettre à jour les modules enseignés par cet intervenant, on supprime d'abord tous les liens entre cet intervenant et les modules qu'il enseigne dans la table instructor_module, puis on insère les nouveaux liens entre cet intervenant et les modules qu'il enseigne dans la table instructor_module
     $requete = $con->prepare("UPDATE user SET last_name = :last_name, first_name = :first_name, email = :email WHERE id=:id");
     $requete->bindParam(':last_name', $last_name);
     $requete->bindParam(':first_name', $first_name);
@@ -252,7 +259,7 @@ function update_infos_enseignant($con, $id, $last_name, $first_name, $email, $na
     }
 }
 
-function filtre_fiche_enseignant($con, $id,  $filtre_start_date, $filtre_end_date, $filtre_name, $offset){
+function filtre_fiche_enseignant($con, $id,  $filtre_start_date, $filtre_end_date, $filtre_name, $offset){ // Récupération de tous les cours associés à un intervenant à partir de l'id de cet intervenant et des filtres de recherche, avec une pagination de 10 cours par page, cette fonction est utilisée pour afficher la liste des cours associés à un intervenant dans la fiche de cet intervenant en fonction des filtres de recherche
     $offend = $offset + 10;
     $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id AND ( c.start_date LIKE :inter_start_date OR c.end_date LIKE :inter_end_date OR m.name LIKE :module_name) LIMIT :offsetend OFFSET :offset");
     $requete->bindParam(':id', $id);
@@ -266,7 +273,7 @@ function filtre_fiche_enseignant($con, $id,  $filtre_start_date, $filtre_end_dat
     return $contenu;
 }
 
-function fiche_enseignant_tableau_intervenants($con, $element ){
+function fiche_enseignant_tableau_intervenants($con, $element ){ // Récupération de tous les intervenants associés à un cours à partir de l'id de ce cours, cette fonction est utilisée pour afficher la liste des intervenants associés à un cours dans la fiche de ce cours
     $requete = $con->prepare("SELECT upper(u.last_name), upper(u.first_name) FROM user u join instructor i ON i.user_id = u.id join course_instructor ci ON ci.instructor_id = i.id WHERE ci.course_id = :id");
     $requete -> bindParam(':id', $element); 
     $requete->execute();
@@ -274,7 +281,7 @@ function fiche_enseignant_tableau_intervenants($con, $element ){
     return $noms_intervenants;
 }
 
-function fiche_enseignant_tableau($con, $id ,$offset){
+function fiche_enseignant_tableau($con, $id ,$offset){ // Récupération de tous les cours associés à un intervenant à partir de l'id de cet intervenant, avec une pagination de 10 cours par page, cette fonction est utilisée pour afficher la liste des cours associés à un intervenant dans la fiche de cet intervenant
     $offend = $offset + 10;
     $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id LIMIT :offsetend OFFSET :offset");
     $requete->bindParam(':id', $id);
@@ -286,7 +293,7 @@ function fiche_enseignant_tableau($con, $id ,$offset){
 }
 
 
-function select_nb_pages_filtre_fiche_enseignant($con, $id, $filtre_start_date, $filtre_end_date, $filtre_name){
+function select_nb_pages_filtre_fiche_enseignant($con, $id, $filtre_start_date, $filtre_end_date, $filtre_name){ // Récupération du nombre total de cours associés à un intervenant qui correspondent aux filtres de recherche, cette fonction est utilisée pour calculer le nombre de pages nécessaires pour afficher la liste des cours associés à un intervenant dans la fiche de cet intervenant en fonction des filtres de recherche
     $requete = $con->prepare("SELECT count(*) AS nblignes FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id AND ( c.start_date LIKE :inter_start_date OR c.end_date LIKE :inter_end_date OR m.name LIKE :module_name )");
     $requete->bindParam(':id', $id);
     $requete->bindParam(':inter_start_date', $filtre_start_date);
@@ -297,14 +304,14 @@ function select_nb_pages_filtre_fiche_enseignant($con, $id, $filtre_start_date, 
     return $contenu;
 }
 
-function select_parent($con) {
+function select_parent($con) { // Récupération de tous les modules qui n'ont pas de parent, cette fonction est utilisée pour afficher la liste des modules dans le formulaire d'ajout ou de modification d'une intervention pour permettre à l'utilisateur de sélectionner le module associé à l'intervention
     $requete = $con -> prepare("SELECT id, name, hours_count FROM module WHERE parent_id IS NULL;");
     $requete->execute();
     $infos = $requete->fetchAll(PDO::FETCH_ASSOC);
     return $infos;
 }
 
-function calendrier_tableau($con, $offset){
+function calendrier_tableau($con, $offset){ // Récupération de tous les cours avec leurs modules associés, avec une pagination de 10 cours par page, cette fonction est utilisée pour afficher la liste de tous les cours avec leurs modules associés dans la page de calendrier
     $offend = $offset + 10;
     $requete = $con->prepare("SELECT DISTINCT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id ORDER BY c.start_date ASC LIMIT :offsetend OFFSET :offset");
     $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
@@ -313,21 +320,21 @@ function calendrier_tableau($con, $offset){
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
 }
-function calendrier_tableau_Count($con){
+function calendrier_tableau_Count($con){ // Récupération de tous les cours avec leurs modules associés, cette fonction est utilisée pour afficher la liste de tous les cours avec leurs modules associés dans la page de calendrier
     $requete = $con->prepare("SELECT DISTINCT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id ");
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
 }
 
-function select_nb_pages_calendrier($con){
+function select_nb_pages_calendrier($con){ // Récupération du nombre total de cours avec leurs modules associés, cette fonction est utilisée pour calculer le nombre de pages nécessaires pour afficher la liste de tous les cours avec leurs modules associés dans la page de calendrier
     $requete = $con->prepare("SELECT DISTINCT count(*) AS nblignes FROM course c ");
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
 }
 
-function insert_infos_intervention($con, $title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio){
+function insert_infos_intervention($con, $title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio){ // Insertion d'un nouveau cours dans la base de données, on doit préciser le titre, la date de début, la date de fin, le module associé, le type d'intervention associé, les intervenants associés et si l'intervention se déroule en visio ou non
 
     $requete = $con->prepare("SELECT it.id FROM intervention_type it WHERE name = :name ");
     $requete->bindParam(':name', $typeintervention);
@@ -370,7 +377,7 @@ function insert_infos_intervention($con, $title, $date_start, $date_end, $module
 }
 
 
-function verification_insert_intervention($con, $date_start, $date_end, $module, $intervenant){
+function verification_insert_intervention($con, $date_start, $date_end, $module, $intervenant){ // Vérification des informations d'un nouveau cours avant de l'insérer dans la base de données, on vérifie que la date de début est inférieure à la date de fin, que la durée du cours ne dépasse pas 4 heures et que le module associé est enseigné par tous les intervenants associés à ce cours
 
     $module_verification = 0;
 

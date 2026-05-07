@@ -30,7 +30,7 @@ require_once("inclus/Header.php")?>
     ?>
 
     <section class="intervention-type page">
-        <div class="breadcrumb">
+        <div class="breadcrumb"> <!-- Fil d'ariane -->
             <a href="Calendrier.php"><img src="assets/home.png" alt=""></a>
             <p>></p>
             <a href="Liste_module.php">Modules</a>
@@ -41,32 +41,32 @@ require_once("inclus/Header.php")?>
         </div>
     
     <section class="intervention_sheet">
-        <h3><?php echo htmlspecialchars($contenu['name']); ?></h3>
+        <h3><?php echo htmlspecialchars($contenu['name']); ?></h3> <!-- Affichage du nom du module en titre de la page -->
         <form action="" method="post">
             <div class="form-align">
                 <div>
                     <label for="code">Code - champ obligatoire</label>
-                    <input type="text" id="code" name="code" value="<?php echo htmlspecialchars($contenu['code']); ?>" required>
+                    <input type="text" id="code" name="code" value="<?php echo htmlspecialchars($contenu['code']); ?>" required> <!-- Champ de saisie du code du module, ce champ est obligatoire-->
                 </div>
                 <div>
                     <label for="name">Nom - champ obligatoire</label>
-                    <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($contenu['name']); ?>" required>
+                    <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($contenu['name']); ?>" required> <!-- Champ de saisie du nom du module, ce champ est obligatoire-->
                 </div>
             </div>
 
             <div class="form-align">
                 <div>
                     <label for="hours_count">Nombre d'heures</label>
-                    <input type="number" id="hours_count" name="hours_count" min="0" value="<?php echo htmlspecialchars($contenu['hours_count']); ?>">
+                    <input type="number" id="hours_count" name="hours_count" min="0" value="<?php echo htmlspecialchars($contenu['hours_count']); ?>"> <!-- Champ de saisie du nombre d'heures du module, ce champ n'est pas obligatoire-->
                 </div>
                 <div>
-                    <label for="parent_id">Module parent</label>
+                    <label for="parent_id">Module parent</label> <!-- Champ de sélection du module parent, ce champ n'est pas obligatoire -->
                     <select id="parent_id" name="parent_id">
-                        <option value="">-- Aucun --</option>
+                        <option value="">-- Aucun --</option> <!-- Option par défaut pour indiquer qu'il n'y a pas de module parent -->
                         <?php foreach ($modules as $module): ?>
                             <option value="<?php echo $module['id']; ?>" 
-                                <?php echo ($contenu['parent_id'] == $module['id']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($module['code'] . ' - ' . $module['name']); ?>
+                                <?php echo ($contenu['parent_id'] == $module['id']) ? 'selected' : ''; ?>> <!-- Si le module est le parent du module en cours d'édition, on le sélectionne par défaut dans la liste déroulante -->
+                                <?php echo htmlspecialchars($module['code'] . ' - ' . $module['name']); ?> <!-- Affichage du code et du nom du module dans la liste déroulante pour faciliter le choix du parent -->
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -75,7 +75,7 @@ require_once("inclus/Header.php")?>
 
             <div class="desc_form_update">
                 <label for="description">Description</label>
-                <input class="input_desc" type="text" id="description" name="description" value="<?php echo htmlspecialchars($contenu['description']); ?>">
+                <input class="input_desc" type="text" id="description" name="description" value="<?php echo htmlspecialchars($contenu['description']); ?>"> <!-- Champ de saisie de la description du module, ce champ n'est pas obligatoire -->
             </div>
               <div class="button-intervention">
                 <a href="Modules.php" class="grey-button selection">Retour à la liste</a>
