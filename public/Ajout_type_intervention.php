@@ -58,7 +58,7 @@ if ((!empty($_POST['name'])) && !empty($_POST['color']) && !empty($_POST['descri
         echo "<p>"."Vous n'avez pas mis d'hexadecimal"."</p>";
     }
 }
-else {
+else if (isset($_POST['name']) || isset($_POST['color']) || isset($_POST['description'])) {
     echo "<p>"."Erreur de saisie"."</p>";
 }
 

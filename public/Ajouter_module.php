@@ -89,7 +89,7 @@ if (!empty($_POST['code']) && !empty($_POST['name'])) {
     $description = htmlspecialchars($_POST['description'] ?? '');
     $hours_count = isset($_POST['hours_count']) ? (int) $_POST['hours_count'] : null;
     $red_string = isset($_POST['red_string']) ? (int) $_POST['red_string'] : 0;
-    $parent_id = !empty($_POST['parent_id']) ? (int) $_POST['parent_id'] : null;
+    $parent_id = !empty($_POST['parent_id']) ? (int) $_POST['parent_id'] : null; 
 
     $requete = $con->prepare(
         "INSERT INTO module (code, parent_id, name, description, hours_count, capstone_project) VALUES (:code, :parent_id, :name, :description, :hours_count, :red_string)");

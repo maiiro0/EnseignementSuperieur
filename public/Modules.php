@@ -27,8 +27,9 @@ $active='modules';
                 $infos = select_parent($con);
                 ?><ul><?php
                 foreach ($infos as $info){ ?>
-                    <div class='form-align'>
+                    <div class='form-align module'>
                         <li><img src="assets/Module-arrow.png" alt=""><?php echo $info['name'] . ' (' . $info['hours_count'] . 'h)'; ?> </li>
+                        <a href="Fiche_module.php?id=<?php echo $info['id']; ?>">></a>
                     </div>
                     <?php
                     $requete = $con->prepare('SELECT id, name, hours_count FROM module WHERE parent_id = :nom_parent');
