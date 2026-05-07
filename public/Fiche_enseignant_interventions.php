@@ -97,11 +97,11 @@ else { // Récupération du filtre de nom de module dans l'URL
                     <div class="filter-column">
                         <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>">
                         <label name="start_date">Date de debut</label>
-                        <input type="text" name="start_date" placeholder="Saisissez la date de debut">
+                        <input type="datetime-local" name="start_date">
                     </div>
                     <div class="filter-column">
                         <label name="end_date">Date de fin</label>
-                        <input type="text" name="end_date" placeholder="Saisissez la date de fin">
+                        <input type="datetime-local" name="end_date">
                     </div>
                     <div class="filter-column">
                         <label for="name">Module</label>
