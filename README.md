@@ -1,22 +1,119 @@
-L'objectif de ce projet est de réaliser un site web pour la gestion des élèves de licence. Nous sommes un groupe de 4 personnes de BTS1. (Cassandre, HUgo, Chloé et Elena)
+# 🎓 Gestion des Élèves de Licence
 
-***Technologies et veilles :***
-- HTML
-- CSS
-- PHP
-- JavaScript
-- Veille Markdown
-- Veille connextion BDD à PHP
+> Projet réalisé par 4 étudiants de BTS1 — Cassandre, Hugo, Chloé et Elena
 
-On se retrouvais tous les lundis pour voir notre avancée du projet. Nous avons travaillé par sprints et issues sur GitHub. On a travaillé avec la méthodologie AGILE. Nous avons utilisé GitBash et GitHub Desktop.
+---
 
-Pour lancer le projet, il faut avoir xampp ou wampp et lancer Apache et MySQL. Le fichier à entrer sur MySQL se trouve dans le fichier database. Il faut ensuite lancer Apache, cliquer sur EnseignementSuperieur puis public.
+## Présentation
 
-Nous avons choisi d'écrire nos classe en anglais, en minuscule et avec un tiret "-" entre les mots. 
+Ce projet est un site web de gestion des élèves de licence. Il permet de centraliser et d'administrer les données des étudiants via une interface web connectée à une base de données.
 
-Pour l'arborescence, nous avons un dossier database dans lequel se trouve la BDD, un dossier public dans lequel se trouve les fichiers php et css ainsi que les images et un dossier ressources où l'on peut retrouver nos veilles et notre documentation.
+---
 
-Il y a aussi un fichier parametres.php où vous pouvez y rentrer votre user et votre mot de passe pour votre base de données.
+## Équipe
 
-**Ressources :**
-Nous avons utilisé Figma, Word, Excel, XAMPP, GitHub Desktop, GitHub, Git Bash.
+| Membre     |
+|------------|
+| Cassandre  |
+| Hugo       |
+| Chloé      |
+| Elena      |
+
+---
+
+## Technologies utilisées
+
+| Technologie | Usage |
+|-------------|-------|
+| HTML        | Structure des pages |
+| CSS         | Mise en forme |
+| PHP         | Logique serveur & connexion BDD |
+| JavaScript  | Interactions côté client |
+
+### Veilles technologiques réalisées
+- Veille **Markdown**
+- Veille **connexion base de données avec PHP**
+
+---
+
+## Méthodologie & Outils
+
+- **Méthode AGILE** — sprints et issues
+- Réunions hebdomadaires **chaque lundi** pour faire le point sur l'avancement
+- Gestion des versions via **GitHub** (issues & sprints)
+- Utilisation de **Git Bash** et **GitHub Desktop**
+
+---
+
+## Installation & Lancement
+
+### Prérequis
+
+- [XAMPP](https://www.apachefriends.org/) ou [WAMP](https://www.wampserver.com/) installé sur votre machine
+
+### Étapes
+
+1. **Cloner le dépôt** sur votre machine locale
+
+2. **Configurer la base de données**
+   - Ouvrir **phpMyAdmin** (via XAMPP/WAMP)
+   - Importer le fichier SQL situé dans le dossier `database/`
+
+3. **Configurer les paramètres de connexion**
+   - Ouvrir le fichier `parametres.php` à la racine du projet
+   - Renseigner votre nom d'utilisateur et mot de passe MySQL :
+     ```php
+     $user = "votre_utilisateur";
+     $password = "votre_mot_de_passe";
+     ```
+
+4. **Lancer le projet**
+   - Démarrer **Apache** et **MySQL** depuis XAMPP/WAMP
+   - Accéder à l'URL suivante dans votre navigateur :
+     ```
+     http://localhost/EnseignementSuperieur/public
+     ```
+
+---
+
+## Arborescence du projet
+
+```
+projet/
+│
+├── database/           # Fichier SQL de la base de données
+│
+├── public/             # Fichiers accessibles depuis le navigateur
+│   ├── *.php           # Pages PHP
+│   ├── *.css           # Feuilles de style
+│   └── images/         # Ressources visuelles
+│
+├── ressources/         # Documentation & veilles technologiques
+│
+└── parametres.php      # Configuration de la connexion BDD
+```
+
+---
+
+## Conventions de nommage
+
+Les classes CSS sont écrites :
+- En **anglais**
+- En **minuscules**
+- Avec un **tiret `-`** comme séparateur entre les mots
+
+> Exemple : `.student-list`, `.form-container`
+
+---
+
+## Ressources & outils utilisés
+
+| Outil            | Usage |
+|------------------|-------|
+| Figma            | Maquettage de l'interface |
+| Word             | Documentation |
+| Excel            | Suivi du projet |
+| XAMPP            | Environnement de développement local |
+| GitHub Desktop   | Interface graphique Git |
+| GitHub           | Hébergement du dépôt & gestion des sprints |
+| Git Bash         | Commandes Git en ligne de commande |
