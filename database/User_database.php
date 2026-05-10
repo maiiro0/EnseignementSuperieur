@@ -261,7 +261,13 @@ function update_infos_enseignant($con, $id, $last_name, $first_name, $email, $na
 
 function filtre_fiche_enseignant($con, $id,  $filtre_start_date, $filtre_end_date, $filtre_name, $offset){ // Récupération de tous les cours associés à un intervenant à partir de l'id de cet intervenant et des filtres de recherche, avec une pagination de 10 cours par page, cette fonction est utilisée pour afficher la liste des cours associés à un intervenant dans la fiche de cet intervenant en fonction des filtres de recherche
     $offend = $offset + 10;
-    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id AND ( c.start_date LIKE :inter_start_date OR c.end_date LIKE :inter_end_date OR m.name LIKE :module_name) LIMIT :offsetend OFFSET :offset");
+    if (!empty($filtre_start_date)) {
+        $filtre_start_date = $filtre_start_date->format('Y-m-d H:i:s');
+    }
+    if (!empty($filtre_end_date)) {
+        $filtre_end_date = $filtre_end_date->format('Y-m-d H:i:s');
+    }
+    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id AND ( c.start_date LIKE :inter_start_date OR c.end_date LIKE :inter_end_date OR m.name LIKE :module_name) ORDER BY c.start_date ASC LIMIT :offsetend OFFSET :offset");
     $requete->bindParam(':id', $id);
     $requete->bindParam(':inter_start_date', $filtre_start_date);
     $requete->bindParam(':inter_end_date', $filtre_end_date);
@@ -283,7 +289,7 @@ function fiche_enseignant_tableau_intervenants($con, $element ){ // Récupérati
 
 function fiche_enseignant_tableau($con, $id ,$offset){ // Récupération de tous les cours associés à un intervenant à partir de l'id de cet intervenant, avec une pagination de 10 cours par page, cette fonction est utilisée pour afficher la liste des cours associés à un intervenant dans la fiche de cet intervenant
     $offend = $offset + 10;
-    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id LIMIT :offsetend OFFSET :offset");
+    $requete = $con->prepare("SELECT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id ORDER BY c.start_date ASC LIMIT :offsetend OFFSET :offset");
     $requete->bindParam(':id', $id);
     $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
     $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
@@ -294,13 +300,42 @@ function fiche_enseignant_tableau($con, $id ,$offset){ // Récupération de tous
 
 
 function select_nb_pages_filtre_fiche_enseignant($con, $id, $filtre_start_date, $filtre_end_date, $filtre_name){ // Récupération du nombre total de cours associés à un intervenant qui correspondent aux filtres de recherche, cette fonction est utilisée pour calculer le nombre de pages nécessaires pour afficher la liste des cours associés à un intervenant dans la fiche de cet intervenant en fonction des filtres de recherche
-    $requete = $con->prepare("SELECT count(*) AS nblignes FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id WHERE u.id = :id AND ( c.start_date LIKE :inter_start_date OR c.end_date LIKE :inter_end_date OR m.name LIKE :module_name )");
+    if (!empty($filtre_start_date)) {
+        $filtre_start_date = $filtre_start_date->format('Y-m-d H:i:s');
+    }
+    if (!empty($filtre_end_date)) {
+        $filtre_end_date = $filtre_end_date->format('Y-m-d H:i:s');
+    }
+    $requete = $con->prepare("SELECT i.id  FROM instructor i  WHERE i.user_id = :id ");
     $requete->bindParam(':id', $id);
+    $requete->execute(); 
+    $instructor = $requete->fetch(\PDO::FETCH_ASSOC);
+    $instructor = $instructor['id'];
+
+    $requete = $con->prepare("SELECT count(*) AS nblignes FROM course_instructor ci JOIN course c ON ci.course_id = c.id JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id WHERE ci.instructor_id = :id AND ( c.start_date LIKE :inter_start_date OR c.end_date LIKE :inter_end_date OR m.name LIKE :module_name )");
+    $requete->bindParam(':id', $instructor);
     $requete->bindParam(':inter_start_date', $filtre_start_date);
     $requete->bindParam(':inter_end_date', $filtre_end_date);
     $requete->bindParam(':module_name', $filtre_name);
     $requete->execute();
-    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
+    $contenu = $requete->fetch(\PDO::FETCH_ASSOC);
+    $contenu = $contenu['nblignes'];
+    return $contenu;
+}
+
+
+function select_nb_pages_fiche_enseignant($con, $id){ // Récupération du nombre total de cours associés à un intervenant, cette fonction est utilisée pour calculer le nombre de pages nécessaires pour afficher la liste des cours associés à un intervenant dans la fiche de cet intervenant
+    $requete = $con->prepare("SELECT i.id  FROM instructor i  WHERE i.user_id = :id ");
+    $requete->bindParam(':id', $id);
+    $requete->execute(); 
+    $instructor = $requete->fetch(\PDO::FETCH_ASSOC);
+    $instructor = $instructor['id'];
+
+    $requete = $con->prepare("SELECT count(*) AS nblignes FROM course_instructor ci WHERE ci.instructor_id = :id");
+    $requete->bindParam(':id', $instructor);
+    $requete->execute();
+    $contenu = $requete->fetch(\PDO::FETCH_ASSOC);
+    $contenu = $contenu['nblignes'];
     return $contenu;
 }
 
@@ -339,12 +374,14 @@ function insert_infos_intervention($con, $title, $date_start, $date_end, $module
     $requete = $con->prepare("SELECT it.id FROM intervention_type it WHERE name = :name ");
     $requete->bindParam(':name', $typeintervention);
     $requete->execute();
-    $typeintervention_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
+    $typeintervention_id = $requete->fetch(PDO::FETCH_ASSOC);
+    $typeintervention_id = $typeintervention_id['id'];
 
     $requete = $con->prepare("SELECT m.id FROM module m WHERE name = :name ");
     $requete->bindParam(':name', $module);
     $requete->execute();
-    $module_id = $requete->fetch(PDO::FETCH_ASSOC)['id'];
+    $module_id = $requete->fetch(PDO::FETCH_ASSOC);
+    $module_id = $module_id['id'];
 
     $course_id = select_nb_pages_calendrier($con);
     $course_id= $course_id[0]["nblignes"];

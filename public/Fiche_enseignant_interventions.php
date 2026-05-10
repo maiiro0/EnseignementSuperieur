@@ -131,8 +131,8 @@ else { // Récupération du filtre de nom de module dans l'URL
                 </thead>
                 <?php
                 if (!empty($_GET["start_date"]) || !empty($_GET["end_date"]) || !empty($_GET["name"])){
-                    $filtre_start_date = '%'.$_GET["start_date"].'%';
-                    $filtre_end_date = '%'.$_GET["end_date"].'%';
+                    $filtre_start_date = new DateTime( $_GET["start_date"]);
+                    $filtre_end_date = new DateTime($_GET["end_date"]);
                     $filtre_name = '%'.$_GET["name"].'%';
 
                     $limit = 10;
@@ -152,7 +152,7 @@ else { // Récupération du filtre de nom de module dans l'URL
                     }
 
                     $contenu = filtre_fiche_enseignant($con, $id,  $filtre_start_date, $filtre_end_date, $filtre_name, $offset);
-                    echo "<h4>".count($contenu)." interventions trouvées</h4>";
+                    echo "<h4>".select_nb_pages_filtre_fiche_enseignant($con,$id, $filtre_start_date, $filtre_end_date, $filtre_name)." interventions trouvées</h4>";
                     ?>
                     <tbody>
                         <?php
@@ -190,7 +190,6 @@ else { // Récupération du filtre de nom de module dans l'URL
                         
 
                     $nb_pages = select_nb_pages_filtre_fiche_enseignant($con,$id, $filtre_start_date, $filtre_end_date, $filtre_name); // Récupération du nombre de pages pour la pagination en fonction du nombre d'interventions trouvées avec les filtres, les informations récupérées sont le nombre d'interventions trouvées
-                    $nb_pages = $nb_pages[0]["nblignes"];
                     $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1; //Pagination
                     
                 }
@@ -199,7 +198,7 @@ else { // Récupération du filtre de nom de module dans l'URL
                     $limit = 10;
                     $offset = $page * $limit - $limit; //Pagination en fonction du numéro de la page dans l'URL
                     $contenu = fiche_enseignant_tableau($con, $id ,$offset);
-                    echo "<h4>".count($contenu)." interventions trouvées</h4>";
+                    echo "<h4>".select_nb_pages_fiche_enseignant($con, $id)." interventions trouvées</h4>";
                     ?>
                     <tbody>
                         <?php
@@ -235,8 +234,7 @@ else { // Récupération du filtre de nom de module dans l'URL
                         ?>
                     </tbody>
                     <?php
-                    $nb_pages = select_nb_pages_filtre_fiche_enseignant($con,$id, $filtre_start_date, $filtre_end_date, $filtre_name);
-                    $nb_pages = $nb_pages[0]["nblignes"];
+                    $nb_pages = select_nb_pages_fiche_enseignant($con,$id);
                     $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1; //Pagination
                 }
                 ?>
