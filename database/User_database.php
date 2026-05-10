@@ -348,7 +348,7 @@ function select_parent($con) { // Récupération de tous les modules qui n'ont p
 
 function calendrier_tableau($con, $offset){ // Récupération de tous les cours avec leurs modules associés, avec une pagination de 10 cours par page, cette fonction est utilisée pour afficher la liste de tous les cours avec leurs modules associés dans la page de calendrier
     $offend = $offset + 10;
-    $requete = $con->prepare("SELECT DISTINCT c.id, c.start_date, c.end_date, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id ORDER BY c.start_date ASC LIMIT :offsetend OFFSET :offset");
+    $requete = $con->prepare("SELECT DISTINCT c.id, c.start_date, c.end_date, c.title, c.intervention_type_id, m.name AS module, it.name AS type_name, c.remotely FROM course c JOIN module m ON c.module_id = m.id JOIN intervention_type it ON c.intervention_type_id = it.id JOIN course_instructor ci ON c.id = ci.course_id JOIN instructor i ON ci.instructor_id = i.id JOIN user u ON i.user_id = u.id ORDER BY c.start_date ASC LIMIT :offsetend OFFSET :offset");
     $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
     $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
     $requete->execute();

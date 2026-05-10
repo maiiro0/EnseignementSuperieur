@@ -406,7 +406,7 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
                 <thead>
                     <tr class="columns">
                         <td>Date de l'intervention</td>
-                        <td>Module</td>
+                        <td>Module & Titre</td>
                         <td>Type</td>
                         <td>Intervenants</td>
                         <td>En visio</td>
@@ -426,7 +426,12 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
                         echo "<tr>";
                         echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
 
-                        echo "<td>". $element["module"] . "</td>";
+                        echo "<td>". $element["module"] ;
+                        if (!empty ($element["title"])){
+                            echo "<br>";
+                            echo $element["title"] ;
+                        }
+                        echo "</td>" ;
 
                         echo "<td>". $element["type_name"] ."</td>";
 

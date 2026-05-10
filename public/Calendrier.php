@@ -154,7 +154,7 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
                 <thead>
                     <tr class="columns">
                         <td>Date de l'intervention</td>
-                        <td>Module</td>
+                        <td>Module & Titre</td>
                         <td>Type</td>
                         <td>Intervenants</td>
                         <td>En visio</td>
@@ -174,8 +174,12 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
                         echo "<tr>";
                         echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>"; // Affichage de la date de l'intervention, avec le jour, le mois, l'année, l'heure de début et l'heure de fin
 
-                        echo "<td>". $element["module"] . "</td>";
-
+                        echo "<td>". $element["module"] ;
+                        if (!empty ($element["title"])){
+                            echo "<br>";
+                            echo $element["title"] ;
+                        }
+                        echo "</td>" ;
                         echo "<td>". $element["type_name"] ."</td>";
 
                         $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
