@@ -383,12 +383,7 @@ function insert_infos_intervention($con, $title, $date_start, $date_end, $module
     $module_id = $requete->fetch(PDO::FETCH_ASSOC);
     $module_id = $module_id['id'];
 
-    $course_id = select_nb_pages_calendrier($con);
-    $course_id= $course_id[0]["nblignes"];
-    $course_id= $course_id +1;
-
-    $requete = $con->prepare("INSERT INTO course (id, start_date, end_date, intervention_type_id, module_id, remotely, title) VALUES (:id, :start_date, :end_date, :intervention_type_id, :module_id, :remotely, :title)");
-    $requete->bindParam(':id', $course_id);
+    $requete = $con->prepare("INSERT INTO course (start_date, end_date, intervention_type_id, module_id, remotely, title) VALUES (:start_date, :end_date, :intervention_type_id, :module_id, :remotely, :title)");
     $requete->bindParam(':start_date', $date_start);
     $requete->bindParam(':end_date', $date_end);
     $requete->bindParam(':intervention_type_id', $typeintervention_id);
@@ -398,7 +393,7 @@ function insert_infos_intervention($con, $title, $date_start, $date_end, $module
 
     $requete->execute();
 
-
+    $course_id = $con->lastInsertId();
 
     foreach ($intervenant as $id_user) {
         $requete = $con->prepare("SELECT i.id FROM instructor i WHERE user_id = :id_user ");
