@@ -79,7 +79,7 @@ if (isset($_POST['action_supprimer']) && !empty($_POST['id_action'])) {
         $stmt_del_course->execute([$id]);
 
         // Redirection pour rafraîchir la page
-        header("Location: Intervention.php");
+        header("Location: Calendrier.php");
         exit();
     } catch (Exception $e) {
         echo "Erreur lors de la suppression : " . $e->getMessage();
@@ -124,7 +124,7 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
         }
 
         // Redirection
-        header("Location: Intervention.php");
+        header("Location: Calendrier.php");
         exit();
     } catch (Exception $e) {
         echo "Erreur lors de la modification : " . $e->getMessage();
