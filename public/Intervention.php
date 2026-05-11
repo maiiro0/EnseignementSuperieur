@@ -332,8 +332,9 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
 
                             <input type="hidden" name="id_action" value="<?php echo $infos_inter['id']; ?>">
                         </div>
+                        
                         <?php
-                    
+                    /*
                         if(isset($_POST['supp-inter'])) {
                             $requete = $con->prepare("DELETE FROM course WHERE id = :id");
                             $requete->bindParam(':id', $id);
@@ -348,6 +349,7 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
                             $requete->bindParam(':intervention_type_id', $_POST['modif-intervention']);
                             $requete->execute();
                         }
+                    */
                         ?>
                     </form>
                 </dialog>
@@ -453,10 +455,9 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
                         }
                         ?>
                         <td class="table_align">
-                            <form method="post" action="">
+                            <img src="assets/Oeil.png" alt="">
+                            <form method="post" action="" class="form_margin">
                                 <input type="hidden" name="id_inter" value="<?php echo $element['id']; ?>">
-                            
-                                <img src="assets/Oeil.png" alt="">
                                 <button type="submit" name="charger_fiche" class="modif-button">Accéder à la fiche</button>
                             </form>
                         </td>

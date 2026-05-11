@@ -76,6 +76,10 @@ tr {
     font-family: Poppins;
 }
 
+.form_margin{
+    margin-top: -20px;
+}
+
 nav {
     width: 240px;
     background-color: #F1F2F7;

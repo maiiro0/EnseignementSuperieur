@@ -42,6 +42,95 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
     exit;
 }
 
+
+$infos_inter = null;
+$intervenants_ids = [];
+
+// Si on a cliqué sur "Accéder à la fiche"
+if (isset($_POST['id_inter']) && isset($_POST['charger_fiche'])) {
+    $id_select = (int)$_POST['id_inter'];
+
+    // On récupère les infos de l'intervention
+    $stmt = $con->prepare("SELECT * FROM course WHERE id = :id");
+    $stmt->execute([':id' => $id_select]);
+    $infos_inter = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    // On récupère les ID des intervenants liés
+    $stmt2 = $con->prepare("SELECT instructor_id FROM course_instructor WHERE course_id = :id");
+    $stmt2->execute([':id' => $id_select]);
+    $intervenants_ids = $stmt2->fetchAll(PDO::FETCH_COLUMN);
+
+    // On déclenche l'ouverture de la modal au chargement de la page
+    echo "<script>document.addEventListener('DOMContentLoaded', () => { document.getElementById('Modif').showModal(); });</script>";
+}
+
+
+// SUPPRIMER
+if (isset($_POST['action_supprimer']) && !empty($_POST['id_action'])) {
+    $id = (int)$_POST['id_action'];
+    
+    try {
+        // On supprime d'abord les liens entre l'intervention et les intervenants
+        $stmt_del_links = $con->prepare("DELETE FROM course_instructor WHERE course_id = ?");
+        $stmt_del_links->execute([$id]);
+
+        // On supprime l'intervention elle-même
+        $stmt_del_course = $con->prepare("DELETE FROM course WHERE id = ?");
+        $stmt_del_course->execute([$id]);
+
+        // Redirection pour rafraîchir la page
+        header("Location: Intervention.php");
+        exit();
+    } catch (Exception $e) {
+        echo "Erreur lors de la suppression : " . $e->getMessage();
+    }
+}
+
+// --- ACTION MODIFIER ---
+if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
+    $id = (int)$_POST['id_action'];
+    
+    // Récupération des données du formulaire
+    $titre = $_POST['titre'];
+    $date_debut = $_POST['date-debut'];
+    $date_fin = $_POST['date-fin'];
+    $module_id = $_POST['modif-module'];
+    $type_id = $_POST['modif-intervention'];
+    $visio = isset($_POST['modif-visio']) ? 1 : 0;
+    $intervenants = $_POST['intervenants'] ?? []; // Tableau des IDs d'instructeurs
+
+    try {
+        // Mise à jour de la table 'course'
+        $sql_update = "UPDATE course SET 
+                        title = ?, 
+                        start_date = ?, 
+                        end_date = ?, 
+                        module_id = ?, 
+                        intervention_type_id = ?, 
+                        remotely = ? 
+                       WHERE id = ?";
+        $stmt_up = $con->prepare($sql_update);
+        $stmt_up->execute([$titre, $date_debut, $date_fin, $module_id, $type_id, $visio, $id]);
+
+        // Mise à jour des intervenants  (on supprime tout et on rémet à jour)
+        $stmt_clean = $con->prepare("DELETE FROM course_instructor WHERE course_id = ?");
+        $stmt_clean->execute([$id]);
+
+        if (!empty($intervenants)) {
+            $stmt_ins = $con->prepare("INSERT INTO course_instructor (course_id, instructor_id) VALUES (?, ?)");
+            foreach ($intervenants as $instructor_id) {
+                $stmt_ins->execute([$id, $instructor_id]);
+            }
+        }
+
+        // Redirection
+        header("Location: Intervention.php");
+        exit();
+    } catch (Exception $e) {
+        echo "Erreur lors de la modification : " . $e->getMessage();
+    }
+}
+
 ?>
 
 <body>
@@ -146,7 +235,94 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
                         </div>
                     </form>
                 </dialog>
+                <dialog  id="Modif">
+                    <button type="button" command="close" commandfor="Modif" class="invisible-button"><img src="assets/Frame 1041.png" alt=""></button>
+                    <div class="add-intervention">
+                        <img src="assets/Frame.png" alt="">
+                        <div>
+                            <h3>Modifier une intervention</h3>
+                            <p>Remplissez les informations ci-dessous</p>
+                        </div>
+                    </div>
 
+                    <form action="" method="post" class="calendar-form">
+                        <div>
+                            <label for="titre">Titre</label> </br>
+                            <input type="text" name="titre" id="titre" class="input-size-long" 
+                            value="<?php echo htmlspecialchars($infos_inter['title'] ?? ''); ?>"></br>
+                        </div>
+                        
+                        <div class="form-align">
+                            <div>
+                                <label for="date-debut" require>Date de début - champ obligatoire</label></br>
+                               <input type="datetime-local" name="date-debut" class="select-input-size" 
+                                value="<?= isset($infos_inter['start_date']) ? date('Y-m-d\TH:i', strtotime($infos_inter['start_date'])) : '' ?>"></br>
+                            </div>
+
+                            <div>
+                                <label for="date-fin" require>Date de fin - champ obligatoire</label></br>
+                                <input type="datetime-local" name="date-fin" class="select-input-size"
+                                value="<?= isset($infos_inter['end_date']) ? date('Y-m-d\TH:i', strtotime($infos_inter['end_date'])) : '' ?>"></br>
+                            </div>
+                        </div>
+
+                        <div class="form-align">
+                            <div>
+                                <label for="modif-module">Module - champ obligatoire</label></br>
+                                <select name="modif-module" class="select-size">
+                                    <?php
+                                    $req = $con->query("SELECT id, name FROM module ORDER BY name");
+                                    while($m = $req->fetch()) {
+                                        $selected = ($infos_inter['module_id'] == $m['id']) ? 'selected' : '';
+                                        echo "<option value='{$m['id']}' $selected>{$m['name']}</option>";
+                                    }
+                                    ?>
+                                </select></br> 
+                            
+                            </div>
+
+                            <div>
+                                <label for="modif-intervention">Type d'intervention - champ obligatoire</label></br>
+                                <select name="modif-intervention" class="select-size">
+                                    <?php 
+                                    $req = $con->query("SELECT id, name FROM intervention_type ORDER BY name");
+                                    while($t = $req->fetch()) {
+                                        $selected = ($infos_inter['intervention_type_id'] == $t['id']) ? 'selected' : '';
+                                        echo "<option value='{$t['id']}' $selected>{$t['name']}</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="modif-inter">Intervenant - champ obligatoire - Ctrl pour sélectionner plusieurs intervenants</label></br>
+                            <select name="intervenants[]" multiple class="select-size-long">
+                                <?php
+                                // On récupère les utilisateurs qui sont des instructeurs
+                                $req = $con->query("SELECT i.id, u.last_name, u.first_name FROM instructor i JOIN user u ON i.user_id = u.id ORDER BY u.last_name");
+                                while($u = $req->fetch()) {
+                                    // $intervenants_ids a été rempli lors de l'étape 2 (récupération)
+                                    $selected = in_array($u['id'], $intervenants_ids) ? 'selected' : '';
+                                    echo "<option value='{$u['id']}' $selected>".strtoupper($u['last_name'])." ".$u['first_name']."</option>";
+                                }
+                                ?>
+                            </select></br>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="modif-visio" name="modif-visio" value="1" <?= ($infos_inter['remotely'] ?? 0) == 1 ? 'checked' : '' ?> />
+                            <label for="modif-visio">Intervention effectuée en visio</label>
+                        </div>
+                        <div class="select-button-gap">
+                            <button type="button" command="close" commandfor="Modif" class="grey-button selection">Annuler</button>
+
+                            <button type="submit" name="action_supprimer" class="red-button selection" onclick="return confirm('Supprimer définitivement ?')">Supprimer</button>
+
+                            <button type="submit" name="action_modifier" class="blue-button selection">Confirmer</button>
+
+                            <input type="hidden" name="id_action" value="<?php echo $infos_inter['id']; ?>">
+                        </div>
+                    </form>
+                </dialog>
             </div>
             <h4>Interventions de la semaine</h4>
 
@@ -199,8 +375,13 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
                             ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
                         }
                         ?>
-                        <td class="table_align"><img src="assets/Oeil.png" alt="">
-                        <a href="">Accéder à la fiche</a></td>
+                        <td class="table_align">
+                            <img src="assets/Oeil.png" alt="">
+                            <form method="post" action="" class="form_margin">
+                                <input type="hidden" name="id_inter" value="<?php echo $element['id']; ?>">
+                                <button type="submit" name="charger_fiche" class="modif-button">Accéder à la fiche</button>
+                            </form>
+                        </td>
                         <?php
                         echo "</tr>";
 
