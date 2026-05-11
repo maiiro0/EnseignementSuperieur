@@ -152,7 +152,7 @@ else { // Récupération du filtre de nom de module dans l'URL
                     }
 
                     $contenu = filtre_fiche_enseignant($con, $id,  $filtre_start_date, $filtre_end_date, $filtre_name, $offset);
-                    echo "<h4>".select_nb_pages_filtre_fiche_enseignant($con,$id, $filtre_start_date, $filtre_end_date, $filtre_name)." interventions trouvées</h4>";
+                    echo "<h4 class='result-count'>".select_nb_pages_filtre_fiche_enseignant($con,, $filtre_start_date, $filtre_end_date, $filtre_name)." interventions trouvées</h4>";
                     ?>
                     <tbody>
                         <?php
@@ -198,7 +198,7 @@ else { // Récupération du filtre de nom de module dans l'URL
                     $limit = 10;
                     $offset = $page * $limit - $limit; //Pagination en fonction du numéro de la page dans l'URL
                     $contenu = fiche_enseignant_tableau($con, $id ,$offset);
-                    echo "<h4>".select_nb_pages_fiche_enseignant($con, $id)." interventions trouvées</h4>";
+                    echo "<h4 class='result-count'>".select_nb_pages_fiche_enseignant($con, $id)." interventions trouvées</h4>";
                     ?>
                     <tbody>
                         <?php

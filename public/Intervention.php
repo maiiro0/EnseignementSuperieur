@@ -356,47 +356,32 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
                         
             </div>
 
-            <form method="GET" action="">
-                <h3 class="yellow">Filtres</h3>
+            <form method="get" action="" class="teacher-information-form">
                 <div class="filter-row">
                     <div class="filter-column">
-                        <label for="date_start">Date de début</label>
-                        <input
-                            type="datetime-local"
-                            name="date_start"
-                            id="date_start"
-                            value="<?= htmlspecialchars($dateStart) ?>"
-                        >
+                        <input type="hidden" name="id">
+                        <label name="start_date">Date de debut</label>
+                        <input type="datetime-local" name="start_date">
                     </div>
-
                     <div class="filter-column">
-                        <label for="date_end">Date de fin</label>
-                        <input
-                            type="datetime-local"
-                            name="date_end"
-                            id="date_end"
-                            value="<?= htmlspecialchars($dateEnd) ?>"
-                        >
+                        <label name="end_date">Date de fin</label>
+                        <input type="datetime-local" name="end_date">
                     </div>
-
                     <div class="filter-column">
-                        <label for="module_id">Module</label>
-                        <select name="module_id" id="module_id">
-                            <option value="">Sélectionnez le module</option>
-                            <?php foreach ($modules as $module): ?>
-                                <option
-                                    value="<?= $module['id'] ?>"
-                                    <?= ($moduleId == $module['id']) ? 'selected' : '' ?>
-                                >
-                                    <?= htmlspecialchars($module['name']) ?>
-                                </option>
-                            <?php endforeach; ?>
+                        <label for="name">Module</label>
+                        <select name="name" id="name" >
+                                <option value="">Sélectionnez le module</option>
+                                <?php
+                                    $nom_module = select_modules_corp_enseignant($con);
+                                    foreach ($nom_module as $valeurs=>$element) { 
+                                        echo "<option>". $element["name"]."</option>";
+                                    }
+                                ?>
                         </select>
                     </div>
-
                     <button class="yellow-button">Filtrer</button>
                 </div>
-            </form>
+            </form> 
 
             <?php
                 $interventions = calendrier_tableau_Count($con);

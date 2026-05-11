@@ -1,16 +1,12 @@
-# 🎓 Gestion des Élèves de Licence
+# Explication du projet
 
 > Projet réalisé par 4 étudiants de BTS1 — Cassandre, Hugo, Chloé et Elena
 
 ---
 
-## Présentation
+Présentation
 
 Ce projet est un site web de gestion des élèves de licence. Il permet de centraliser et d'administrer les données des étudiants via une interface web connectée à une base de données.
-
----
-
-## Équipe
 
 | Membre     |
 |------------|
@@ -19,9 +15,8 @@ Ce projet est un site web de gestion des élèves de licence. Il permet de centr
 | Chloé      |
 | Elena      |
 
----
 
-## Technologies utilisées
+Technologies utilisées
 
 | Technologie | Usage |
 |-------------|-------|
@@ -30,53 +25,44 @@ Ce projet est un site web de gestion des élèves de licence. Il permet de centr
 | PHP         | Logique serveur & connexion BDD |
 | JavaScript  | Interactions côté client |
 
-### Veilles technologiques réalisées
-- Veille **Markdown**
-- Veille **connexion base de données avec PHP**
+Veilles technologiques réalisées
+- Veille Markdown
+- Veille connexion base de données avec PHP
 
----
 
-## Méthodologie & Outils
+Méthodologie & Outils
 
-- **Méthode AGILE** — sprints et issues
-- Réunions hebdomadaires **chaque lundi** pour faire le point sur l'avancement
-- Gestion des versions via **GitHub** (issues & sprints)
-- Utilisation de **Git Bash** et **GitHub Desktop**
+- Méthode AGILE — sprints et issues
+- Réunions hebdomadaires chaque lundi pour faire le point sur l'avancement
+- Gestion des versions via GitHub (issues & sprints)
+- Utilisation de Git Bash et GitHub Desktop
 
----
 
-## Installation & Lancement
+## Démarrer le projet
 
-### Prérequis
+Prérequis
 
 - [XAMPP](https://www.apachefriends.org/) ou [WAMP](https://www.wampserver.com/) installé sur votre machine
 
 ### Étapes
 
-1. **Cloner le dépôt** sur votre machine locale
+1. Cloner le dépôt sur votre machine locale
 
-2. **Configurer la base de données**
-   - Ouvrir **phpMyAdmin** (via XAMPP/WAMP)
+2. Configurer la base de données
+   - Ouvrir phpMyAdmin (via XAMPP/WAMP)
    - Importer le fichier SQL situé dans le dossier `database/`
 
-3. **Configurer les paramètres de connexion**
-   - Ouvrir le fichier `parametres.php` à la racine du projet
-   - Renseigner votre nom d'utilisateur et mot de passe MySQL :
-     ```php
-     $user = "votre_utilisateur";
-     $password = "votre_mot_de_passe";
-     ```
+3. Copier le fichier parametres.example.php et le renommer en parametres.php 
 
-4. **Lancer le projet**
-   - Démarrer **Apache** et **MySQL** depuis XAMPP/WAMP
+4. Remplacer dans ce fichier les informations de connexions avec les votres
+
+4. Lancer le projet
+   - Démarrer Apache et MySQL depuis XAMPP/WAMP
    - Accéder à l'URL suivante dans votre navigateur :
-     ```
-     http://localhost/EnseignementSuperieur/public
-     ```
+     ``` http://localhost/EnseignementSuperieur/public ```
 
----
 
-## Arborescence du projet
+Arborescence du projet
 
 ```
 projet/
@@ -95,18 +81,16 @@ projet/
 
 ---
 
-## Conventions de nommage
+Conventions de nommage
 
 Les classes CSS sont écrites :
-- En **anglais**
-- En **minuscules**
-- Avec un **tiret `-`** comme séparateur entre les mots
+- En anglais
+- En minuscules
+- Avec un tiret `-` comme séparateur entre les mots
+Exemple : `.student-list`, `.form-container`
 
-> Exemple : `.student-list`, `.form-container`
 
----
-
-## Ressources & outils utilisés
+Ressources & outils utilisés
 
 | Outil            | Usage |
 |------------------|-------|
