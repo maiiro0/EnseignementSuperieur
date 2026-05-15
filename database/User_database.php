@@ -250,10 +250,14 @@ function update_infos_enseignant($con, $id, $last_name, $first_name, $email, $na
     $requete->bindParam(':id', $id);
     $requete->execute();
 
-    
-    
-    $requete = $con->prepare("DELETE FROM instructor_module WHERE instructor_id = :id");
+    $requete = $con->prepare("SELECT id FROM instructor WHERE user_id= :id ");
     $requete->bindParam(':id', $id);
+    $requete->execute();
+    $instructor_id = $requete->fetch(\PDO::FETCH_ASSOC);
+    $instructor_id = $instructor_id['id'];
+    
+    $requete = $con->prepare("DELETE FROM instructor_module WHERE instructor_id = :instructor_id");
+    $requete->bindParam(':instructor_id', $instructor_id);
     $requete->execute();
 
     foreach ($name as $colonne => $element) {
@@ -262,12 +266,10 @@ function update_infos_enseignant($con, $id, $last_name, $first_name, $email, $na
         $requete->execute();
         $module_id = $requete->fetch(PDO::FETCH_ASSOC);
 
-        $requete = $con->prepare("INSERT INTO instructor_module VALUES (:id ,:module_id)");
-        $requete->bindParam(':id', $id);
+        $requete = $con->prepare("INSERT INTO instructor_module VALUES (:instructor_id ,:module_id)");
+        $requete->bindParam(':instructor_id', $instructor_id);
         $requete->bindParam(':module_id', $module_id['id']);
         $requete->execute();
-    
-
     }
 }
 
