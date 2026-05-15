@@ -208,8 +208,14 @@ function select_infos_enseignant($con, $id){ // Récupération des informations 
 
 
 function select_infos_modules_enseignant($con, $id){ // Récupération des informations des modules enseignés par un intervenant à partir de l'id de cet intervenant, cette fonction est utilisée pour afficher les informations des modules enseignés par un intervenant dans la fiche de cet intervenant et pour pré-sélectionner les modules enseignés par cet intervenant dans le formulaire de modification
-    $requete = $con->prepare("SELECT m.name, m.hours_count FROM instructor_module im JOIN module m ON im.module_id = m.id  WHERE im.instructor_id= :id ");
+    $requete = $con->prepare("SELECT id FROM instructor WHERE user_id= :id ");
     $requete->bindParam(':id', $id);
+    $requete->execute();
+    $instructor_id = $requete->fetch(\PDO::FETCH_ASSOC);
+    $instructor_id = $instructor_id['id'];
+    
+    $requete = $con->prepare("SELECT m.name, m.hours_count FROM instructor_module im JOIN module m ON im.module_id = m.id WHERE im.instructor_id= :id ");
+    $requete->bindParam(':id', $instructor_id);
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
@@ -223,8 +229,14 @@ function select_modules_corp_enseignant($con){ // Récupération de tous les mod
 }
 
 function select_modules_enseignées($con, $id){ // Récupération de tous les modules enseignés par un intervenant à partir de l'id de cet intervenant, cette fonction est utilisée pour afficher la liste de tous les modules enseignés par un intervenant dans la fiche de cet intervenant et pour pré-sélectionner les modules enseignés par cet intervenant dans le formulaire de modification
-    $requete = $con->prepare("SELECT m.name FROM  module m JOIN instructor_module im ON m.id = im.module_id WHERE im.instructor_id = :id");
+    $requete = $con->prepare("SELECT id FROM instructor WHERE user_id= :id ");
     $requete->bindParam(':id', $id);
+    $requete->execute();
+    $instructor_id = $requete->fetch(\PDO::FETCH_ASSOC);
+    $instructor_id = $instructor_id['id'];
+    
+    $requete = $con->prepare("SELECT m.name FROM  module m JOIN instructor_module im ON m.id = im.module_id WHERE im.instructor_id = :id");
+    $requete->bindParam(':id', $instructor_id);
     $requete->execute();
     $nom_module_selected = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $nom_module_selected;
