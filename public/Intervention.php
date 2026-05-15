@@ -40,11 +40,11 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
         $title = htmlspecialchars($_POST['title']);
     }
     $verification = verification_insert_intervention($con, $date_start, $date_end, $module, $intervenant);
-    if ($verification== True){
+    if ($verification=== True){
         insert_infos_intervention($con, $title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio);
+        header("Location: Intervention.php");
+        exit();
     }
-    header("Location: Intervention.php");
-    exit();
 }
 
 
@@ -103,36 +103,38 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
     $type_id = $_POST['modif-intervention'];
     $visio = isset($_POST['modif-visio']) ? 1 : 0;
     $intervenants = $_POST['intervenants'] ?? []; // Tableau des IDs d'instructeurs
+    $verif = verification_modification_intervention($con, $date_debut, $date_fin, $module_id, $intervenants);
+    if ($verif=== True){
+        try {
+            // Mise à jour de la table 'course'
+            $sql_update = "UPDATE course SET 
+                            title = ?, 
+                            start_date = ?, 
+                            end_date = ?, 
+                            module_id = ?, 
+                            intervention_type_id = ?, 
+                            remotely = ? 
+                        WHERE id = ?";
+            $stmt_up = $con->prepare($sql_update);
+            $stmt_up->execute([$titre, $date_debut, $date_fin, $module_id, $type_id, $visio, $id]);
 
-    try {
-        // Mise à jour de la table 'course'
-        $sql_update = "UPDATE course SET 
-                        title = ?, 
-                        start_date = ?, 
-                        end_date = ?, 
-                        module_id = ?, 
-                        intervention_type_id = ?, 
-                        remotely = ? 
-                       WHERE id = ?";
-        $stmt_up = $con->prepare($sql_update);
-        $stmt_up->execute([$titre, $date_debut, $date_fin, $module_id, $type_id, $visio, $id]);
+            // Mise à jour des intervenants  (on supprime tout et on rémet à jour)
+            $stmt_clean = $con->prepare("DELETE FROM course_instructor WHERE course_id = ?");
+            $stmt_clean->execute([$id]);
 
-        // Mise à jour des intervenants  (on supprime tout et on rémet à jour)
-        $stmt_clean = $con->prepare("DELETE FROM course_instructor WHERE course_id = ?");
-        $stmt_clean->execute([$id]);
-
-        if (!empty($intervenants)) {
-            $stmt_ins = $con->prepare("INSERT INTO course_instructor (course_id, instructor_id) VALUES (?, ?)");
-            foreach ($intervenants as $instructor_id) {
-                $stmt_ins->execute([$id, $instructor_id]);
+            if (!empty($intervenants)) {
+                $stmt_ins = $con->prepare("INSERT INTO course_instructor (course_id, instructor_id) VALUES (?, ?)");
+                foreach ($intervenants as $instructor_id) {
+                    $stmt_ins->execute([$id, $instructor_id]);
+                }
             }
-        }
 
-        // Redirection
-        header("Location: Intervention.php");
-        exit();
-    } catch (Exception $e) {
-        echo "Erreur lors de la modification : " . $e->getMessage();
+            // Redirection
+            header("Location: Intervention.php");
+            exit();
+        } catch (Exception $e) {
+            echo "Erreur lors de la modification : " . $e->getMessage();
+        }
     }
 }
 
@@ -332,25 +334,6 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
 
                             <input type="hidden" name="id_action" value="<?php echo $infos_inter['id']; ?>">
                         </div>
-                        
-                        <?php
-                    /*
-                        if(isset($_POST['supp-inter'])) {
-                            $requete = $con->prepare("DELETE FROM course WHERE id = :id");
-                            $requete->bindParam(':id', $id);
-                            $requete->execute();
-                        }
-                        if(isset($_POST['titre']) && isset($_POST['date-debut']) && isset($_POST['date-fin']) && isset($_POST['modif-module']) && isset($_POST['modif-intervention']) && isset($_POST['modif-inter'])) {
-                            $requete = $con->prepare("INSERT INTO course (title, start_date, end_date, module_id, intervention_type_id) VALUES (:title, :start_date, :end_date, :module_id, :intervention_type_id)");
-                            $requete->bindParam(':title', $_POST['titre']);
-                            $requete->bindParam(':start_date', $_POST['date-debut']);
-                            $requete->bindParam(':end_date', $_POST['date-fin']);
-                            $requete->bindParam(':module_id', $_POST['modif-module']);
-                            $requete->bindParam(':intervention_type_id', $_POST['modif-intervention']);
-                            $requete->execute();
-                        }
-                    */
-                        ?>
                     </form>
                 </dialog>
                         

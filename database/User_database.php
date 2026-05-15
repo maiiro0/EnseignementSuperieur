@@ -453,3 +453,37 @@ function verification_insert_intervention($con, $date_start, $date_end, $module,
         return False ;
     }
 }
+
+
+function verification_modification_intervention($con, $date_start, $date_end, $module_id, $intervenants){ // Vérification des informations d'un cours avant de le modifier dans la base de données, on vérifie que la date de début est inférieure à la date de fin, que la durée du cours ne dépasse pas 4 heures et que le module associé est enseigné par tous les intervenants associés à ce cours
+
+    $module_verification = 0;
+
+    $start = new DateTime("$date_start");
+    $end = new DateTime("$date_end");
+    $time = $start->diff($end);
+    $hours = ($time->days * 24) + $time->h;
+
+    if (($start < $end) && ($hours<= 4) ){
+        foreach ($intervenants as $intervenant_id) {
+            $requete = $con->prepare("SELECT m.id FROM  module m JOIN instructor_module im ON m.id = im.module_id WHERE im.instructor_id = :intervenant_id");
+            $requete->bindParam(':intervenant_id', $intervenant_id);
+            $requete->execute();
+            $modules_intervenant = $requete->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($modules_intervenant as $module_intervenant) {
+                if ($module_intervenant['id'] == $module_id){
+                    $module_verification +=1;
+                }
+            }
+        }
+        if ( $module_verification == count($intervenants)){
+            return True;
+        }
+        else {
+            return "module non enseigné par un des enseignants";
+        }
+    }
+    else{
+        return "horraire incorecte, une intervention dure entre 1 minute et 4 heures";
+    }
+}
