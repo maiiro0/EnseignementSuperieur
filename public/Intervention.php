@@ -14,11 +14,29 @@ else {
     $page = $_GET['page'];
 }
 
+if (empty($_GET['start_date'])) { // Vérification que le filtre de date de début est présent dans l'URL
+    $filtre_start_date = '';
+    $_GET['start_date'] ="";
+}
+else { // Récupération du filtre de date de début dans l'URL
+    $filtre_start_date = $_GET['start_date'];
+}
 
-$dateStart = $_GET['date_start'] ?? '';
-$dateEnd = $_GET['date_end'] ?? '';
-$moduleId = $_GET['module_id'] ?? '';
+if (empty($_GET["end_date"])){ // Vérification que le filtre de date de fin est présent dans l'URL
+    $filtre_end_date = '';
+    $_GET["end_date"] ="";
+}
+else { // Récupération du filtre de date de fin dans l'URL
+    $filtre_end_date = $_GET["end_date"];
+}
 
+if (empty($_GET["name"])){ // Vérification que le filtre de nom de module est présent dans l'URL
+    $filtre_name = '';
+    $_GET["name"] ="";
+}
+else { // Récupération du filtre de nom de module dans l'URL
+    $filtre_name = $_GET["name"];
+}
 
 // fonction ajt intervention
 if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST['module']) && !empty($_POST['typeintervention']) && !empty($_POST['intervenant'])) {
@@ -342,7 +360,6 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
             <form method="get" action="" class="teacher-information-form">
                 <div class="filter-row">
                     <div class="filter-column">
-                        <input type="hidden" name="id">
                         <label name="start_date">Date de debut</label>
                         <input type="datetime-local" name="start_date">
                     </div>
@@ -365,13 +382,6 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
                     <button class="yellow-button">Filtrer</button>
                 </div>
             </form> 
-
-            <?php
-                $interventions = calendrier_tableau_Count($con);
-            ?>
-
-            <p class="result-count"><?= count($interventions) ?> interventions trouvées</p>
-
             <table class="table">
                 <thead>
                     <tr class="columns">
@@ -384,60 +394,139 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
                     </tr>
                 </thead>
                 <?php
-                $limit = 10;
-                $offset = $page * $limit - $limit;
-                $contenu = calendrier_tableau($con, $offset);
-                ?>
-                <tbody>
-                    <?php
-                    foreach ($contenu as $valeurs=>$element) {
-                        $debut = new DateTime($element["start_date"]);
-                        $fin = new DateTime($element["end_date"]);
-                        echo "<tr>";
-                        echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
+                if (!empty($_GET["start_date"]) || !empty($_GET["end_date"]) || !empty($_GET["name"])){
+                    $filtre_start_date = new DateTime( $_GET["start_date"]);
+                    $filtre_end_date = new DateTime($_GET["end_date"]);
+                    $filtre_name = '%'.$_GET["name"].'%';
 
-                        echo "<td>". $element["module"] ;
-                        if (!empty ($element["title"])){
-                            echo "<br>";
-                            echo $element["title"] ;
-                        }
-                        echo "</td>" ;
-
-                        echo "<td>". $element["type_name"] ."</td>";
-
-                        $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
-                        echo "<td>";
-                        $temporaire = "";
-                        foreach ($noms_intervenants as $colonne=>$noms){
-                            $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
-                        }
-                        echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
-                        echo "</td>";
+                    $limit = 10;
+                    $offset = $page * $limit - $limit;
 
 
-                        if ($element["remotely"] == 0){
-                            ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
-                        }   
-                        else {
-                            ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
+                    if (empty($_GET["start_date"])){
+                        $filtre_start_date = '';
+                    }
+
+                    if (empty($_GET["end_date"])){
+                        $filtre_end_date = '';
+                    }
+
+                    if (empty($_GET["name"])){
+                        $filtre_name = '';
+                    }
+                    $contenu = calendrier_tableau_filter($con, $filtre_start_date, $filtre_end_date, $filtre_name, $offset);
+                    $interventions = calendrier_tableau_Count_filter($con, $filtre_start_date, $filtre_end_date, $filtre_name);
+                    echo "<h4 class='result-count'>".count($interventions)." interventions trouvées</h4>";
+                    ?>
+                    <tbody>
+                        <?php
+                        foreach ($contenu as $valeurs=>$element) {
+                            $debut = new DateTime($element["start_date"]);
+                            $fin = new DateTime($element["end_date"]);
+                            echo "<tr>";
+                            echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
+
+                            echo "<td>". $element["module"] ;
+                            if (!empty ($element["title"])){
+                                echo "<br>";
+                                echo $element["title"] ;
+                            }
+                            echo "</td>" ;
+
+                            echo "<td>". $element["type_name"] ."</td>";
+
+                            $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
+                            echo "<td>";
+                            $temporaire = "";
+                            foreach ($noms_intervenants as $colonne=>$noms){
+                                $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
+                            }
+                            echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
+                            echo "</td>";
+
+
+                            if ($element["remotely"] == 0){
+                                ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
+                            }   
+                            else {
+                                ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
+                            }
+                            ?>
+                            <td class="table_align">
+                                <img src="assets/Oeil.png" alt="">
+                                <form method="post" action="">
+                                    <input type="hidden" name="id_inter" value="<?php echo $element['id']; ?>">
+                                    <button type="submit" name="charger_fiche" class="modif-button">Accéder à la fiche</button>
+                                </form>
+                            </td>
+                            <?php
+                            echo "</tr>";
                         }
                         ?>
-                        <td class="table_align">
-                            <img src="assets/Oeil.png" alt="">
-                            <form method="post" action="" class="form_margin">
-                                <input type="hidden" name="id_inter" value="<?php echo $element['id']; ?>">
-                                <button type="submit" name="charger_fiche" class="modif-button">Accéder à la fiche</button>
-                            </form>
-                        </td>
-                        <?php
-                        echo "</tr>";
-                    }
+                    </tbody>
+                    <?php
+                    $nb_pages = calendrier_tableau_Count_filter($con, $filtre_start_date, $filtre_end_date, $filtre_name);
+                    $nb_pages = count($nb_pages);
+                    $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
+                }
+                else{
+                    $limit = 10;
+                    $offset = $page * $limit - $limit;
+                    $contenu = calendrier_tableau($con, $offset);
+                    $interventions = calendrier_tableau_Count($con);
+                    echo "<h4 class='result-count'>".count($interventions)." interventions trouvées</h4>";
                     ?>
-                </tbody>
-                <?php
-                $nb_pages = select_nb_pages_calendrier($con);
-                $nb_pages = $nb_pages[0]["nblignes"];
-                $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
+                    <tbody>
+                        <?php
+                        foreach ($contenu as $valeurs=>$element) {
+                            $debut = new DateTime($element["start_date"]);
+                            $fin = new DateTime($element["end_date"]);
+                            echo "<tr>";
+                            echo "<td>". $debut->format('d/m/Y H\hi'). " à " . $fin->format('H\hi')."</td>";
+
+                            echo "<td>". $element["module"] ;
+                            if (!empty ($element["title"])){
+                                echo "<br>";
+                                echo $element["title"] ;
+                            }
+                            echo "</td>" ;
+
+                            echo "<td>". $element["type_name"] ."</td>";
+
+                            $noms_intervenants = fiche_enseignant_tableau_intervenants($con, $element["id"]);
+                            echo "<td>";
+                            $temporaire = "";
+                            foreach ($noms_intervenants as $colonne=>$noms){
+                                $temporaire .= ", ". $noms["upper(u.first_name)"][0].". ".$noms["upper(u.last_name)"];
+                            }
+                            echo substr($temporaire, 2); //substr permet de récupérer à partir d'un certain endroit de la chaîne de caractère. Ici à partir de l'élément en place 2
+                            echo "</td>";
+
+
+                            if ($element["remotely"] == 0){
+                                ?><td> <img src="assets/VisioOff.png" alt=""> </td><?php
+                            }   
+                            else {
+                                ?><td> <img src="assets/VisioOn.png" alt=""> </td><?php
+                            }
+                            ?>
+                            <td class="table_align">
+                                <img src="assets/Oeil.png" alt="">
+                                <form method="post" action="">
+                                    <input type="hidden" name="id_inter" value="<?php echo $element['id']; ?>">
+                                    <button type="submit" name="charger_fiche" class="modif-button">Accéder à la fiche</button>
+                                </form>
+                            </td>
+                            <?php
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>
+                    <?php
+                    $nb_pages = select_nb_pages_calendrier($con);
+                    $nb_pages = $nb_pages[0]["nblignes"];
+                    $nb_pages = $nb_pages = (int)($nb_pages / 10) + 1;
+                }
                 ?>
             </table>
             <?php
@@ -445,15 +534,15 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
                 <?php
             }
             else if ($_GET["page"] == $nb_pages){?>
-                <a href="Intervention.php?page=<?php echo $page - 1; ?>"> Page précédente </a><?php
+                <a href="Intervention.php?page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page précédente </a><?php
             }
             else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
-                <a href="Intervention.php?page=<?php echo $page - 1; ?>">Page précédente </a>
-                <a href="Intervention.php?page=<?php echo $page + 1; ?>"> Page suivante</a>
+                <a href="Intervention.php?page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>">Page précédente </a>
+                <a href="Intervention.php?page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a>
                 <?php
             } 
             else { ?>
-                <a href="Intervention.php?page=<?php echo $page + 1; ?>"> Page suivante</a><?php
+                <a href="Intervention.php?page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a><?php
             }
             ?>
         </section>

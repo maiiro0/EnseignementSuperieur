@@ -379,7 +379,7 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
                         ?>
                         <td class="table_align">
                             <img src="assets/Oeil.png" alt="">
-                            <form method="post" action="" class="form_margin">
+                            <form method="post" action="">
                                 <input type="hidden" name="id_inter" value="<?php echo $element['id']; ?>">
                                 <button type="submit" name="charger_fiche" class="modif-button">Accéder à la fiche</button>
                             </form>

@@ -24,7 +24,7 @@ if (empty($_GET['start_date'])) { // Vérification que le filtre de date de déb
     $_GET['start_date'] ="";
 }
 else { // Récupération du filtre de date de début dans l'URL
-    $filtre_prenom = $_GET['start_date'];
+    $filtre_start_date = $_GET['start_date'];
 }
 
 if (empty($_GET["end_date"])){ // Vérification que le filtre de date de fin est présent dans l'URL
@@ -32,7 +32,7 @@ if (empty($_GET["end_date"])){ // Vérification que le filtre de date de fin est
     $_GET["end_date"] ="";
 }
 else { // Récupération du filtre de date de fin dans l'URL
-    $filtre_nom = $_GET["end_date"];
+    $filtre_end_date = $_GET["end_date"];
 }
 
 if (empty($_GET["name"])){ // Vérification que le filtre de nom de module est présent dans l'URL
@@ -40,7 +40,7 @@ if (empty($_GET["name"])){ // Vérification que le filtre de nom de module est p
     $_GET["name"] ="";
 }
 else { // Récupération du filtre de nom de module dans l'URL
-    $filtre_email = $_GET["name"];
+    $filtre_name = $_GET["name"];
 }
 
 
