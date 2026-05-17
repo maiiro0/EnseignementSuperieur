@@ -38,7 +38,7 @@ $active='types';?>
 
             <div class="button-intervention">
                 <a href="type_intervention.php" class="grey-button selection">Retour à la liste</a>
-                <button type="submit" class="blue-button selection">Ajouter l'intervenant</button>
+                <button type="submit" class="blue-button selection">Enregistrer les informations</button>
             </div>
         </form>
     </section>
