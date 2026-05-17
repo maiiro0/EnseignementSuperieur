@@ -35,9 +35,9 @@ require_once("inclus/Header.php")?>
             <p>></p>
             <a href="modules.php">Modules</a>
             <p>></p>
-            <a href="fiche_module.php">Fiche module</a>
+            <a href="#">Fiche module</a>
             <p>></p>
-            <p><?php echo htmlspecialchars($contenu['name']); ?></p>
+            <a><?php echo htmlspecialchars($contenu['name']); ?></a>
         </div>
     
     <section class="intervention_sheet">
