@@ -119,16 +119,28 @@ function nom_module_where_instructor($con, $id){ // Récupération de tous les n
 
 function infos_module_where($con, $filtre_prenom, $filtre_nom, $filtre_email, $offset){ // Récupération de tous les modules enseignés par les intervenants qui correspondent aux filtres de recherche, avec une pagination de 10 modules par page, cette fonction est utilisée pour afficher la liste des modules enseignés par les intervenants qui correspondent aux filtres de recherche dans la page de gestion des intervenants
     $offend = $offset + 10;
-    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count,  u.id FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name LIKE :first_name OR u.last_name LIKE :last_name OR u.email LIKE :email ORDER BY u.last_name ASC LIMIT :offsetend OFFSET :offset");
+    $requete = $con->prepare("
+        SELECT u.first_name, u.last_name, 
+               GROUP_CONCAT(m.name ORDER BY m.name SEPARATOR ', ') AS module,
+               SUM(m.hours_count) AS hours_count,
+               u.id 
+        FROM instructor i 
+        JOIN user u ON i.user_id = u.id 
+        JOIN instructor_module im ON im.instructor_id = i.id 
+        JOIN module m ON im.module_id = m.id 
+        WHERE u.first_name LIKE :first_name OR u.last_name LIKE :last_name OR u.email LIKE :email
+        GROUP BY u.id, u.first_name, u.last_name
+        ORDER BY u.last_name ASC 
+        LIMIT :offsetend OFFSET :offset
+    ");
     $requete->bindParam(':first_name', $filtre_prenom);
     $requete->bindParam(':last_name', $filtre_nom);
     $requete->bindParam(':email', $filtre_email);
     $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
     $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
     $requete->execute();
-    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
-    return $contenu;
-}
+    return $requete->fetchAll(\PDO::FETCH_ASSOC);
+}    
 
 function select_nom_prenom_distinct($con){ // Récupération de tous les prénoms et noms distincts des intervenants, cette fonction est utilisée pour afficher la liste des prénoms et noms dans les filtres de recherche de la page de gestion des intervenants pour permettre à l'utilisateur de sélectionner un prénom ou un nom pour filtrer la liste des intervenants
     $requete = $con -> prepare("SELECT DISTINCT first_name, last_name FROM user");
@@ -137,14 +149,25 @@ function select_nom_prenom_distinct($con){ // Récupération de tous les prénom
     return $infos;
 }
 
-function select_infos_table_corps_enseignant($con, $offset){ // Récupération de tous les intervenants avec leurs modules enseignés, avec une pagination de 10 intervenants par page, cette fonction est utilisée pour afficher la liste des intervenants avec leurs modules enseignés dans la page de gestion des intervenants
+function select_infos_table_corps_enseignant($con, $offset){
     $offend = $offset + 10;
-    $requete = $con->prepare("SELECT u.first_name, u.last_name,m.name AS module, m.hours_count, u.id FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id ORDER BY u.last_name ASC LIMIT :offsetend OFFSET :offset");
+    $requete = $con->prepare("
+        SELECT u.first_name, u.last_name, 
+               GROUP_CONCAT(m.name ORDER BY m.name SEPARATOR ', ') AS module,
+               SUM(m.hours_count) AS hours_count,
+               u.id 
+        FROM instructor i 
+        JOIN user u ON i.user_id = u.id 
+        JOIN instructor_module im ON im.instructor_id = i.id 
+        JOIN module m ON im.module_id = m.id 
+        GROUP BY u.id, u.first_name, u.last_name
+        ORDER BY u.last_name ASC 
+        LIMIT :offsetend OFFSET :offset
+    ");
     $requete->bindValue(':offsetend', (int) $offend, PDO::PARAM_INT);
     $requete->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
     $requete->execute();
-    $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
-    return $contenu;
+    return $requete->fetchAll(\PDO::FETCH_ASSOC);
 }
 
 function insert_intervention_type($con, $name, $color, $description) { // Insertion d'un nouveau type d'intervention dans la base de données, on doit préciser le nom, la couleur et la description du type d'intervention
@@ -167,14 +190,14 @@ function select_id_intervention_type_where($con, $filtre, $offset) { // Récupé
 }
 
 function select_nb_pages_entier($con){ // Récupération du nombre total de modules enseignés par les intervenants, cette fonction est utilisée pour calculer le nombre de pages nécessaires pour afficher la liste des modules enseignés par les intervenants dans la page de gestion des intervenants
-    $requete = $con->prepare("SELECT count(*) AS nblignes FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id");
+    $requete = $con->prepare("SELECT count(distinct u.id) AS nblignes FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id");
     $requete->execute();
     $contenu = $requete->fetchAll(\PDO::FETCH_ASSOC);
     return $contenu;
 }
 
 function select_nb_pages_filtre($con, $filtre_prenom, $filtre_nom, $filtre_email){ // Récupération du nombre total de modules enseignés par les intervenants qui correspondent aux filtres de recherche, cette fonction est utilisée pour calculer le nombre de pages nécessaires pour afficher la liste des modules enseignés par les intervenants qui correspondent aux filtres de recherche dans la page de gestion des intervenants
-    $requete = $con->prepare("SELECT count(*) AS nblignes FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name LIKE :first_name OR u.last_name LIKE :last_name OR u.email LIKE :email");
+    $requete = $con->prepare("SELECT count(distinct u.id) AS nblignes FROM instructor i JOIN user u ON i.user_id =u.id JOIN instructor_module im ON im.instructor_id = i.id JOIN module m ON im.module_id = m.id WHERE u.first_name LIKE :first_name OR u.last_name LIKE :last_name OR u.email LIKE :email");
     $requete->bindParam(':first_name', $filtre_prenom);
     $requete->bindParam(':last_name', $filtre_nom);
     $requete->bindParam(':email', $filtre_email);
