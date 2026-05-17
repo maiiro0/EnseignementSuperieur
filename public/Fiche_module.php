@@ -181,10 +181,4 @@ if (!empty($_POST['code']) &&  !empty($_POST['name']) &&  isset($_POST['hours_co
     $requete->bindParam(':capstone_project', $capstone_project, \PDO::PARAM_INT);
     $requete->bindParam(':parent_id', $parent_id, \PDO::PARAM_INT);
     $requete->execute();
-<<<<<<< Updated upstream:public/Fiche_module.php
 }
-=======
-}
-
-?>
->>>>>>> Stashed changes:public/fiche_module.php
