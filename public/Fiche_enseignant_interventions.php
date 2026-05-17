@@ -1,7 +1,7 @@
 
 <?php 
 require_once 'inclus/auth_check.php';
-require_once 'inclus/Connexion.php';
+require_once 'inclus/connexion.php';
 require_once 'inclus/Header.php';
 require_once '../database/User_database.php';
 $active='enseignants';
@@ -48,15 +48,15 @@ else { // Récupération du filtre de nom de module dans l'URL
 
 <body>
     <nav>
-        <?php include_once 'inclus/Menu_gestion_licence.php' ?>
+        <?php include_once 'inclus/menu_gestion_licence.php' ?>
     </nav>
     <section class="teacher-information page">
         <div class="breadcrumb"> <!-- Fil d'ariane -->
-            <a href="Calendrier.php"><img src="assets/home.png" alt=""></a>
+            <a href="calendrier.php"><img src="assets/home.png" alt=""></a>
             <p>></p>
-            <a href="Corps_enseignant.php">Corps enseignant</a>
+            <a href="corps_enseignant.php">Corps enseignant</a>
             <p>></p>
-            <a href="Fiche_enseignant_informations.php?id=<?php echo $id; ?>"> <span><?php echo $infos["first_name"];?></span> <span><?php echo $infos["last_name"];?></span> </a> 
+            <a href="fiche_enseignant_informations.php?id=<?php echo $id; ?>"> <span><?php echo $infos["first_name"];?></span> <span><?php echo $infos["last_name"];?></span> </a> 
             <!-- Le nom et le prénom de l'enseignant sont affichés dans le fil d'ariane pour indiquer que c'est la page de cet enseignant -->
             <p>></p>
             <a href="#">Interventions</a>
@@ -88,7 +88,7 @@ else { // Récupération du filtre de nom de module dans l'URL
         <section class="form-part">
 
             <div class="link-part">
-                <a href="Fiche_enseignant_informations.php?id=<?php echo $id; ?>" class="link-unselected">Informations générales</a>
+                <a href="fiche_enseignant_informations.php?id=<?php echo $id; ?>" class="link-unselected">Informations générales</a>
                 <a href="#"  class="link-select">Interventions</a>
             </div>
             <p class="yellow-title">Filtrer les interventions</p>
@@ -244,15 +244,15 @@ else { // Récupération du filtre de nom de module dans l'URL
                 <?php
             }
             else if ($_GET["page"] == $nb_pages){?> <!-- Si on est sur la dernière page, on n'affiche que le lien de la page précédente -->
-                <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>">Page précédente </a><?php
+                <a href="fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>">Page précédente </a><?php
             }
             else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?> <!-- Si on est sur une page intermédiaire, on affiche les liens de la page précédente et de la page suivante -->
-                <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>">Page précédente </a>
-                <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a>
+                <a href="fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>">Page précédente </a>
+                <a href="fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a>
                 <?php
             } 
             else { ?> <!-- Si on est sur la première page, on n'affiche que le lien de la page suivante -->
-                <a href="Fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a><?php
+                <a href="fiche_enseignant_interventions.php?id=<?php echo $_GET['id']; ?>&page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a><?php
             }
             ?>    
         </section>

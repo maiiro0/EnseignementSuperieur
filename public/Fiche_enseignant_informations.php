@@ -1,7 +1,7 @@
 
 <?php 
 require_once 'inclus/auth_check.php';
-require_once 'inclus/Connexion.php';
+require_once 'inclus/connexion.php';
 require_once 'inclus/Header.php';
 require_once '../database/User_database.php';
 $active='enseignants';
@@ -17,7 +17,7 @@ if ((!empty($_POST['last_name'])) && !empty($_POST['first_name']) && !empty($_PO
     $email = htmlspecialchars($_POST['email']);
     $name = $_POST['name'];
     update_infos_enseignant($con, $id, $last_name, $first_name, $email, $name); // Mise à jour des informations de l'enseignant dans la base de données à partir des informations saisies dans le formulaire, cette fonction est définie dans le fichier database/User_database.php
-    header("Location: Fiche_enseignant_informations.php?id=" . $id); // Redirection vers la même page pour afficher les informations mises à jour de l'enseignant, l'id de l'enseignant est passé en paramètre dans l'URL pour pouvoir afficher les informations de l'enseignant
+    header("Location: fiche_enseignant_informations.php?id=" . $id); // Redirection vers la même page pour afficher les informations mises à jour de l'enseignant, l'id de l'enseignant est passé en paramètre dans l'URL pour pouvoir afficher les informations de l'enseignant
     exit();
 }
 
@@ -26,13 +26,13 @@ if ((!empty($_POST['last_name'])) && !empty($_POST['first_name']) && !empty($_PO
 
 <body>
     <nav>
-        <?php include_once 'inclus/Menu_gestion_licence.php' ?>
+        <?php include_once 'inclus/menu_gestion_licence.php' ?>
     </nav>
     <section class="teacher-information page">  
         <div class="breadcrumb">  <!-- Fil d'ariane -->
-            <a href="Calendrier.php"><img src="assets/home.png" alt=""></a>
+            <a href="calendrier.php"><img src="assets/home.png" alt=""></a>
             <p>></p>
-            <a href="Corps_enseignant.php">Corps enseignant</a>
+            <a href="corps_enseignant.php">Corps enseignant</a>
             <p>></p>
             <a href="#"><span><?php echo $infos["first_name"];?></span> <span><?php echo $infos["last_name"];?></span></a> <!-- Le nom et le prénom de l'enseignant sont affichés dans le fil d'ariane pour indiquer que c'est la page de cet enseignant, les informations de l'enseignant sont récupérées à partir de son id qui est passé en paramètre dans l'URL -->
             <p>></p>
@@ -65,7 +65,7 @@ if ((!empty($_POST['last_name'])) && !empty($_POST['first_name']) && !empty($_PO
         <section class="form-part">
             <div class="link-part">
                 <a href="#" class="link-select">Informations générales</a>
-                <a href="Fiche_enseignant_interventions.php?id=<?php echo $id; ?>"class="link-unselected">Interventions</a> <!-- Lien vers la page des interventions de l'enseignant, l'id de l'enseignant est passé en paramètre dans l'URL pour pouvoir afficher les interventions de cet enseignant -->
+                <a href="fiche_enseignant_interventions.php?id=<?php echo $id; ?>"class="link-unselected">Interventions</a> <!-- Lien vers la page des interventions de l'enseignant, l'id de l'enseignant est passé en paramètre dans l'URL pour pouvoir afficher les interventions de cet enseignant -->
             </div>
             <div>
                 <p class="yellow-title">Informations générales</p>

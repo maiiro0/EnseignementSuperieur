@@ -1,20 +1,20 @@
 <?php
 require_once 'inclus/auth_check.php';
-require_once 'inclus/Connexion.php';
+require_once 'inclus/connexion.php';
 require_once '../database/User_database.php';
 require_once 'inclus/Header.php';
 $active='types';?>
 
 <body>
     <nav>
-        <?php require_once('inclus/Menu_gestion_licence.php'); ?>
+        <?php require_once('inclus/menu_gestion_licence.php'); ?>
     </nav>
 
     <section class="intervention-type page">
         <div class="breadcrumb"> <!-- Fil d'ariane -->
-            <a href="Calendrier.php"><img src="assets/home.png" alt=""></a>
+            <a href="calendrier.php"><img src="assets/home.png" alt=""></a>
             <p>></p>
-            <a href="Type_intervention.php">Types intervention</a>
+            <a href="type_intervention.php">Types intervention</a>
             <p>></p>
             <a href="#">Cours</a>
         </div>
@@ -45,7 +45,7 @@ $active='types';?>
             </div>
 
             <div class="button-intervention">
-                <a href="Type_intervention.php" class="grey-button selection">Retour à la liste</a>
+                <a href="type_intervention.php" class="grey-button selection">Retour à la liste</a>
                 <button type="button" command="show-modal" commandfor="supp" class="red-button selection">Supprimer</button>
                 <button type="submit" class="blue-button selection">Enregistrer les informations</button>
             </div>

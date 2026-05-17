@@ -1,6 +1,6 @@
 <?php
 require_once 'inclus/Header.php'; // Header de la page
-require_once 'inclus/Connexion.php'; // Connexion à la base de données
+require_once 'inclus/connexion.php'; // Connexion à la base de données
 ?>
 <!-- Page de connexion -->
 <body>
@@ -48,7 +48,7 @@ require_once 'inclus/Connexion.php'; // Connexion à la base de données
     if ($user['email'] && password_verify($typedPassword, $user['password'])) {
         $_SESSION['email'] = $email;
         // redirection vers la page calendrier
-        header('Location: Calendrier.php');
+        header('Location: calendrier.php');
         exit();
     } else {
         echo "Problème de connexion";

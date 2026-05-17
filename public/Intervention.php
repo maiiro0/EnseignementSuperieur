@@ -1,6 +1,6 @@
 <?php
 require_once 'inclus/auth_check.php';
-require_once 'inclus/Connexion.php';
+require_once 'inclus/connexion.php';
 require_once 'inclus/Header.php';
 require_once '../database/User_database.php';
 $active='interventions';
@@ -60,7 +60,7 @@ if (!empty($_POST['date-start']) && !empty($_POST['date-end']) && !empty($_POST[
     $verification = verification_insert_intervention($con, $date_start, $date_end, $module, $intervenant);
     if ($verification=== True){
         insert_infos_intervention($con, $title, $date_start, $date_end, $module, $typeintervention, $intervenant, $visio);
-        header("Location: Intervention.php");
+        header("Location: intervention.php");
         exit();
     }
 }
@@ -102,7 +102,7 @@ if (isset($_POST['action_supprimer']) && !empty($_POST['id_action'])) {
         $stmt_del_course->execute([$id]);
 
         // Redirection pour rafraîchir la page
-        header("Location: Intervention.php");
+        header("Location: intervention.php");
         exit();
     } catch (Exception $e) {
         echo "Erreur lors de la suppression : " . $e->getMessage();
@@ -148,7 +148,7 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
             }
 
             // Redirection
-            header("Location: Intervention.php");
+            header("Location: intervention.php");
             exit();
         } catch (Exception $e) {
             echo "Erreur lors de la modification : " . $e->getMessage();
@@ -165,12 +165,12 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
 <body>
 
     <nav>
-        <?php require_once 'inclus/Menu_gestion_licence.php'?>
+        <?php require_once 'inclus/menu_gestion_licence.php'?>
     </nav>
 
     <section class="calendar page">
         <div class="breadcrumb">
-            <a href="#"><img src="assets/home.png" alt=""></a>
+            <a href="calendrier.php"><img src="assets/home.png" alt=""></a>
             <p>></p>
             <a href="#">Interventions</a>
         </div>
@@ -534,15 +534,15 @@ if (isset($_POST['action_modifier']) && !empty($_POST['id_action'])) {
                 <?php
             }
             else if ($_GET["page"] == $nb_pages){?>
-                <a href="Intervention.php?page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page précédente </a><?php
+                <a href="intervention.php?page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page précédente </a><?php
             }
             else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
-                <a href="Intervention.php?page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>">Page précédente </a>
-                <a href="Intervention.php?page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a>
+                <a href="intervention.php?page=<?php echo $page - 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>">Page précédente </a>
+                <a href="intervention.php?page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a>
                 <?php
             } 
             else { ?>
-                <a href="Intervention.php?page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a><?php
+                <a href="intervention.php?page=<?php echo $page + 1; ?>&start_date=<?php echo $filtre_start_date; ?>&end_date=<?php echo $filtre_end_date; ?>&name=<?php echo $filtre_name; ?>"> Page suivante</a><?php
             }
             ?>
         </section>

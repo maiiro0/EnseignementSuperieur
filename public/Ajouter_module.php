@@ -4,10 +4,10 @@ require_once("inclus/Header.php")?>
 <body>
     <nav>
         <?php $active='modules';
-        require_once('inclus/Menu_gestion_licence.php'); ?>
+        require_once('inclus/menu_gestion_licence.php'); ?>
     </nav>
 
-     <?php require_once 'inclus/Connexion.php';
+     <?php require_once 'inclus/connexion.php';
 
     // Récupération du module 
     $requete = $con->prepare("SELECT code, name, description, hours_count, capstone_project, parent_id FROM module");
@@ -23,7 +23,7 @@ require_once("inclus/Header.php")?>
 
     <section class="intervention-type page">
         <div class="breadcrumb"> <!-- Fil d'ariane -->
-            <a href="Calendrier.php"><img src="assets/home.png" alt=""></a>
+            <a href="calendrier.php"><img src="assets/home.png" alt=""></a>
             <p>></p>
             <a href="Liste_module.php">Modules</a>
         </div>
@@ -72,7 +72,7 @@ require_once("inclus/Header.php")?>
             </div>
 
             <div class="button-intervention">
-                <a href="Modules.php" class="grey-button selection">Retour à la liste</a>
+                <a href="modules.php" class="grey-button selection">Retour à la liste</a>
                 <button type="submit" class="blue-button selection">Ajouter le module</button>
             </div>
         </form>

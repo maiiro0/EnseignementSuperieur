@@ -4,11 +4,11 @@ require_once("inclus/Header.php")?>
 <body>
     <nav>
         <?php $active='modules';
-        require_once('inclus/Menu_gestion_licence.php'); ?>
+        require_once('inclus/menu_gestion_licence.php'); ?>
     </nav>
 
      <?php 
-    require_once 'inclus/Connexion.php';
+    require_once 'inclus/connexion.php';
 
     if (isset($_GET['id'])) {
         $id = htmlspecialchars($_GET['id']);
@@ -31,11 +31,11 @@ require_once("inclus/Header.php")?>
 
     <section class="intervention-type page">
         <div class="breadcrumb"> <!-- Fil d'ariane -->
-            <a href="Calendrier.php"><img src="assets/home.png" alt=""></a>
+            <a href="calendrier.php"><img src="assets/home.png" alt=""></a>
             <p>></p>
-            <a href="Liste_module.php">Modules</a>
+            <a href="modules.php">Modules</a>
             <p>></p>
-            <p>Fiche module</p>
+            <a href="fiche_module.php">Fiche module</a>
             <p>></p>
             <p><?php echo htmlspecialchars($contenu['name']); ?></p>
         </div>
@@ -78,7 +78,7 @@ require_once("inclus/Header.php")?>
                 <input class="input_desc" type="text" id="description" name="description" value="<?php echo htmlspecialchars($contenu['description']); ?>"> <!-- Champ de saisie de la description du module, ce champ n'est pas obligatoire -->
             </div>
               <div class="button-intervention">
-                <a href="Modules.php" class="grey-button selection">Retour à la liste</a>
+                <a href="modules.php" class="grey-button selection">Retour à la liste</a>
                 <button type="button" command="show-modal" commandfor="supp" class="red-button selection">Supprimer</button>
                 <button type="submit" class="blue-button selection">Enregistrer les informations</button>
             </div>

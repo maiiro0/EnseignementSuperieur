@@ -2,7 +2,7 @@
 require_once 'inclus/auth_check.php';
 require_once 'inclus/Header.php';
 require_once '../database/User_database.php';
-require_once 'inclus/Connexion.php';
+require_once 'inclus/connexion.php';
 $active='types';
 
 if (empty($_GET["page"])){ // Vérification de la pagination dans l'URL. Si pas de numéro de page, on considère que c'est la page 1 par défaut
@@ -25,12 +25,12 @@ else {
 
 <body>
     <nav>
-        <?php require_once('inclus/Menu_gestion_licence.php'); ?> 
+        <?php require_once('inclus/menu_gestion_licence.php'); ?> 
     </nav>
 
     <section class="intervention-type page">
         <div class="breadcrumb"> <!-- Fil d'ariane -->
-            <a href="Calendrier.php"><img src="assets/home.png" alt=""></a>
+            <a href="calendrier.php"><img src="assets/home.png" alt=""></a>
             <p>></p>
             <a href="#">Types intervention</a>
         </div>
@@ -38,7 +38,7 @@ else {
         <section class="titles-page">
             <div class="align">
                 <h3>Types intervention</h3>
-                <a href="Ajout_type_intervention.php" class="blue-button">Ajouter un type</a>
+                <a href="ajout_type_intervention.php" class="blue-button">Ajouter un type</a>
             </div>
 
             <form method="get" action="">
@@ -84,7 +84,7 @@ else {
                             <td style="color:<?php echo $element["color"]?>"><?php echo $element["color"] ?></td> <!-- Affichage du code couleur du type d'intervention, le texte du code couleur est affiché dans la couleur correspondante pour différencier les types d'intervention par leur couleur -->
 
                             <td class="table_align"><img src="assets/Oeil.png" alt="">
-                            <a href="Fiche_intervention.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td>
+                            <a href="fiche_intervention.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td>
                             </tr><?php
                             }
                             ?>
@@ -115,7 +115,7 @@ else {
                                 <td style="color:<?php echo $element["color"]?>"><?php echo $element["color"] ?></td> <!-- Affichage du code couleur du type d'intervention, le texte du code couleur est affiché dans la couleur correspondante pour différencier les types d'intervention par leur couleur -->
 
                                 <td class="table_align"><img src="assets/Oeil.png" alt="">
-                                <a href="Fiche_intervention.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td> <!-- Renvoie à Fiche_intervention.php pour avoir des précisions sur le type d'intervention-->
+                                <a href="fiche_intervention.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td> <!-- Renvoie à fiche_intervention.php pour avoir des précisions sur le type d'intervention-->
                                 <?php
                                 echo "</tr>";
                             }
@@ -133,20 +133,20 @@ else {
                     <?php
                 }
                 else if ($_GET["page"] == 1){ ?> <!-- Si on est sur la première page, on n'affiche pas le lien de la page précédente -->
-                    <a href="Type_intervention.php?page=<?php echo $page + 1; ?>&filtre=<?php echo $filtre ?>"> Page suivante</a> <!-- Lien vers la page suivante en oubliant pas le filtre -->
+                    <a href="type_intervention.php?page=<?php echo $page + 1; ?>&filtre=<?php echo $filtre ?>"> Page suivante</a> <!-- Lien vers la page suivante en oubliant pas le filtre -->
                     <?php
                 }
                 else if ($_GET["page"] == $nb_pages){?>
-                    <a href="Type_intervention.php?page=<?php echo $page - 1; ?>&filtre=<?php echo $filtre ?>">Page précédente </a> <!-- Lien vers la page précédente en oubliant pas le filtre -->
+                    <a href="type_intervention.php?page=<?php echo $page - 1; ?>&filtre=<?php echo $filtre ?>">Page précédente </a> <!-- Lien vers la page précédente en oubliant pas le filtre -->
                     <?php
                 }
                 else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?>
-                    <a href="Type_intervention.php?page=<?php echo $page - 1; ?>&filtre=<?php echo $filtre ?>">Page précédente </a> <!-- Lien vers la page précédente en oubliant pas le filtre -->
-                    <a href="Type_intervention.php?page=<?php echo $page + 1; ?>&filtre=<?php echo $filtre ?>"> Page suivante</a> <!-- Lien vers la page suivante en oubliant pas le filtre -->
+                    <a href="type_intervention.php?page=<?php echo $page - 1; ?>&filtre=<?php echo $filtre ?>">Page précédente </a> <!-- Lien vers la page précédente en oubliant pas le filtre -->
+                    <a href="type_intervention.php?page=<?php echo $page + 1; ?>&filtre=<?php echo $filtre ?>"> Page suivante</a> <!-- Lien vers la page suivante en oubliant pas le filtre -->
                     <?php
                 } 
                 else { ?>
-                    <a href="Type_intervention.php?page=<?php echo $page + 1; ?>&filtre=<?php echo $filtre ?>"> Page suivante</a> <!-- Lien vers la page suivante en oubliant pas le filtre --><?php
+                    <a href="type_intervention.php?page=<?php echo $page + 1; ?>&filtre=<?php echo $filtre ?>"> Page suivante</a> <!-- Lien vers la page suivante en oubliant pas le filtre --><?php
                 }
             ?>
         </section>

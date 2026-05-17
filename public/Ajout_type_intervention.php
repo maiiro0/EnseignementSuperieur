@@ -1,19 +1,19 @@
 <?php
 require_once 'inclus/Header.php';
 require_once '../database/User_database.php';
-require_once 'inclus/Connexion.php';
+require_once 'inclus/connexion.php';
 $active='types';?>
 
 <body>
     <nav>
-        <?php require_once('inclus/Menu_gestion_licence.php'); ?>
+        <?php require_once('inclus/menu_gestion_licence.php'); ?>
     </nav>
 
     <section class="intervention-type page">
         <div class="breadcrumb">
-            <a href="Calendrier.php"><img src="assets/home.png" alt=""></a>
+            <a href="calendrier.php"><img src="assets/home.png" alt=""></a>
             <p>></p>
-            <a href="Type_intervention.php">Types d'intervention</a> <!-- Fil d'ariane -->
+            <a href="type_intervention.php">Types d'intervention</a> <!-- Fil d'ariane -->
             <p>></p>
             <a href="#">Ajouter type intervention</a>
         </div>
@@ -37,7 +37,7 @@ $active='types';?>
             </div>
 
             <div class="button-intervention">
-                <a href="Type_intervention.php" class="grey-button selection">Retour à la liste</a>
+                <a href="type_intervention.php" class="grey-button selection">Retour à la liste</a>
                 <button type="submit" class="blue-button selection">Ajouter l'intervenant</button>
             </div>
         </form>

@@ -1,6 +1,6 @@
 <?php
 require_once 'inclus/auth_check.php'; // Vérification de la session
-require_once('inclus/Connexion.php'); // Connexion à la base de données
+require_once('inclus/connexion.php'); // Connexion à la base de données
 require_once '../database/User_database.php'; // Fonctions liées à la table user
 require_once 'inclus/Header.php'; // Header de la page
 // Définition de la variable active pour le menu
@@ -43,12 +43,12 @@ else { // Récupère le filtre de l'email dans l'URL
 
 <body>
     <nav>
-        <?php require_once('inclus/Menu_gestion_licence.php'); ;?>
+        <?php require_once('inclus/menu_gestion_licence.php'); ;?>
     </nav>
 
     <section class="teaching_staff page">
         <div class="breadcrumb"> <!-- Fil d'ariane -->
-            <a href="Calendrier.php"><img src="assets/home.png" alt=""></a>
+            <a href="calendrier.php"><img src="assets/home.png" alt=""></a>
             <p>></p>
             <a href="#">Corps Enseignant</a>
         </div>
@@ -182,7 +182,7 @@ else { // Récupère le filtre de l'email dans l'URL
                             echo"<td>". $valeur['module']. "</td>";
                             echo"<td>". $valeur['hours_count']. "</td>";
                             ?><td class="table_align"><img src="assets/Oeil.png" alt="">
-                            <a href="Fiche_enseignant_informations.php?id=<?php echo $valeur['id']; ?>">Accéder à la fiche</a></td>
+                            <a href="fiche_enseignant_informations.php?id=<?php echo $valeur['id']; ?>">Accéder à la fiche</a></td>
                             <?php
                         }
                         echo "</tr>";
@@ -212,7 +212,7 @@ else { // Récupère le filtre de l'email dans l'URL
                             echo"<td>". $element['hours_count']. "</td>";
 
                             ?><td class="table_align"><img src="assets/Oeil.png" alt="">
-                            <a href="Fiche_enseignant_informations.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td>
+                            <a href="fiche_enseignant_informations.php?id=<?php echo $element['id']; ?>">Accéder à la fiche</a></td>
                             <?php
 
                             echo "</tr>";
@@ -231,15 +231,15 @@ else { // Récupère le filtre de l'email dans l'URL
                 <?php
             }
             else if ($_GET["page"] == $nb_pages){?> <!-- Si on est sur la dernière page, on n'affiche que le lien de la page précédente -->
-                <a href="Corps_enseignant.php?page=<?php echo $page - 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>">Page précédente </a><?php
+                <a href="corps_enseignant.php?page=<?php echo $page - 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>">Page précédente </a><?php
             }
             else if ($_GET["page"] > 1 && $_GET["page"] < $nb_pages){ ?> <!-- Si on est sur une page intermédiaire, on affiche les liens de la page précédente et de la page suivante -->
-                <a href="Corps_enseignant.php?page=<?php echo $page - 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>">Page précédente </a>
-                <a href="Corps_enseignant.php?page=<?php echo $page + 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>"> Page suivante</a>
+                <a href="corps_enseignant.php?page=<?php echo $page - 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>">Page précédente </a>
+                <a href="corps_enseignant.php?page=<?php echo $page + 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>"> Page suivante</a>
                 <?php
             } 
             else { ?> <!-- Si on est sur la première page, on n'affiche que le lien de la page suivante -->
-                <a href="Corps_enseignant.php?page=<?php echo $page + 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>"> Page suivante</a><?php
+                <a href="corps_enseignant.php?page=<?php echo $page + 1; ?>&first_name=<?php echo $filtre_prenom; ?>&last_name=<?php echo $filtre_nom; ?>&email=<?php echo $filtre_email; ?>"> Page suivante</a><?php
             }
             ?>
         </section>
