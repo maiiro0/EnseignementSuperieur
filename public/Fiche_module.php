@@ -77,7 +77,13 @@ require_once("inclus/Header.php")?>
                 <label for="description">Description</label>
                 <input class="input_desc" type="text" id="description" name="description" value="<?php echo htmlspecialchars($contenu['description']); ?>"> <!-- Champ de saisie de la description du module, ce champ n'est pas obligatoire -->
             </div>
-              <div class="button-intervention">
+
+            <div>
+                <input type="checkbox" id="capstone_project" name="capstone_project" value="1" />
+                <label for="capstone_project">Module effectué sur le projet fil rouge</label> <!-- Case à cocher pour indiquer si le module est effectué sur le projet fil rouge (pas obligatoire) -->
+            </div>
+
+            <div class="button-intervention">
                 <a href="modules.php" class="grey-button selection">Retour à la liste</a>
                 <button type="button" command="show-modal" commandfor="supp" class="red-button selection">Supprimer</button>
                 <button type="submit" class="blue-button selection">Enregistrer les informations</button>
@@ -142,23 +148,24 @@ if (isset($_POST['action']) && $_POST['action'] === 'confirm-delete') {
         $requete = $con->prepare("DELETE FROM module WHERE id = :id");
         $requete->bindParam(':id', $id);
         $requete->execute();
-
-        header('Location: Liste_module.php');
-        exit;
     } else {
         $erreurSuppression = "Impossible de supprimer ce module : des cours y sont encore liés.";
     }
 }
 
 // MISE À JOUR 
-if (!empty($_POST['code']) &&  !empty($_POST['name']) &&  isset($_POST['hours_count']) && isset($_POST['capstone_project'])) {
+if (!empty($_POST['code']) &&  !empty($_POST['name']) &&  isset($_POST['hours_count'])) {
     $code = htmlspecialchars($_POST['code']);
     $name = htmlspecialchars($_POST['name']);
     $description = htmlspecialchars($_POST['description'] ?? '');
     $hours_count = (int) $_POST['hours_count'];
-    $capstone_project = (int) $_POST['capstone_project'];
     $parent_id = !empty($_POST['parent_id']) ? (int) $_POST['parent_id'] : null;
-
+    if (isset($_POST['capstone_project'])){
+        $capstone_project = (int) $_POST['capstone_project'];
+    }
+    else{
+        $capstone_project = 0;
+    }
     $requete = $con->prepare(
         "UPDATE module 
          SET code = :code, name = :name, description = :description, 
@@ -174,4 +181,10 @@ if (!empty($_POST['code']) &&  !empty($_POST['name']) &&  isset($_POST['hours_co
     $requete->bindParam(':capstone_project', $capstone_project, \PDO::PARAM_INT);
     $requete->bindParam(':parent_id', $parent_id, \PDO::PARAM_INT);
     $requete->execute();
+<<<<<<< Updated upstream:public/Fiche_module.php
 }
+=======
+}
+
+?>
+>>>>>>> Stashed changes:public/fiche_module.php
